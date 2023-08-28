@@ -11,3 +11,11 @@ ion-item::part(detail-icon) {
   color: #ff00ff;
   opacity: 1;
 }
+.ion-image {
+  width: 100%;
+  object-fit: cover;
+  height: 200px;
+}
+.card-title {
+  margin-bottom: 5px;
+}
