@@ -1,197 +1,104 @@
 import {
-   IonAvatar,
-   IonButton,
-   IonButtons,
-   IonCard,
-   IonCardContent,
-   IonChip,
-   IonContent,
-   IonDatetime,
-   IonFab,
-   IonFabButton,
-   IonHeader,
-   IonIcon,
-   IonImg,
-   IonItem,
-   IonLabel,
-   IonModal,
-   IonPage,
-   IonRefresher,
-   IonRefresherContent,
-   IonSegment,
-   IonSegmentButton,
-   IonSkeletonText,
-   IonTitle,
-   IonToolbar,
-   useIonAlert,
-   useIonToast,
-   useIonViewWillEnter,
- } from '@ionic/react';
- import { addOutline, trashBinOutline } from 'ionicons/icons';
- import React, { useEffect, useRef, useState } from 'react';
- import './Order.css';
- const Order: React.FC = () => {
-   const [loading, setLoading] = useState<boolean>(true);
-   const [users, setUsers] = useState<any[]>([]);
-   const [showAlert] = useIonAlert();
-   const [showToast] = useIonToast();
-   const [selectedUser, setSelectedUser] = useState<any>(null);
-   const modal = useRef<HTMLIonModalElement>(null);
-   const cardModal = useRef<HTMLIonModalElement>(null);
-   const [presentingElement, setPresentingElement] = useState<HTMLElement | null>(null);
-   const page = useRef(null);
- 
-   const [activeSegment, setActiveSegment] = useState<any>('details');
- 
-   useEffect(() => {
-     setPresentingElement(page.current);
-   }, []);
- 
-   useIonViewWillEnter(async () => {
-     const users = await getUsers();
-     console.log('🚀 ~ file: List.tsx:10 ~ useIonViewWillEnter ~ users:', users);
-     setUsers(users);
-     setLoading(false);
-   });
- 
-   const getUsers = async () => {
-     const data = await fetch('https://randomuser.me/api?results=10');
-     const users = await data.json();
-     return users.results;
-   };
- 
-   const clearList = () => {
-     showAlert({
-       header: 'Confirm!',
-       message: 'Are you sure you want to delete all users?',
-       buttons: [
-         { text: 'Cancel', role: 'cancel' },
-         {
-           text: 'Delete',
-           handler: () => {
-             setUsers([]);
-             showToast({
-               message: 'All users deleted',
-               duration: 2000,
-               color: 'danger',
-             });
-           },
-         },
-       ],
-     });
-   };
- 
-   const doRefresh = async (event: any) => {
-     const data = await getUsers();
-     setUsers(data);
-     event.detail.complete();
-   };
- 
-   return (
-     <IonPage ref={page}>
-       <IonContent>
-         <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
-           <IonRefresherContent />
-         </IonRefresher>
- 
-         {loading &&
-           [...Array(10)].map((_, index) => (
-             <IonCard key={index}>
-               <IonCardContent className="ion-no-padding">
-                 <IonItem lines="none">
-                   <IonAvatar slot="start">
-                     <IonSkeletonText />
-                   </IonAvatar>
-                   <IonLabel>
-                     <IonSkeletonText animated style={{ width: '150px' }} />
-                     <p>
-                       <IonSkeletonText />
-                     </p>
-                   </IonLabel>
-                   <IonChip slot="end" color={'primary'}></IonChip>
-                 </IonItem>
-               </IonCardContent>
-             </IonCard>
-           ))}
- 
-         {users.map((user, index) => (
-           <IonCard key={index} onClick={() => setSelectedUser(user)}>
-             <IonCardContent className="ion-no-padding">
-               <IonItem lines="none">
-                 <IonAvatar slot="start">
-                   <IonImg src={user.picture.large} />
-                 </IonAvatar>
-                 <IonLabel>
-                   {user.name.first} {user.name.last}
-                   <p>{user.email}</p>
-                 </IonLabel>
-                 <IonChip slot="end" color={'primary'}>
-                   {user.nat}
-                 </IonChip>
-               </IonItem>
-             </IonCardContent>
-           </IonCard>
-         ))}
- 
-         <IonModal breakpoints={[0, 0.5, 0.8]} initialBreakpoint={0.5} ref={modal} isOpen={selectedUser !== null} onIonModalDidDismiss={() => setSelectedUser(null)}>
-           <IonHeader>
-             <IonToolbar color={'light'}>
-               <IonButtons slot="start">
-                 <IonButton onClick={() => modal.current?.dismiss()}>Close</IonButton>
-               </IonButtons>
-               <IonTitle>
-                 {selectedUser?.name.first} {selectedUser?.name.last}
-               </IonTitle>
-             </IonToolbar>
-             <IonToolbar color={'light'}>
-               <IonSegment value={activeSegment} onIonChange={(e) => setActiveSegment(e.detail.value!)}>
-                 <IonSegmentButton value="details">Details</IonSegmentButton>
-                 <IonSegmentButton value="calendar">Calendar</IonSegmentButton>
-               </IonSegment>
-             </IonToolbar>
-           </IonHeader>
-           <IonContent className="ion-padding">
-             {activeSegment === 'details' && (
-               <IonCard>
-                 <IonAvatar slot="start">
-                   <IonImg src={selectedUser?.picture.large} />
-                 </IonAvatar>
-                 <IonCardContent className="ion-no-padding">
-                   <IonItem lines="none">
-                     <IonLabel class="ion-text-wrap">
-                       {selectedUser?.name.first} {selectedUser?.name.last}
-                       <p>{selectedUser?.email}</p>
-                     </IonLabel>
-                   </IonItem>
-                 </IonCardContent>
-               </IonCard>
-             )}
-             {activeSegment === 'calendar' && <IonDatetime />}
-           </IonContent>
-         </IonModal>
-       </IonContent>
- 
-       <IonModal ref={cardModal} trigger="card-modal" presentingElement={presentingElement!}>
-         <IonHeader>
-           <IonToolbar color={'success'}>
-             <IonButtons slot="start">
-               <IonButton onClick={() => cardModal.current?.dismiss()}>Close</IonButton>
-             </IonButtons>
-             <IonTitle>Card Modal</IonTitle>
-           </IonToolbar>
-         </IonHeader>
-         <IonContent>
-           <p>My card modal</p>
-         </IonContent>
-       </IonModal>
- 
-       <IonFab vertical="bottom" horizontal="end" slot="fixed">
-         <IonFabButton id="card-modal">
-           <IonIcon icon={addOutline} />
-         </IonFabButton>
-       </IonFab>
-     </IonPage>
-   );
- };
- 
- export default Order;
+  IonCard,
+  IonCardContent,
+  IonChip,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonImg,
+  IonItem,
+  IonLabel,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  useIonViewWillEnter,
+} from "@ionic/react";
+import { cartOutline } from "ionicons/icons";
+import React, {useState } from "react";
+import "../Home/Home.css";
+import axios from "axios";
+import { url } from "../../utils/utils";
+import Home_Skeleton from "../Home/Home_Skeleton";
+const Shop: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [orders, setOrders] = useState<any[]>([]);
+  const controller: AbortController = new AbortController();
+
+  const getOrders = async () => {
+    try {
+      const data = await axios(`${url}/api/products`, {
+        signal: controller.signal,
+      });
+      return data.data;
+    } catch (error: any) {
+      if (error.name !== "CanceledError") {
+      }
+    }
+  };
+  useIonViewWillEnter(async () => {
+    const orders = await getOrders();
+    setOrders(orders);
+    setLoading(false);
+  });
+
+  const doRefresh = async (event: any) => {
+    const data = await getOrders();
+    setOrders(data);
+    event.detail.complete();
+  };
+
+  return (
+    <IonPage>
+      <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
+          <IonRefresherContent />
+        </IonRefresher>
+        {loading &&
+          [...Array(10)].map((_, index) => (
+            <Home_Skeleton key={index} index={index} />
+          ))}
+        {orders.map((order, index) => (
+          <IonCard
+            key={index}
+            onClick={() => {
+              console.log("clicked");
+            }}
+          >
+            <IonCardContent className="ion-no-padding">
+              <IonItem lines="none">
+                <IonImg
+                  src={`${url}${JSON.parse(order.product_images)[0].url}`}
+                  className="ion-image ion-margin-top"
+                  alt="hello"
+                />
+              </IonItem>
+              <IonItem
+                lines="none"
+                className="ion-margin-top ion-margin-bottom"
+              >
+                <IonLabel>
+                  <IonLabel className="card-title">
+                    {order.product_name}
+                  </IonLabel>
+                  <p>{order.product_category}</p>
+                </IonLabel>
+                <IonChip slot="end" color={"primary"}>
+                  {order.product_code}
+                </IonChip>
+              </IonItem>
+            </IonCardContent>
+          </IonCard>
+        ))}
+      </IonContent>
+
+      <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        <IonFabButton id="card-modal">
+          <IonIcon icon={cartOutline} />
+        </IonFabButton>
+      </IonFab>
+    </IonPage>
+  );
+};
+
+export default Shop;

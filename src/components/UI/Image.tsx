@@ -4,11 +4,11 @@ import { url } from "../../utils/utils";
 
 interface Props {
   src: string;
-  notServer: boolean;
-  display: string;
+  notServer?: boolean;
+  display?: string;
   hash: string;
   label: string;
-  props: any;
+  props?: any;
 }
 const ImageComponent: React.FC<Props> = ({
   src,
@@ -22,11 +22,10 @@ const ImageComponent: React.FC<Props> = ({
   useEffect(() => {
     const image = new Image();
     image.onload = () => {
-      setImageLoaded((pre) => !pre);
+      setImageLoaded(true);
     };
     image.src = !notServer ? `${url}${src}` : src;
 
-    // eslint-disable-next-line
   }, [src, hash, label, display, notServer]);
   return (
     <>

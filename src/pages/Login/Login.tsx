@@ -48,7 +48,7 @@ const  Login: React.FC = () => {
       dismiss();
       console.log(clientIdentity.current?.value);
       console.log(password.current?.value);
-      router.push('/app', 'root');
+      router.push('/app/home', 'root');
     }, 2000);
    }
    const finishIntro = async () => {
@@ -61,7 +61,7 @@ const  Login: React.FC = () => {
         {
             !introSeen?<Intro onFinish={finishIntro}/>:(  
             <>
-              <ToolBar backButton={false}/>
+              <ToolBar backButton={false} title="Sign in"/>
                <LoginContent 
                handleSubmit={handleSubmit}
                clientIdentity={clientIdentity} 
