@@ -1,0 +1,35 @@
+.payment-details img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+.gopHolder {
+  background: #ffffff;
+}
+.gop {
+  width: 100%;
+  background: #ffffff;
+}
+.card-con {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 15px 0;
+}
+.card-con > div p:nth-of-type(1) {
+  margin-bottom: 5px;
+}
+.payment-desc {
+  width: 100%;
+  background: #ffffff;
+  padding: 10px;
+}
+.ctpm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ctpm ion-button {
+  text-transform: capitalize;
+}

@@ -1,17 +1,12 @@
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonMenuButton, IonButton, IonIcon, IonSearchbar,} from "@ionic/react"
 import { trashBinOutline } from "ionicons/icons";
 interface Props{
-  backButton:boolean;
-  backHref?:string;
   title?:string;
 }
-const ToolBar:React.FC<Props> = ({backButton,backHref,title})=> {
+export const ToolBarMain:React.FC<Props> = ({title})=> {
   return (
     <IonHeader>
       <IonToolbar color="primary">
-        <IonButtons slot="start">
-          <IonMenuButton />
-        </IonButtons>
        <IonTitle>{title || "KM"}</IonTitle>
         <IonButtons slot="end">
           <IonButton onClick={()=>{}}>
@@ -23,11 +18,6 @@ const ToolBar:React.FC<Props> = ({backButton,backHref,title})=> {
           </IonButton>
         </IonButtons>
       </IonToolbar>
-      {/* {
-     backButton &&  <IonButtons slot='end'>
-     <IonBackButton defaultHref={backHref}></IonBackButton>
-    </IonButtons>
-     } */}
       <IonToolbar color="primary">
         <IonSearchbar />
       </IonToolbar>
@@ -35,10 +25,20 @@ const ToolBar:React.FC<Props> = ({backButton,backHref,title})=> {
 
   )
 }
+export const ToolBarDetails:React.FC<Props> = ({title})=> {
+  return (
+    <IonHeader>
+      <IonToolbar color="primary">
+       <IonTitle>{title || "KM"}</IonTitle>
+        <IonButtons slot="start">
+          <IonBackButton  defaultHref="/app">
+          </IonBackButton>
+        </IonButtons>
+      </IonToolbar>
+    </IonHeader>
 
-export default ToolBar
-
-
+  )
+}
 
 
 

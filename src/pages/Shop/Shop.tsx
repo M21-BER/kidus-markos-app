@@ -21,7 +21,7 @@ import axios from "axios";
 import { jsonCheck, url } from "../../utils/utils";
 import Home_Skeleton from "../Home/Home_Skeleton";
 import "../Home/Home.css";
-import "./Shops.css";
+import "../Home/HomeDetail.css";
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [shops, setShops] = useState<any[]>([]);
@@ -62,13 +62,14 @@ const Shop: React.FC = () => {
           ))}
         {shops.map((shop, index) => (
           <IonCard
+          color='warning'
             key={index}
             onClick={() => {
-             router.push(`/app/shops/details/${shop.s_product_id}`)
+             router.push(`/app/home/shops/details/${shop.s_product_id}`)
             }}
-          >
+          >  
             <IonCardContent className="ion-no-padding">
-              <IonItem lines="none">
+              <IonItem lines="none" color='warning'>
                 <IonImg
                   src={`${url}${jsonCheck(shop.s_product_images)[0].url}`}
                   className="ion-image ion-margin-top"
@@ -76,6 +77,7 @@ const Shop: React.FC = () => {
                 />
               </IonItem>
               <IonItem
+              color='warning'
                 lines="none"
                 className="ion-margin-top ion-margin-bottom"
               >
@@ -85,7 +87,7 @@ const Shop: React.FC = () => {
                   </IonLabel>
                   <p>{shop.s_product_category}</p>
                 </IonLabel>
-                <IonChip slot="end" color={"primary"}>
+                <IonChip slot="end" color="primary">
                   {`${shop.s_product_price}.ETB`}
                 </IonChip>
               </IonItem>

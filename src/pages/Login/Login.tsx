@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Intro from '../../components/Intro/Intro';
 import { Preferences } from '@capacitor/preferences';
 import LoginContent from './LoginContent';
-import ToolBar from '../../components/ToolBar/ToolBar';
+import {ToolBarMain} from '../../components/ToolBar/ToolBar';
 import { useRef } from "react";
 import axios from 'axios';
 import { url } from '../../utils/utils';
@@ -48,7 +48,7 @@ const  Login: React.FC = () => {
       dismiss();
       console.log(clientIdentity.current?.value);
       console.log(password.current?.value);
-      router.push('/app/home', 'root');
+      router.push('/app/home', 'root','replace');
     }, 2000);
    }
    const finishIntro = async () => {
@@ -61,7 +61,7 @@ const  Login: React.FC = () => {
         {
             !introSeen?<Intro onFinish={finishIntro}/>:(  
             <>
-              <ToolBar backButton={false} title="Sign in"/>
+              <ToolBarMain title="Sign in"/>
                <LoginContent 
                handleSubmit={handleSubmit}
                clientIdentity={clientIdentity} 

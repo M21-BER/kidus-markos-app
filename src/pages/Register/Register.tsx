@@ -1,7 +1,7 @@
 import {useIonRouter } from '@ionic/react';
 
 import React, { useRef } from 'react';
-import ToolBar from '../../components/ToolBar/ToolBar';
+import {ToolBarMain} from '../../components/ToolBar/ToolBar';
 import RegisterContent from './RegisterContent';
 const Register: React.FC = () => {
    const router = useIonRouter();
@@ -40,7 +40,7 @@ const Register: React.FC = () => {
    }
     return (
         <>
-            <ToolBar backButton={true} backHref="/"/>
+            <ToolBarMain title='Sign up'/>
             <RegisterContent 
              first_name={first_name} 
              last_name={last_name} 

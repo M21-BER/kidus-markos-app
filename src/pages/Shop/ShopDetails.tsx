@@ -1,11 +1,11 @@
-import {IonPage, IonButton, IonCard, IonCardContent,useIonToast, IonContent, IonIcon} from '@ionic/react';
-import ToolBar from '../../components/ToolBar/ToolBar';
+import {IonPage, IonButton, IonCard, IonCardContent,useIonToast, IonContent, IonIcon, useIonRouter} from '@ionic/react';
+import {ToolBarDetails} from '../../components/ToolBar/ToolBar';
 import { useParams } from 'react-router';
 import { useAxios } from '../../hooks/useAxios';
 import { url,jsonCheck } from '../../utils/utils';
 import { nFormatter } from '../../utils/numberFormatter';
 import ImageComponent from '../../components/UI/Image';
-import "./Shops.css";
+import "../Home/HomeDetail.css";
 import { cartSharp,addSharp, timeSharp, eyeSharp, checkmarkDoneCircleSharp } from 'ionicons/icons';
 import CustomSlider from '../../components/slider/custom.slider';
 import { formatDistance } from "date-fns";
@@ -17,6 +17,7 @@ const ShopDetails: React.FC = () => {
    const id:any =  useParams();
    const [detail,isPending,error] = useAxios(`${url}/api/shops/${id.id}`);
    let distance:any = null;
+   const router = useIonRouter();
    const [cartExist,setCartExist] = useState<boolean>(true)
    const [present] = useIonToast();
    if(error){
@@ -63,12 +64,12 @@ const ShopDetails: React.FC = () => {
     
    }
    const shopping = ()=>{
-   console.log("to shopping");
+     router.push('/app/home/shop/details/payment')
    
    }
     return (
         <IonPage>
-            <ToolBar backButton={false}/>
+            <ToolBarDetails />
             <IonContent className="ion-no-padding">
              {!isPending && 
              (
@@ -88,7 +89,7 @@ const ShopDetails: React.FC = () => {
                 }
               </CustomSlider>    
               <div className='km-detail-card'>
-               <IonCard className='km-detail-card-main'>
+               <IonCard className='km-detail-card-main' color='warning'>
                 <IonCardContent>
                 <div className='km-card-header'>
                   <small><IonIcon icon={timeSharp} color='primary'/> {distance.substring(distance.indexOf(distance.match(/\d+/g)))}</small>

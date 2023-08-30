@@ -9,6 +9,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   background-color: #361705;
+  height: 200px;
 }
 
 .container__slider > button {

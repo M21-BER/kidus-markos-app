@@ -38,8 +38,6 @@ const App: React.FC = () => (
           <Route path="/register" component={Menu}/>
           <Route path="/app" component={Menu} />
           <Route path="/login" component={Menu}/>
-          <Route path="/s_details/:id" component={Menu}/>
-          <Route path="/o_details/:id" component={Menu}/>
         </IonRouterOutlet>
       </IonReactRouter>
     </IonPage>

@@ -13,18 +13,20 @@ import {
   IonRefresher,
   IonRefresherContent,
   useIonViewWillEnter,
+  useIonRouter,
 } from "@ionic/react";
 import { cartOutline } from "ionicons/icons";
 import React, {useState } from "react";
 import "../Home/Home.css";
 import axios from "axios";
-import { url } from "../../utils/utils";
+import { jsonCheck, url } from "../../utils/utils";
 import Home_Skeleton from "../Home/Home_Skeleton";
+import "../Home/HomeDetail.css";
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [orders, setOrders] = useState<any[]>([]);
   const controller: AbortController = new AbortController();
-
+  const router = useIonRouter();
   const getOrders = async () => {
     try {
       const data = await axios(`${url}/api/products`, {
@@ -60,20 +62,22 @@ const Shop: React.FC = () => {
           ))}
         {orders.map((order, index) => (
           <IonCard
+            color="warning"
             key={index}
             onClick={() => {
-              console.log("clicked");
-            }}
+              router.push(`/app/home/orders/details/${order.product_id}`)
+             }}
           >
             <IonCardContent className="ion-no-padding">
-              <IonItem lines="none">
+              <IonItem lines="none"   color="warning">
                 <IonImg
-                  src={`${url}${JSON.parse(order.product_images)[0].url}`}
+                  src={`${url}${jsonCheck(order.product_images)[0].url}`}
                   className="ion-image ion-margin-top"
                   alt="hello"
                 />
               </IonItem>
               <IonItem
+                color="warning"
                 lines="none"
                 className="ion-margin-top ion-margin-bottom"
               >
