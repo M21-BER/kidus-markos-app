@@ -1,0 +1,7 @@
+.add-order-image-btns {
+  display: flex;
+}
+.add-order-image-btns ion-button {
+  flex: 1;
+  text-transform: capitalize;
+}
