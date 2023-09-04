@@ -1,9 +1,10 @@
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonMenuButton, IonButton, IonIcon, IonSearchbar,} from "@ionic/react"
-import { trashBinOutline } from "ionicons/icons";
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonIcon, IonSearchbar,} from "@ionic/react"
+import { logOutOutline,logInOutline } from "ionicons/icons";
 interface Props{
   title?:string;
 }
 export const ToolBarMain:React.FC<Props> = ({title})=> {
+  const logged =  false;
   return (
     <IonHeader>
       <IonToolbar color="primary">
@@ -12,7 +13,7 @@ export const ToolBarMain:React.FC<Props> = ({title})=> {
           <IonButton onClick={()=>{}}>
             <IonIcon
               slot="icon-only"
-              icon={trashBinOutline}
+              icon={logged?logOutOutline:logInOutline}
               color={"light"}
             />
           </IonButton>
@@ -31,7 +32,7 @@ export const ToolBarDetails:React.FC<Props> = ({title})=> {
       <IonToolbar color="primary">
        <IonTitle>{title || "KM"}</IonTitle>
         <IonButtons slot="start">
-          <IonBackButton  defaultHref="/app">
+          <IonBackButton  defaultHref="/">
           </IonBackButton>
         </IonButtons>
       </IonToolbar>

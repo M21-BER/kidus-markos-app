@@ -65,11 +65,11 @@ const Shop: React.FC = () => {
             color="warning"
             key={index}
             onClick={() => {
-              router.push(`/app/home/orders/details/${order.product_id}`)
+              router.push(`/orderDetails/${order.product_id}`)
              }}
           >
             <IonCardContent className="ion-no-padding">
-              <IonItem lines="none"   color="warning">
+              <IonItem lines="none" color="warning">
                 <IonImg
                   src={`${url}${jsonCheck(order.product_images)[0].url}`}
                   className="ion-image ion-margin-top"

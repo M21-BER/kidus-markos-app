@@ -1,4 +1,4 @@
-import {useIonRouter } from '@ionic/react';
+import {IonPage, useIonRouter } from '@ionic/react';
 
 import React, { useRef } from 'react';
 import {ToolBarMain} from '../../components/ToolBar/ToolBar';
@@ -39,7 +39,7 @@ const Register: React.FC = () => {
     
    }
     return (
-        <>
+      <IonPage>
             <ToolBarMain title='Sign up'/>
             <RegisterContent 
              first_name={first_name} 
@@ -49,7 +49,7 @@ const Register: React.FC = () => {
              phone_number={phone_number} 
              password={password} 
              handleSubmit={handleSubmit}/>
-        </>
+       </IonPage>
     );
 };
 

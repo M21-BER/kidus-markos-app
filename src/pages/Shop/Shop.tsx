@@ -65,7 +65,7 @@ const Shop: React.FC = () => {
           color='warning'
             key={index}
             onClick={() => {
-             router.push(`/app/home/shops/details/${shop.s_product_id}`)
+             router.push(`/shopDetails/${shop.s_product_id}`)
             }}
           >  
             <IonCardContent className="ion-no-padding">

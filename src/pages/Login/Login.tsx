@@ -1,4 +1,4 @@
-import {useIonLoading, useIonRouter } from '@ionic/react';
+import {IonPage, useIonLoading, useIonRouter } from '@ionic/react';
 
 import { useEffect, useState } from 'react';
 import Intro from '../../components/Intro/Intro';
@@ -57,7 +57,7 @@ const  Login: React.FC = () => {
   };
 
     return (
-        <>
+      <IonPage>
         {
             !introSeen?<Intro onFinish={finishIntro}/>:(  
             <>
@@ -71,7 +71,7 @@ const  Login: React.FC = () => {
             </>)
             
         }
-        </>
+          </IonPage>
       
     );
 };

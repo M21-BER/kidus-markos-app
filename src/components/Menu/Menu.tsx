@@ -35,19 +35,21 @@ const Menu: React.FC = () => {
           } 
         </IonTabBar>
         <IonRouterOutlet>
-            <Route path="/app/settings" component={Settings} exact/>
-            <Route path="/app/login" component={Login} exact/>
-            <Route path="/app/register" component={Register} exact/>
-            {/* ....Redirect.... */}
-            <Route path="/app" exact><Redirect to="/app/home"/></Route>
-            <Route path="/login" exact><Redirect to="/app/login"/></Route>
-            <Route path="/register" exact><Redirect to="/app/register"/></Route>
-            {/* ....Last.... */}
-            <Route   path="/app/home" component={Home} />
-            <Route  exact path="/app/home/shop/details/payment" component={Payment} />
-            <Route  exact path="/app/home/shops/details/:id" component={ShopDetails} />
-            <Route  exact path="/app/home/orders/addOrder/:id" component={AddOrder} />
-            <Route  exact path="/app/home/orders/details/:id" component={OrderDetails} />
+            {/* ....Redirect Start.... */}
+            <Redirect exact path="/" to="/app/home"/>
+            <Redirect exact path="/login" to="/app/login"/>
+            <Redirect exact path="/register" to="/app/register"/>
+            <Redirect exact path="/settings" to="/app/settings"/>
+            {/* ....Redirect End.... */}
+            
+            <Route path="/app/home" component={Home} />
+            <Route path="/app/settings" render={() => <Settings />} exact/>
+            <Route path="/app/login" render={() => <Login />} exact/>
+            <Route path="/app/register" render={() => <Register />} exact/>
+            <Route path="/payment" render={() => <Payment />} exact={true}/>
+            <Route path="/shopDetails/:id" render={() => <ShopDetails />} exact={true}/>
+            <Route path="/orderDetails/:id" render={() => <OrderDetails />} exact={true}/>
+            <Route path="/addOrder/:id" render={() => <AddOrder />} exact={true}/>
         </IonRouterOutlet>
       </IonTabs>
     </IonPage>

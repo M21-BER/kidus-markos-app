@@ -13,7 +13,7 @@ const OrderDetails: React.FC = () => {
     const router = useIonRouter();
     const [detail,isPending,error] = useAxios(`${url}/api/products/${id.id}`);
     const orderProduct = ()=>{
-      router.push(`/app/home/orders/addOrder/${id.id}`)
+      router.push(`/addOrder/${id.id}`)
     }
     if(!isPending){
     // console.log(detail);

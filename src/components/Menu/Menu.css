@@ -1,4 +1,4 @@
-/* ion-tab-bar {
+ion-tab-bar {
   bottom: 0;
   position: relative;
   border-radius: 16px;
@@ -22,4 +22,4 @@ ion-tab-button::before {
 }
 ion-tab-button.tab-selected::before {
   background-color: var(--ion-color-primary);
-} */
+}

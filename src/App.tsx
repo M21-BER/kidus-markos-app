@@ -32,15 +32,18 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonPage>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route path="/register" component={Menu}/>
-          <Route path="/app" component={Menu} />
-          <Route path="/login" component={Menu}/>
+          <Route path="/" component={Menu} />
+          <Route exact path="/register" component={Menu}/>
+          <Route exact path="/login" component={Menu}/>
+          <Route exact path="/settings" component={Menu}/>
+          <Route exact path="/shopDetails/:id" component={Menu}/>
+          <Route exact path="/orderDetails/:id" component={Menu}/>
+          <Route exact path="/addOrder/:id" component={Menu}/>
+          <Route exact path="/payment" component={Menu}/>
         </IonRouterOutlet>
       </IonReactRouter>
-    </IonPage>
   </IonApp>
 );
 
