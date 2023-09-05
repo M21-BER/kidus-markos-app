@@ -35,6 +35,16 @@ const Shop: React.FC = () => {
       return data.data;
     } catch (error: any) {
       if (error.name !== "CanceledError") {
+        if(error.response){
+          if(error.response.data){
+             if(error.response.data.error){
+                if(error.response.data.error.message){
+                   console.log(error.response.data.error.message)
+              }
+             }
+          }
+  
+      }
       }
     }
   };
@@ -73,7 +83,7 @@ const Shop: React.FC = () => {
                 <IonImg
                   src={`${url}${jsonCheck(shop.s_product_images)[0].url}`}
                   className="ion-image ion-margin-top"
-                  alt="hello"
+                  alt={jsonCheck(shop.s_product_images)[0].url}
                 />
               </IonItem>
               <IonItem

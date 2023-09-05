@@ -1,0 +1,21 @@
+.ErrorFallBack {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  text-align: center;
+  gap: 5px;
+}
+.ErrorFallBack p {
+  color: rgba(0, 0, 0, 0.7);
+}
+.ErrorFallBack h1 span {
+  vertical-align: middle;
+}
+.ErrorFallBack h1 span:nth-of-type(2) {
+  position: relative;
+  top: 3px;
+  margin-left: 5px;
+}
