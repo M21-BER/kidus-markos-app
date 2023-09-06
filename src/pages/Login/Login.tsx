@@ -48,7 +48,7 @@ const  Login: React.FC = () => {
       dismiss();
       console.log(clientIdentity.current?.value);
       console.log(password.current?.value);
-      router.push('/app/home', 'root','replace');
+      router.push('/', 'root','replace');
     }, 2000);
    }
    const finishIntro = async () => {

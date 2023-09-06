@@ -1,6 +1,6 @@
 import {IonIcon, IonLabel, IonPage, IonRouterOutlet,IonTabBar, IonTabButton, IonTabs} from '@ionic/react';
 import React from 'react';
-import {calendarOutline, cartSharp, homeSharp, settingsSharp } from 'ionicons/icons';
+import {calendarOutline, cartSharp, homeSharp, personCircleSharp } from 'ionicons/icons';
 import { Redirect, Route } from 'react-router';
 import './Menu.css'
 import Home from '../../pages/Home/Home';
@@ -11,13 +11,14 @@ import Settings from '../../pages/Settings/Settings';
 import ShopDetails from '../../pages/Shop/ShopDetails';
 import Payment from '../../pages/Shop/Payment';
 import AddOrder from '../../pages/Order/AddOrder';
+import Account from '../../pages/Account/Account';
 
 const Menu: React.FC = () => {
   const paths:{name:string,url:string,icon:string}[] = [
     { name: 'Home', url: '/app/home', icon: homeSharp },
     { name: 'Cart', url: '/app/settings', icon: cartSharp },
     { name: 'Order', url: '/app/settings', icon: calendarOutline },
-    { name: 'Settings', url: '/app/settings', icon: settingsSharp },
+    { name: 'Account', url: '/app/account', icon: personCircleSharp },
   ];
   return (
     <IonPage>
@@ -39,10 +40,12 @@ const Menu: React.FC = () => {
             <Redirect exact path="/" to="/app/home"/>
             <Redirect exact path="/login" to="/app/login"/>
             <Redirect exact path="/register" to="/app/register"/>
+            <Redirect exact path="/account" to="/app/account"/>
             <Redirect exact path="/settings" to="/app/settings"/>
             {/* ....Redirect End.... */}
             
             <Route path="/app/home" component={Home} />
+            <Route path="/app/account" render={() => <Account />} exact/>
             <Route path="/app/settings" render={() => <Settings />} exact/>
             <Route path="/app/login" render={() => <Login />} exact/>
             <Route path="/app/register" render={() => <Register />} exact/>

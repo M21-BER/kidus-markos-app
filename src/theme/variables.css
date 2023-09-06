@@ -73,7 +73,18 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 }
-
+ion-toolbar {
+  --color: white;
+  --min-height: 30px;
+}
+ion-toolbar:nth-of-type(1) {
+  --padding-top: 10px;
+  --padding-bottom: 5px;
+}
+ion-toolbar:nth-of-type(2) {
+  --padding-top: 5px;
+  --padding-bottom: 10px;
+}
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
