@@ -32,6 +32,8 @@ const ShopDetails: React.FC = () => {
       if(cartE.value){
       const parse = jsonCheck(cartE.value);
       if(parse.includes(id)){
+        console.log("Hello");
+        
        setCartExist(false)
       }
       }

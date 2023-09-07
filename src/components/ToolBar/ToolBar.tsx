@@ -40,7 +40,7 @@ export const ToolBarMain:React.FC<Props> = ({title})=> {
         },
       })
     }else{
-      router.push('/app/login','root')
+      router.push('/app/login','root','replace')
     }
   }
   return (

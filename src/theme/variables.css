@@ -85,6 +85,20 @@ ion-toolbar:nth-of-type(2) {
   --padding-top: 5px;
   --padding-bottom: 10px;
 }
+ion-toast {
+  --background: #3d3d3d;
+  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  --color: #ffffff;
+}
+/* ion-input:focus,
+ion-input:hover {
+  border: 0;
+  outline: none;
+}
+ion-input.ionInput {
+  border: 1px solid red;
+  border-radius: 10px;
+} */
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors

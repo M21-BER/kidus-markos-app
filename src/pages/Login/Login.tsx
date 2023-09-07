@@ -1,83 +1,118 @@
-import {IonPage, useIonLoading, useIonRouter } from '@ionic/react';
-
-import { useEffect, useState } from 'react';
-import Intro from '../../components/Intro/Intro';
+import {IonPage, useIonLoading, useIonRouter,useIonToast } from '@ionic/react';
 import { Preferences } from '@capacitor/preferences';
 import LoginContent from './LoginContent';
 import {ToolBarMain} from '../../components/ToolBar/ToolBar';
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import axios from 'axios';
-import { url } from '../../utils/utils';
-const INTRO_KEY = 'intro-seen';
+import { login_key, url } from '../../utils/utils';
+import { errorResponse } from '../../utils/errorResponse';
+import { checkmarkCircleOutline, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
+import { useUser } from '../../hooks/useUser';
+import Loader from '../../components/UI/Loader/Loader';
 
-
-const  Login: React.FC = () => {
-
+const  Login: React.FC  = () => {
    const clientIdentity = useRef<null | HTMLIonInputElement>(null);
    const password = useRef<null | HTMLIonInputElement>(null);
    const router = useIonRouter(); 
-   
-   const [introSeen,setIntroSeen] = useState(true);
    const [present, dismiss] = useIonLoading();
-   useEffect(() => {
-    const checkStorage = async () => {
-      const seen = await Preferences.get({ key: INTRO_KEY });
-      setIntroSeen(seen.value === 'true');
-    };
-    checkStorage();
-  }, []);
+   const [presentToast] = useIonToast(); 
 
-  
-   const handleSubmit = async (event:any)=>{
-    event.preventDefault();
-    await present('Logging in...');
-    //  (async()=>{
-    //   try {
-    //    const data :object = {
-    //     clientIdentity: clientIdentity.current?.value,
-    //     password:password.current?.value
-    //    }
-    //    const login = axios.get(`${url}/clients/login`,data); 
-    //    dismiss(); 
-    //    router.push('/app', 'root')
-    //   } catch (error) {
-    //    dismiss();
-    //   }
-    //  })()
-    setTimeout(async () => {
-      dismiss();
-      console.log(clientIdentity.current?.value);
-      console.log(password.current?.value);
-      router.push('/', 'root','replace');
-    }, 2000);
+   const [user,logged,isPending] = useUser();
+   useEffect(()=>{
+    if(!isPending){
+      if(logged){
+     router.push('/app/home','root','replace')
+      }
    }
-   const finishIntro = async () => {
-    setIntroSeen(true);
-    Preferences.set({ key: INTRO_KEY, value: 'true' });
-  };
+   },[isPending,logged])
+   
+  const handleSubmit = async (event:any)=>{
+  event.preventDefault();
 
+  const data :any = {
+  clientIdentity: clientIdentity.current?.value,
+  password:password.current?.value
+  }
+  async function login(){
+  try {
+  await present('Logging in...');
+  const login = await axios.post(`${url}/api/clients/login`,data); 
+  dismiss(); 
+  if(login.data.status === "true" || login.status === 200){
+  if(login.data.client && login.data.token){
+  const userData = {
+    ...login.data.client,
+    token: login.data.token,
+    logged:true,
+  }
+  Preferences.set({ key: login_key, value: JSON.stringify(userData)});
+  presentToast({
+    message: login.data.message,
+    duration: 3000,
+    position: "bottom",
+    icon:checkmarkCircleOutline,
+  });
+  router.push('/', 'root','replace');
+  }else{
+  throw new Error("Oops, something went wrong. Please try again")
+  }
+  }else{
+  throw new Error("Oops, something went wrong. Please try again")
+  } 
+  } catch (error) {
+  dismiss();
+  const {message,status} = errorResponse(error)
+  if(message && status){
+  presentToast({
+  message: message,
+  duration: 3000,
+  position: "bottom",
+  icon:closeCircleOutline,
+
+  });
+  }else{
+  presentToast({
+  message: "Oops, something went wrong. Please try again",
+  duration: 3000,
+  position: "bottom",
+  icon:closeCircleOutline,
+
+  });
+  }
+
+  }
+  }
+  if(data.clientIdentity && data.password){
+  login();
+  }else{
+  presentToast({
+  message: "user credentials can not be empty.",
+  duration: 3000,
+  position: "bottom",
+  icon:informationCircleOutline,
+  });
+  }
+  }
+  if(isPending){
     return (
-      <IonPage>
-        {
-            !introSeen?<Intro onFinish={finishIntro}/>:(  
-            <>
-              <ToolBarMain title="Sign in"/>
-               <LoginContent 
-               handleSubmit={handleSubmit}
-               clientIdentity={clientIdentity} 
-               password={password}
-               />
-               
-            </>)
-            
-        }
-          </IonPage>
-      
-    );
+     <Loader/>
+    ) 
+ }else{
+  return (
+    <IonPage>
+          <>
+            <ToolBarMain title="Sign in"/>
+              <LoginContent 
+              handleSubmit={handleSubmit}
+              clientIdentity={clientIdentity} 
+              password={password}
+              />
+          </>
+        </IonPage>
+    
+  );
+
+ }
 };
 
 export default  Login;
-
-
-
-
