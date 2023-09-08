@@ -8,8 +8,8 @@ import Login from '../../pages/Login/Login';
 import OrderDetails from '../../pages/Order/OrderDetails';
 import Register from '../../pages/Register/Register';
 import Settings from '../../pages/Settings/Settings';
-import ShopDetails from '../../pages/Shop/ShopDetails';
-import Payment from '../../pages/Shop/Payment';
+import ShopDetails from '../../pages/Shop/ShopDetails/ShopDetails';
+import Payment from '../../pages/Shop/payment/Payment';
 import AddOrder from '../../pages/Order/AddOrder';
 import Account from '../../pages/Account/Account';
 

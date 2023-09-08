@@ -1,12 +1,12 @@
 import {IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonImg, IonItem, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
-import { ToolBarDetails } from '../../components/ToolBar/ToolBar';
-import { useAxios } from '../../hooks/useAxios';
-import { jsonCheck, url } from '../../utils/utils';
-import image1 from '../../assets/banks/01.png'
-import image2 from '../../assets/banks/02.png'
-import image3 from '../../assets/banks/03.png'
-import image4 from '../../assets/banks/04.png'
+import { ToolBarDetails } from '../../../components/ToolBar/ToolBar';
+import { useAxios } from '../../../hooks/useAxios';
+import { jsonCheck, url } from '../../../utils/utils';
+import image1 from '../../../assets/banks/01.png'
+import image2 from '../../../assets/banks/02.png'
+import image3 from '../../../assets/banks/03.png'
+import image4 from '../../../assets/banks/04.png'
 import './Payment.css'
 import { informationCircleSharp } from 'ionicons/icons';
 const Payment: React.FC = () => {

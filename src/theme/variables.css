@@ -73,6 +73,12 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 }
+ion-card {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
+ion-button {
+  text-transform: capitalize;
+}
 ion-toolbar {
   --color: white;
   --min-height: 30px;

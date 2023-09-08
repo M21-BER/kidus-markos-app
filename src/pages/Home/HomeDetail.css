@@ -63,6 +63,56 @@
   color: #202020;
   word-break: break-all;
 }
+.km-card-content .pickColorParent {
+  border-radius: 5px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.km-card-content div.pickColorParent > div {
+  border-radius: 5px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5px 0;
+  background: rgba(54, 23, 5, 0.3);
+}
+.km-card-content div.pickColorParent > div ion-icon {
+  margin-left: 10px;
+}
+.km-card-content div.pickColorParent > div p {
+  color: inherit;
+  padding: 5px;
+  margin-left: auto;
+  text-shadow: 1px 1px 1px #000;
+  margin-right: 10px;
+}
+.km-detail-review {
+}
+.km-detail-review ion-input,
+.km-detail-review ion-input:focus {
+  border: 0 !important;
+  outline: none !important;
+}
+.review-card-parent {
+  position: relative;
+}
+div.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px;
+}
+div.review-card ion-text:nth-of-type(1) {
+  font-size: 13px;
+}
+div.review-card ion-text:nth-of-type(2) {
+  font-size: 12px;
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
 @media screen and (max-width: 300px) {
   .km-btns {
     flex-direction: column;
