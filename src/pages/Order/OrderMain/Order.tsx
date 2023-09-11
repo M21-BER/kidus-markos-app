@@ -1,23 +1,16 @@
 import {
-  IonCard,
-  IonCardContent,
-  IonChip,
   IonContent,
-  IonImg,
-  IonItem,
-  IonLabel,
   IonPage,
   IonRefresher,
   IonRefresherContent,
   useIonViewWillEnter,
-  useIonRouter,
+  useIonLoading
 } from "@ionic/react";
 import { useState } from "react";
 import "../../Home/Home.css";
 import "../../Home/HomeDetail.css";
 import axios from "axios";
-import { failMessage, jsonCheck, url } from "../../../utils/utils";
-import Home_Skeleton from "../../Home/Home_Skeleton";
+import { failMessage, url } from "../../../utils/utils";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import OrderList from "./OrderList";
 import OrderSkeleton from "./OrderSkeleton";
@@ -26,7 +19,7 @@ const Shop: React.FC = () => {
   const [error, setError] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const controller: AbortController = new AbortController();
-  const router = useIonRouter();
+  const [present, dismiss] = useIonLoading();
   const getOrders = async () => {
     try {
       const data = await axios(`${url}/api/products`, {
@@ -55,15 +48,24 @@ const Shop: React.FC = () => {
   });
 
   const doRefresh = async (event: any) => {
+    setLoading(true);
     const data = await getOrders();
     setOrders(data);
+    setLoading(false);
     event.detail.complete();
   };
-
+  const reload= async () => {
+    setLoading(true);
+    await present("Refreshing...");
+    const data = await getOrders();
+    dismiss();
+    setOrders(data);
+    setLoading(false);
+  };
   if (error) {
     return (
       <IonPage>
-        <ErrorFallBack error={error} />
+         <ErrorFallBack error={error} reload={reload}/>
       </IonPage>
     );
   } else {
@@ -71,7 +73,7 @@ const Shop: React.FC = () => {
       <IonPage>
         <IonContent>
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
-            <IonRefresherContent />
+           {!loading && <IonRefresherContent />}
           </IonRefresher>
           <OrderSkeleton loading={loading} />
           <OrderList orders={orders} />

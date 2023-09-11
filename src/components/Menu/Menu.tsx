@@ -40,7 +40,7 @@ const Menu: React.FC = () => {
   return (
     <IonPage>
       <IonTabs>
-        <IonTabBar slot="bottom" color="warning">
+        <IonTabBar className="bottom-tab-km" slot="bottom" color="warning">
           {paths.map((item, index) => {
             return (
               <IonTabButton

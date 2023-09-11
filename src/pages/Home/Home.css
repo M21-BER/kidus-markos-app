@@ -1,5 +1,5 @@
 ion-item:hover {
-  --background: #5cffa8;
+  --background: grey;
   --color: var(--ion-color-dark);
 }
 
@@ -8,8 +8,11 @@ ion-item {
 }
 
 ion-item::part(detail-icon) {
-  color: #ff00ff;
+  color: grey;
   opacity: 1;
+}
+.home-card {
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 .ion-image {
   width: 100%;

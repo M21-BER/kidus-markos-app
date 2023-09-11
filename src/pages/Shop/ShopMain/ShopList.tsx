@@ -27,6 +27,7 @@ const ShopList: React.FC<Props> = ({ shops }) => {
       <>
         {shops.map((shop, index) => (
           <IonCard
+          className="home-card"
             color="warning"
             key={index}
             onClick={() => {
@@ -44,14 +45,15 @@ const ShopList: React.FC<Props> = ({ shops }) => {
               <IonItem
                 color="warning"
                 lines="none"
-                className="ion-margin-top ion-margin-bottom"
-              >
-                <IonLabel>
-                  <IonLabel className="card-title">
+                className="ion-margin-top ion-margin-bottom">      
+                 <IonLabel>
+                 <IonLabel className="card-title">
                     {shop.s_product_name}
                   </IonLabel>
-                  <p>{shop.s_product_category}</p>
-                </IonLabel>
+                 <small style={{color:"grey"}}>
+                 {shop.s_product_category}
+                 </small>
+                 </IonLabel>
                 <IonChip slot="end" color="primary">
                   {`${shop.s_product_price}.ETB`}
                 </IonChip>

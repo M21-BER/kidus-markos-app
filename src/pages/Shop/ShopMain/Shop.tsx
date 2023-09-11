@@ -4,6 +4,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   useIonViewWillEnter,
+  useIonLoading
 } from "@ionic/react";
 import React, { useState } from "react";
 import axios from "axios";
@@ -15,6 +16,7 @@ import ShopSkeleton from "./ShopSkeleton";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [present, dismiss] = useIonLoading();
   const [shops, setShops] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const controller: AbortController = new AbortController();
@@ -46,15 +48,25 @@ const Shop: React.FC = () => {
   });
 
   const doRefresh = async (event: any) => {
+    setLoading(true);
     const data = await getShops();
     setShops(data);
+    setLoading(false);
     event.detail.complete();
+  };
+  const reload= async () => {
+    setLoading(true);
+     await present("Refreshing...");
+    const data = await getShops();
+    dismiss();
+    setShops(data);   
+    setLoading(false);
   };
 
   if (error) {
     return (
       <IonPage>
-        <ErrorFallBack error={error} />
+        <ErrorFallBack error={error} reload={reload}/>
       </IonPage>
     );
   } else {
@@ -62,7 +74,7 @@ const Shop: React.FC = () => {
       <IonPage>
         <IonContent>
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
-            <IonRefresherContent />
+          {!loading && <IonRefresherContent />}
           </IonRefresher>
           <ShopSkeleton loading={loading} />
           <ShopList shops={shops} />

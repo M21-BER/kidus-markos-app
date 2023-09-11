@@ -27,6 +27,7 @@ const OrderList: React.FC<Props> = ({ orders }) => {
       <>
         {orders.map((order, index) => (
           <IonCard
+          className="home-card"
             color="warning"
             key={index}
             onClick={() => {

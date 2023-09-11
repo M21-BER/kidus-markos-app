@@ -1,18 +1,19 @@
-ion-tab-bar {
+ion-tab-bar.bottom-tab-km {
   bottom: 0;
   position: relative;
-  border-radius: 16px;
   width: 100%;
   margin: 0 auto;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
-ion-tab-button {
+ion-tab-bar.bottom-tab-km ion-tab-button {
   position: relative;
   top: 1px;
   --color: var(--ion-color-medium);
   --color-selected: var(--ion-color-primary);
 }
-ion-tab-button::before {
+ion-tab-bar.bottom-tab-km ion-tab-button::before {
   background-color: transparent;
   display: block;
   content: "";
@@ -20,6 +21,6 @@ ion-tab-button::before {
   width: 20px;
   height: 2px;
 }
-ion-tab-button.tab-selected::before {
+ion-tab-bar.bottom-tab-km ion-tab-button.tab-selected::before {
   background-color: var(--ion-color-primary);
 }
