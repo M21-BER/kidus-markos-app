@@ -1,14 +1,14 @@
-import { useIonToast } from "@ionic/react";
-
-const [present] = useIonToast();
-
-export const Toast = (msg:string,icon:string,color?:string)=>{
-    present({
-      message: msg,
-      duration: 3000,
-      position: "bottom",
-      icon:icon,
-      color:color?color:"primary"
-    });
-  }
-
+export const Toast = (
+  presentIonToast: any,
+  msg: string,
+  icon: string,
+  color?: string
+) => {
+  presentIonToast({
+    message: msg,
+    duration: 3000,
+    position: "bottom",
+    icon: icon,
+    color: color ? color : "primary",
+  });
+};

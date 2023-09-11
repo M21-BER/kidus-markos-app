@@ -1,18 +1,11 @@
-import {IonPage} from "@ionic/react";
+import { IonPage } from "@ionic/react";
 import HomeTab from "./HomeTab";
-import {ToolBarMain} from "../../components/ToolBar/ToolBar";
-import { useUser } from "../../hooks/useUser";
+import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 
 const Home: React.FC = () => {
-  
-  const [user,logged,isPending] = useUser();
-  if(!isPending){
-     if(!logged){
-     }
-  }
   return (
     <IonPage>
-      <ToolBarMain  title="Home"/>
+      <ToolBarMain title="Home" />
       <HomeTab />
     </IonPage>
   );

@@ -1,0 +1,38 @@
+div.form-app {
+  width: 100%;
+  height: 100vh;
+  overflow: scroll;
+  padding: 15px 25px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+div.form-app > div.form-app-core {
+  margin-top: 30%;
+  width: 100%;
+}
+div.form-app > div.form-app-core-login {
+  margin-top: 50%;
+  padding-bottom: 25%;
+}
+div.form-app > div.form-app-core form,
+div.form-app > div.form-app-core section {
+  width: 100%;
+}
+div.form-app > div.form-app-core form ion-input {
+  margin-bottom: 7%;
+}
+div.form-app > div.form-app-core h3 {
+  color: grey;
+  text-align: center;
+  margin-bottom: 40px;
+}
+div.form-app > div.form-app-core h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+div.form-app > div.form-app-core ion-button > * {
+  vertical-align: middle;
+}

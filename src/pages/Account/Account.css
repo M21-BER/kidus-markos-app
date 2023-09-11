@@ -1,0 +1,26 @@
+.account-list > div {
+  padding: 15px 10px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
+}
+.account-list > div > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.account-list > div > ion-text {
+  margin-left: 5px;
+}
+div.reset-last-div {
+  text-align: center;
+  text-decoration: underline;
+}
+@media screen and (max-width: 300px) {
+  .km-btns-acc {
+    flex-direction: column;
+  }
+}

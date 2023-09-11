@@ -113,6 +113,13 @@ div.review-card ion-text:nth-of-type(2) {
   bottom: 5px;
   right: 10px;
 }
+.NDA {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 @media screen and (max-width: 300px) {
   .km-btns {
     flex-direction: column;

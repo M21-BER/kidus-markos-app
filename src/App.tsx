@@ -25,6 +25,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import "./theme/shared.css";
 
 /* Pages, Screens & Components */
 import Menu from "./components/Menu/Menu";
@@ -32,19 +33,20 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/" component={Menu} />
-          <Route exact path="/register" component={Menu}/>
-          <Route exact path="/login" component={Menu}/>
-          <Route exact path="/account" component={Menu}/>
-          <Route exact path="/settings" component={Menu}/>
-          <Route exact path="/shopDetails/:id" component={Menu}/>
-          <Route exact path="/orderDetails/:id" component={Menu}/>
-          <Route exact path="/addOrder/:id" component={Menu}/>
-          <Route exact path="/payment" component={Menu}/>
-        </IonRouterOutlet>
-      </IonReactRouter>
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <Route path="/" component={Menu} />
+        <Route exact path="/register" component={Menu} />
+        <Route exact path="/reset" component={Menu} />
+        <Route exact path="/login" component={Menu} />
+        <Route exact path="/account" component={Menu} />
+        <Route exact path="/settings" component={Menu} />
+        <Route exact path="/shopDetails/:id" component={Menu} />
+        <Route exact path="/orderDetails/:id" component={Menu} />
+        <Route exact path="/addOrder/:id" component={Menu} />
+        <Route exact path="/payment" component={Menu} />
+      </IonRouterOutlet>
+    </IonReactRouter>
   </IonApp>
 );
 
