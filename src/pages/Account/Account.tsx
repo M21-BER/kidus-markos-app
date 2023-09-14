@@ -16,7 +16,7 @@ import {
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 import "./Account.css";
 import { useUser } from "../../hooks/useUser";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Loader from "../../components/UI/Loader/Loader";
 import {
   briefcaseOutline,
@@ -67,7 +67,7 @@ const Account: any = () => {
     return (
       <IonPage>
         <ToolBarMain />
-        <IonContent className="ion-padding">
+        <IonContent className="ion-no-padding">
           <IonCard>
             <IonCardHeader>
               <IonCardTitle color="medium" className="ion-text-center">
@@ -78,66 +78,87 @@ const Account: any = () => {
               <IonList className="account-list">
                 <div>
                   <div>
-                    <IonIcon icon={personOutline} />
+                    <IonIcon color="primary" icon={personOutline} />
                     <IonLabel>User:</IonLabel>
                   </div>
-                  <IonText>
+                <div>
+                <IonText>
                     {user.first_name && user.last_name
                       ? `${user.first_name} ${user.last_name}`
                       : ""}
                   </IonText>
                 </div>
+                </div>
+
                 <div>
                   <div>
-                    <IonIcon icon={callOutline} />
+                    <IonIcon color="primary" icon={callOutline} />
                     <IonLabel> Phone Number:</IonLabel>
                   </div>
-                  <IonText>
+                <div>
+                <IonText>
                     {user.phone_number ? user.phone_number : ""}
                   </IonText>
                 </div>
+                </div>
+                
                 <div>
                   <div>
-                    <IonIcon icon={mailOutline} />
+                    <IonIcon color="primary" icon={mailOutline} />
                     <IonLabel>Email:</IonLabel>
                   </div>
-                  <IonText> {user.email ? user.email : ""}</IonText>
+                 <div>
+                 <IonText>Neil_Oberbrunner65@hotmail.com</IonText>
+                 </div>
                 </div>
+
                 <div>
                   <div>
-                    <IonIcon icon={cartOutline} />
+                    <IonIcon color="primary"icon={cartOutline} />
                     <IonLabel>Shop Count:</IonLabel>
                   </div>
+                  <div>
                   <IonText>{user.shop_count ? user.shop_count : 0}</IonText>
+                  </div>
                 </div>
+
                 <div>
                   <div>
-                    <IonIcon icon={briefcaseOutline} />
+                    <IonIcon color="primary" icon={briefcaseOutline} />
                     <IonLabel>Order Count:</IonLabel>
                   </div>
-                  <IonText>{user.order_count ? user.order_count : 0}</IonText>
+                 <div>
+                 <IonText>{user.order_count ? user.order_count : 0}</IonText>
+                 </div>
                 </div>
+
                 <div className="reset-last-div" onClick={handleDeleteAccount}>
-                  <IonIcon icon={trashBinOutline} />
-                  <IonText>Delete Account</IonText>
+                <div>  <IonIcon color="primary" icon={trashBinOutline} /></div>
+                 <div>
+                 <IonText>Delete Account</IonText>
+                 </div>
                 </div>
                 <div
                   className="reset-last-div"
                   onClick={handleModal}
                   id="open-modal"
                 >
-                  <IonIcon icon={createOutline} />
-                  <IonText>Update Account</IonText>
+                 <div><IonIcon color="primary" icon={createOutline} /></div>
+                 <div>
+                 <IonText>Update Account</IonText>
+                 </div>
                 </div>
                 <div className="reset-last-div" onClick={handleModal}>
-                  <IonIcon icon={createOutline} />
-                  <IonText>My Orders</IonText>
+                   <div> <IonIcon color="primary" icon={createOutline} /></div>
+                <div>
+                <IonText>My Orders</IonText>
+                </div>
                 </div>
               </IonList>
             </IonCardContent>
           </IonCard>
         </IonContent>
-        <UpdateAccount openModal={openModal} setOpenModal={setOpenModal} />
+        <UpdateAccount user={user} openModal={openModal} setOpenModal={setOpenModal} />
       </IonPage>
     );
   }

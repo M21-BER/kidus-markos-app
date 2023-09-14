@@ -1,18 +1,14 @@
 import {
-  IonCardContent,
   IonInput,
   IonButton,
   IonIcon,
-  IonCard,
-  IonCardHeader,
   IonContent,
-  IonTitle,
   IonRadio,
   IonRadioGroup,
   IonLabel,
-  IonHeader,
+
 } from "@ionic/react";
-import { logInOutline, createOutline } from "ionicons/icons";
+import { createOutline } from "ionicons/icons";
 import "../../Register/Radio.css";
 interface Props {
   handleSubmit: (event: React.FormEvent) => void;
@@ -22,6 +18,7 @@ interface Props {
   email: React.MutableRefObject<HTMLIonInputElement | null>;
   phone_number: React.MutableRefObject<HTMLIonInputElement | null>;
   password: React.MutableRefObject<HTMLIonInputElement | null>;
+  user:any
 }
 
 const UpdateAccountContent: React.FC<Props> = ({
@@ -32,6 +29,7 @@ const UpdateAccountContent: React.FC<Props> = ({
   email,
   phone_number,
   password,
+  user
 }) => {
   return (
     <IonContent className="ion-padding">
@@ -43,6 +41,7 @@ const UpdateAccountContent: React.FC<Props> = ({
           </h3>
           <form onSubmit={handleSubmit}>
             <IonInput
+              value={user.first_name?user.first_name:""}
               ref={first_name}
               name="first_name"
               fill="outline"
@@ -54,6 +53,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required
             ></IonInput>
             <IonInput
+              value={user.last_name?user.last_name:""}
               ref={last_name}
               name="last_name"
               fill="outline"
@@ -66,7 +66,7 @@ const UpdateAccountContent: React.FC<Props> = ({
             ></IonInput>
             <IonRadioGroup
               name="gender"
-              value="Male"
+              value={user.gender?user.gender:"Male"}
               ref={gender}
               className="ion-margin-top custom-radio-km"
             >
@@ -79,6 +79,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               </IonRadio>
             </IonRadioGroup>
             <IonInput
+              value={user.email?user.email:""}
               ref={email}
               name="email"
               fill="outline"
@@ -90,6 +91,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required
             ></IonInput>
             <IonInput
+              value={user.phone_number?user.phone_number:""}
               ref={phone_number}
               name="phone_number"
               fill="outline"
@@ -97,17 +99,6 @@ const UpdateAccountContent: React.FC<Props> = ({
               label="Phone Number"
               placeholder="+251---"
               type="text"
-              className="ion-margin-top"
-              required
-            ></IonInput>
-            <IonInput
-              ref={password}
-              name="password"
-              fill="outline"
-              labelPlacement="stacked"
-              label="Password"
-              placeholder="password"
-              type="password"
               className="ion-margin-top"
               required
             ></IonInput>

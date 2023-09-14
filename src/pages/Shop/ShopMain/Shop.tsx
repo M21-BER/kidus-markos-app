@@ -6,7 +6,7 @@ import {
   useIonViewWillEnter,
   useIonLoading
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import "../../Home/Home.css";
@@ -14,12 +14,14 @@ import "../../Home/HomeDetail.css";
 import ShopList from "./ShopList";
 import ShopSkeleton from "./ShopSkeleton";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
+import { UserContext } from "../../../context/AuthContext";
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [present, dismiss] = useIonLoading();
   const [shops, setShops] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const controller: AbortController = new AbortController();
+  const {user,isAuthed}= useContext(UserContext)
   const getShops = async () => {
     try {
       const data = await axios(`${url}/api/shops`, {
@@ -47,6 +49,7 @@ const Shop: React.FC = () => {
     setLoading(false);
   });
 
+  
   const doRefresh = async (event: any) => {
     setLoading(true);
     const data = await getShops();
@@ -62,7 +65,8 @@ const Shop: React.FC = () => {
     setShops(data);   
     setLoading(false);
   };
-
+  console.log(user);
+  
   if (error) {
     return (
       <IonPage>

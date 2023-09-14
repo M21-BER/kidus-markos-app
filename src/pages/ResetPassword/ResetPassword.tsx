@@ -9,7 +9,7 @@ import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 import { useEffect, useRef } from "react";
 import { useUser } from "../../hooks/useUser";
 import Loader from "../../components/UI/Loader/Loader";
-
+import './Reset.css'
 const ResetPassword: React.FC = () => {
   const email = useRef<null | HTMLIonInputElement>(null);
   const otp = useRef<null | HTMLIonInputElement>(null);
@@ -18,21 +18,21 @@ const ResetPassword: React.FC = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const [user, logged, isPending] = useUser();
-  useEffect(() => {
-    if (!isPending) {
-      if (logged) {
-        router.push("/app/home", "root", "replace");
-      }
-    }
-  }, [isPending, logged]);
+  const {user, isAuthed} = useUser();
+  // useEffect(() => {
+  //   if (!isPending) {
+  //     if (logged) {
+  //       router.push("/app/home", "root", "replace");
+  //     }
+  //   }
+  // }, [isPending, logged]);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
   let id = 10;
   let token = "dfhf";
 
-  if (isPending) {
+  if (isAuthed) {
     return <Loader />;
   } else {
     return (

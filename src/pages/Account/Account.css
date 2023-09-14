@@ -1,5 +1,5 @@
 .account-list > div {
-  padding: 15px 10px;
+  padding: 12px 10px;
   margin: 8px 0;
   display: flex;
   align-items: center;
@@ -7,20 +7,26 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   vertical-align: middle;
 }
-.account-list > div > div {
+.account-list > div > div:nth-of-type(1) {
   display: flex;
   align-items: center;
   gap: 5px;
 }
-.account-list > div > ion-text {
+.account-list > div > div:nth-of-type(2) {
+  overflow-x: scroll;
+  white-space: nowrap;
   margin-left: 5px;
+  padding: 7px 0;
 }
 div.reset-last-div {
   text-align: center;
   text-decoration: underline;
 }
+div.reset-last-div > div:nth-of-type(2) {
+  margin-left: 5px;
+}
 @media screen and (max-width: 300px) {
-  .km-btns-acc {
-    flex-direction: column;
+  .account-list > div > div:nth-of-type(1) ion-label {
+    display: none;
   }
 }

@@ -9,7 +9,7 @@ import {
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import { useParams } from "react-router";
 import { useAxios } from "../../../hooks/useAxios";
-import { url, jsonCheck } from "../../../utils/utils";
+import { url, jsonCheck, CART_KEY } from "../../../utils/utils";
 import ImageComponent from "../../../components/UI/Image";
 import "../../Home/HomeDetail.css";
 import {
@@ -31,7 +31,6 @@ import { errorResponse } from "../../../utils/errorResponse";
 import { Toast } from "../../../utils/CustomToast";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import { useUser } from "../../../hooks/useUser";
-const CART_KEY = "KidusMarkosCart436";
 
 const ShopDetails: React.FC = () => {
   const id: any = useParams();
@@ -58,9 +57,11 @@ const ShopDetails: React.FC = () => {
     const checkCart = async () => {
       const cartE = await Preferences.get({ key: CART_KEY });
       if (cartE.value) {
-        const parse: number[] = jsonCheck(cartE.value);
-        if (parse.includes(parseInt(id.id))) {
-          setCartExist(true);
+        const parse: any = jsonCheck(cartE.value);
+        if (parse) {
+          if (parseInt(id.id) === parseInt(parse.id)) {
+            setCartExist(true);
+          }
         }
       }
     };
@@ -126,12 +127,23 @@ const ShopDetails: React.FC = () => {
     try {
       const cartIDS = await Preferences.get({ key: CART_KEY });
       if (cartIDS.value) {
-        const ids: number[] = jsonCheck(cartIDS.value);
-        ids.push(parseInt(id.id));
+        const ids: any[] = jsonCheck(cartIDS.value);
+        const savedcartData = {
+          id:parseInt(id.id),
+          name:detail.product.s_product_name,
+          mode:detail.product.s_product_category,
+          price:detail.product.s_product_price,
+        }
+        ids.push(savedcartData);
         Preferences.set({ key: CART_KEY, value: JSON.stringify(ids) });
       } else {
-        const new_ids: number[] = [];
-        new_ids.push(parseInt(id.id));
+        const new_ids: any[] = [];
+        new_ids.push({
+          id:parseInt(id.id),
+          name:detail.product.s_product_name,
+          price:detail.product.s_product_price,
+          mode:detail.product.s_product_category,
+        });
         Preferences.set({ key: CART_KEY, value: JSON.stringify(new_ids) });
       }
       setCartExist(true);
@@ -149,10 +161,13 @@ const ShopDetails: React.FC = () => {
   const shopping = () => {
     router.push("/payment");
   };
+  const reload= ()=>{
+
+  }
   if (error) {
     return (
       <IonPage>
-        <ErrorFallBack error={error} />
+        <ErrorFallBack error={error} reload={reload}/>
       </IonPage>
     );
   } else {

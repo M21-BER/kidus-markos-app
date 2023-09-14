@@ -8,7 +8,7 @@ import {
 import { Preferences } from "@capacitor/preferences";
 import LoginContent from "./LoginContent";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import axios from "axios";
 import { login_key, url, failMessage } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
@@ -17,9 +17,8 @@ import {
   closeCircleOutline,
   informationCircleOutline,
 } from "ionicons/icons";
-// import { useUser } from "../../hooks/useUser";
-// import Loader from "../../components/UI/Loader/Loader";
 import { Toast } from "../../utils/CustomToast";
+import { UserContext } from "../../context/AuthContext";
 
 const Login: React.FC = () => {
   const clientIdentity = useRef<null | HTMLIonInputElement>(null);
@@ -27,15 +26,13 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
+  const {isAuthed} = useContext(UserContext)
+  useEffect(() => {
+    if (isAuthed) {
+       router.goBack();
+    }
+  }, [isAuthed]);
 
-  // const [user, logged, isPending] = useUser();
-  // useEffect(() => {
-  //   if (!isPending) {
-  //     if (logged) {
-  //       router.push("/app/home", "root", "replace");
-  //     }
-  //   }
-  // }, [isPending, logged]);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
@@ -73,8 +70,17 @@ const Login: React.FC = () => {
         dismiss();
         const { message, status } = errorResponse(error);
         if (message && status) {
+          if(status === 404){
+            reset(clientIdentity);   
+            reset(password);
+          }
+          if(status === 422){
+            reset(password);
+          }
           Toast(presentIonToast, message, closeCircleOutline);
         } else {
+          reset(clientIdentity);        
+          reset(password);
           Toast(presentIonToast, failMessage, closeCircleOutline);
         }
       }
@@ -88,13 +94,8 @@ const Login: React.FC = () => {
         informationCircleOutline
       );
     }
-    reset(clientIdentity);
-    reset(password);
   };
-
-  // if (isPending) {
-  //   return <Loader />;
-  // } else {
+  
   return (
     <IonPage>
       <>
@@ -107,7 +108,6 @@ const Login: React.FC = () => {
       </>
     </IonPage>
   );
-  // }
 };
 
 export default Login;

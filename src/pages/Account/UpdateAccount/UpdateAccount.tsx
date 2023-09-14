@@ -11,8 +11,9 @@ import { OverlayEventDetail } from "@ionic/core/components";
 interface Props {
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  user:any;
 }
-const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal }) => {
+const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal,user }) => {
   const first_name = useRef<null | HTMLIonInputElement>(null);
   const last_name = useRef<null | HTMLIonInputElement>(null);
   const gender = useRef<null | HTMLIonRadioGroupElement>(null);
@@ -21,6 +22,7 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal }) => {
   const password = useRef<null | HTMLIonInputElement>(null);
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+   
     //  router.goBack();
 
     //  (async()=>{
@@ -72,6 +74,7 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal }) => {
         </IonToolbar>
       </IonHeader>
       <RegisterContent
+        user={user}
         first_name={first_name}
         last_name={last_name}
         gender={gender}

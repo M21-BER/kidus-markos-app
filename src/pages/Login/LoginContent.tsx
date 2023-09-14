@@ -1,6 +1,5 @@
 import {
   IonContent,
-  IonGrid,
   IonRow,
   IonCol,
   IonCard,
@@ -10,10 +9,13 @@ import {
   IonInput,
   IonButton,
   IonIcon,
+  IonText,
+  useIonRouter,
 } from "@ionic/react";
-import { logInOutline, createOutline } from "ionicons/icons";
+import { logInOutline, eyeOff, eye } from "ionicons/icons";
 import Logo from "../../assets/Logo.png";
-
+import './Login.css'
+import { useState } from "react";
 interface Props {
   handleSubmit: (e: React.FormEvent) => void;
   clientIdentity: React.MutableRefObject<HTMLIonInputElement | null>;
@@ -24,6 +26,17 @@ const LoginContent: React.FC<Props> = ({
   clientIdentity,
   password,
 }) => {
+   const router = useIonRouter();
+   const [showPassword,setShowPassword] = useState<boolean>(false)
+  const handleLoginAction = (btn:number)=>{
+   if(btn === 1){
+    router.push("/app/register", "root");
+   } 
+   else if(btn === 2){
+    router.push("/app/reset", "root");
+   }
+  }
+  
   return (
     <IonContent className="ion-padding">
       <div className="form-app">
@@ -60,26 +73,35 @@ const LoginContent: React.FC<Props> = ({
                         labelPlacement="floating"
                         label="Password"
                         placeholder="password"
-                        type="password"
-                      ></IonInput>
+                        type={showPassword?"text":"password"}
+                      >
+                      </IonInput>
+                      <small  id="password-icon-parent">
+                        
+                        <IonIcon
+                      onClick={()=>{
+                       setShowPassword(!showPassword)
+                        
+                      }}     
+                      id="password-icon"
+                      color="medium"
+                      icon={showPassword?eye:eyeOff}
+                        />
+                        <span>show password</span>
+                        </small>
                       <IonButton
                         className="ion-margin-top"
                         type="submit"
                         expand="block"
                       >
-                        Sign In <IonIcon icon={logInOutline} slot="end" />{" "}
+                        
+                        Sign In <IonIcon icon={logInOutline} slot="end" />
                       </IonButton>
-                      <IonButton
-                        fill="clear"
-                        size="small"
-                        color={"medium"}
-                        routerLink="/app/register"
-                        className="ion-margin-top"
-                        type="button"
-                        expand="block"
-                      >
-                        Sign up <IonIcon icon={createOutline} slot="end" />{" "}
-                      </IonButton>
+                     <div className="pass-res">
+                     <IonText onClick={()=>{handleLoginAction(1)}}>Sign up</IonText>
+                     <IonText onClick={()=>{handleLoginAction(2)}}>Forget Password?</IonText>
+                     </div>
+                    
                     </form>
                   </IonCardContent>
                 </IonCard>

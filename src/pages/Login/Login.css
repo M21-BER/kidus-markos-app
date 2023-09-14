@@ -1,0 +1,44 @@
+.pass-res {
+  text-align: center;
+  color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 5px;
+  margin-top: 20px;
+}
+.pass-res ion-text {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+.pass-res ion-text:hover {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(54, 23, 5, 0.1);
+}
+
+small#password-icon-parent {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-start;
+  padding-left: 7px;
+  align-items: center;
+  color: grey;
+}
+
+ion-icon#password-icon {
+  top: 10px;
+  font-size: 14px;
+}
+@media (max-width: 300px) {
+  .pass-res {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pass-res ion-text {
+    width: 100%;
+  }
+  small#password-icon-parent {
+    justify-content: center;
+  }
+}
