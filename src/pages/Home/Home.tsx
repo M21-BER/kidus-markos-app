@@ -5,13 +5,7 @@ import { useUser } from "../../hooks/useUser";
 import { useEffect } from "react";
 
 const Home: React.FC = () => {
-  const {isAuthed} = useUser();
-  const router = useIonRouter();
-  useEffect(() => {
-    if (isAuthed) {
-       router.goBack();
-    }
-  }, []);
+  // const {refresh} = useUser();
 
   return (
     <IonPage>

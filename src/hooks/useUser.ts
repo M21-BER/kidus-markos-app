@@ -6,11 +6,16 @@ import jwt_decode from "jwt-decode";
 const useUser = () => {
   const [user, setUser] = useState<any>(null);
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
   const removeUser = async () => {
     await Preferences.remove({ key: login_key });
     setUser(null);
     setIsAuthed(false);
+    setUpdate(false);
   };
+  const refresh = ()=>{
+   setUpdate(true); 
+  }
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -23,6 +28,7 @@ const useUser = () => {
             if (userD.exp * 1000 > currentDate.getTime()) {
               setUser(parsedUserData);
               setIsAuthed(true);
+              setUpdate(false);
             } else {
               await removeUser();
             }
@@ -32,16 +38,18 @@ const useUser = () => {
         } else {
           setUser(null);
           setIsAuthed(false);
+          setUpdate(false);
         }
       } catch (error) {
         setUser(null);
         setIsAuthed(false);
+        setUpdate(false);
       }
     };
     checkUser();
-  }, []);
+  }, [update]);
 
-  return { user, isAuthed };
+  return { user, isAuthed,refresh };
 };
 
 export { useUser };

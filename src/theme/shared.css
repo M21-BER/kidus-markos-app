@@ -8,11 +8,21 @@ div.form-app {
   left: 0;
   bottom: 0;
 }
+div.form-app span.lg {
+  display: inline;
+}
+div.form-app span.sm {
+  display: none;
+}
 div.form-app > div.form-app-core {
   margin-top: 30%;
   width: 100%;
 }
-div.form-app > div.form-app-core-login {
+div.form-app > div.form-app-core ion-text {
+  line-height: 1.5;
+}
+div.form-app > div.form-app-core-login,
+div.form-app > div.form-app-core-register {
   margin-top: 50%;
   /* padding-bottom: 25%; */
 }
@@ -24,9 +34,8 @@ div.form-app > div.form-app-core form ion-input {
   margin-bottom: 7%;
 }
 div.form-app > div.form-app-core h3 {
-  color: grey;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 div.form-app > div.form-app-core h3 {
   display: flex;
@@ -35,4 +44,15 @@ div.form-app > div.form-app-core h3 {
 }
 div.form-app > div.form-app-core ion-button > * {
   vertical-align: middle;
+}
+@media screen and (max-width: 300px) {
+  div.form-app span.lg {
+    display: none;
+  }
+  div.form-app span.sm {
+    display: inline;
+  }
+  div.form-app > div.form-app-core-register {
+    margin-top: 60%;
+  }
 }

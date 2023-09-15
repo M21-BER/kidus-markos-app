@@ -26,7 +26,7 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const { isAuthed } = useContext(UserContext);
+  const { isAuthed,refresh } = useContext(UserContext);
   useEffect(() => {
     if (isAuthed) {
       router.goBack();
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
         await present("Logging in...");
         const login = await axios.post(`${url}/api/clients/login`, data);
         dismiss();
-        if (login.data.status === "true" || login.status === 200) {
+        if (login.data.status === true || login.status === 200) {
           if (login.data.client && login.data.token) {
             const userData = {
               ...login.data.client,
@@ -59,6 +59,7 @@ const Login: React.FC = () => {
               value: JSON.stringify(userData),
             });
             Toast(presentIonToast, login.data.message, checkmarkCircleOutline);
+              
             router.push("/", "root", "replace");
           } else {
             throw new Error(failMessage);

@@ -10,11 +10,13 @@ import {
   IonItem,
   useIonRouter,
   useIonAlert,
+  useIonToast,
 } from "@ionic/react";
-import { logOutOutline, logInOutline } from "ionicons/icons";
+import { logOutOutline, logInOutline, checkmarkCircleOutline, informationCircleOutline } from "ionicons/icons";
 import { logout } from "../../utils/logout";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../../context/AuthContext";
+import { Toast } from "../../utils/CustomToast";
 
 interface Props {
   title?: string;
@@ -22,7 +24,8 @@ interface Props {
 export const ToolBarMain: React.FC<Props> = ({ title }) => {
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
-  const { isAuthed } = useContext(UserContext);
+  const { isAuthed,refresh } = useContext(UserContext);
+  const [presentIonToast] = useIonToast();
   const handleUserToolBar = () => {
     if (isAuthed) {
       presentAlert({
@@ -39,14 +42,17 @@ export const ToolBarMain: React.FC<Props> = ({ title }) => {
           {
             text: "OK",
             role: "confirm",
-            handler: () => {
-              logout();
+            handler: async() => {
+             const status:boolean = await logout();
+               if(status){
+                refresh!();
+                Toast(presentIonToast, "Sign out successfully!", checkmarkCircleOutline);        
+               }else{
+                Toast(presentIonToast, "Sign out failed, please try again later!", informationCircleOutline); 
+               }
             },
           },
         ],
-        // onDidDismiss: (e: CustomEvent) => {
-        //   // setRoleMessage(`Dismissed with role: ${e.detail.role}`)
-        // },
       });
     } else {
       router.push("/app/login", "root", "replace");
