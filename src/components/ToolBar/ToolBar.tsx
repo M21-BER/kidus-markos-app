@@ -13,7 +13,7 @@ import {
 } from "@ionic/react";
 import { logOutOutline, logInOutline } from "ionicons/icons";
 import { logout } from "../../utils/logout";
-import { useContext, useState } from "react";
+import { useContext, useRef } from "react";
 import { UserContext } from "../../context/AuthContext";
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 export const ToolBarMain: React.FC<Props> = ({ title }) => {
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
-  const {isAuthed} = useContext(UserContext);
+  const { isAuthed } = useContext(UserContext);
   const handleUserToolBar = () => {
     if (isAuthed) {
       presentAlert({
@@ -52,23 +52,11 @@ export const ToolBarMain: React.FC<Props> = ({ title }) => {
       router.push("/app/login", "root", "replace");
     }
   };
-  const IonToolbarResultParent:object = {
-   position:'relative',
-   background:'blue',
-  }
-  const IonToolbarResultChild:object = {
-   position:'absolute',
-   width:'100%',
-   left:'0',
-   bottom:'-1px',
-  //  background:'red',
-   height:'300px'
-  }
-  const [serach,setSearch] = useState();
-  const handleSearchChange = (e:any)=>{
-   console.log(e.detail.value);
-    
-  }
+  const searchValue = useRef<null | HTMLIonSearchbarElement>(null);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(searchValue.current?.value);
+  };
   return (
     <IonHeader>
       <IonToolbar color="primary">
@@ -86,10 +74,9 @@ export const ToolBarMain: React.FC<Props> = ({ title }) => {
       </IonToolbar>
       <IonToolbar color="primary">
         <IonItem color="primary">
-          <section style={IonToolbarResultParent}>
-          <IonSearchbar onIonInput={handleSearchChange} value={serach}/>
-          <div style={IonToolbarResultChild}></div>
-          </section>
+          <form onSubmit={handleSearch}>
+            <IonSearchbar ref={searchValue} />
+          </form>
         </IonItem>
       </IonToolbar>
     </IonHeader>

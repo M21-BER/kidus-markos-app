@@ -26,10 +26,10 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const {isAuthed} = useContext(UserContext)
+  const { isAuthed } = useContext(UserContext);
   useEffect(() => {
     if (isAuthed) {
-       router.goBack();
+      router.goBack();
     }
   }, [isAuthed]);
 
@@ -70,16 +70,16 @@ const Login: React.FC = () => {
         dismiss();
         const { message, status } = errorResponse(error);
         if (message && status) {
-          if(status === 404){
-            reset(clientIdentity);   
+          if (status === 404) {
+            reset(clientIdentity);
             reset(password);
           }
-          if(status === 422){
+          if (status === 422) {
             reset(password);
           }
           Toast(presentIonToast, message, closeCircleOutline);
         } else {
-          reset(clientIdentity);        
+          reset(clientIdentity);
           reset(password);
           Toast(presentIonToast, failMessage, closeCircleOutline);
         }
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
       );
     }
   };
-  
+
   return (
     <IonPage>
       <>
