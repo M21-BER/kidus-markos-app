@@ -20,7 +20,7 @@ import {
 import CustomSlider from "../../../components/slider/custom.slider";
 import { formatDistance } from "date-fns";
 import { Preferences } from "@capacitor/preferences";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ColorList from "./ColorList";
 import Description from "./Description";
 import ActionControls from "./ActionControls";
@@ -30,12 +30,12 @@ import axios from "axios";
 import { errorResponse } from "../../../utils/errorResponse";
 import { Toast } from "../../../utils/CustomToast";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
-import { useUser } from "../../../hooks/useUser";
+import { UserContext } from "../../../context/AuthContext";
 
 const ShopDetails: React.FC = () => {
   const id: any = useParams();
   const [detail, isPending, error, setUpdate] = useAxios(
-    `${url}/api/shops/${id.id}`
+    `${url}/api/shops/index/${id.id}`
   );
   let distance: any = null;
   let colors: any = null;
@@ -43,8 +43,8 @@ const ShopDetails: React.FC = () => {
   const [cartExist, setCartExist] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
-  const [present] = useIonToast();
-  const { user, isAuthed } = useUser();
+  const [presentIonToast] = useIonToast();
+  const { user, isAuthed } = useContext(UserContext);
   if (!isPending) {
     distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
       addSuffix: true,
@@ -84,24 +84,24 @@ const ShopDetails: React.FC = () => {
           msg: review.current?.value,
           reviewTime: Date.now(),
         });
-        const reviewPatchRes = await axios.patch(
-          `${url}/api/shops/${id}/empty`,
+       await axios.patch(
+          `${url}/api/shops/${id.id}/empty`,
           { s_product_reviews },
           {
             headers: {
-              Authorization: `Basic ${user.token}`,
+              Authorization: user.token,
             },
           }
         );
         setUpdate(true);
-        Toast(present, "Review Added Successfully", checkmarkCircleOutline);
+        Toast(presentIonToast, "Review Added Successfully", checkmarkCircleOutline);
       } catch (error) {
         const { message, status } = errorResponse(error);
         if (status && status == 401) {
-          Toast(present, message, informationCircleOutline);
+          Toast(presentIonToast, message, informationCircleOutline);
         } else {
           Toast(
-            present,
+            presentIonToast,
             "Review not added please try again!",
             informationCircleOutline
           );
@@ -110,16 +110,13 @@ const ShopDetails: React.FC = () => {
     };
     if (isAuthed) {
       if (!review.current?.value) {
-        present({
-          message: "Please write your message first",
-          duration: 3000,
-          position: "bottom",
-          icon: informationCircleOutline,
-          color: "primary",
-        });
+        Toast(presentIonToast,"Please write your message first",informationCircleOutline)
       } else {
         addReview();
       }
+    }else{
+      Toast(presentIonToast,"Please login first",informationCircleOutline);
+      return router.push('/app/login')
     }
     reset(review);
   };
@@ -147,13 +144,7 @@ const ShopDetails: React.FC = () => {
         Preferences.set({ key: CART_KEY, value: JSON.stringify(new_ids) });
       }
       setCartExist(true);
-      present({
-        message: "Item have been Added to Cart 🗸 ",
-        duration: 3000,
-        position: "bottom",
-        icon: cartSharp,
-        color: "primary",
-      });
+      Toast(presentIonToast,"Item have been Added to Cart 🗸 ",cartSharp);
     } catch (error) {
       console.log("error on adding cart");
     }
