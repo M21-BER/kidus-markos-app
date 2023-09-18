@@ -1,9 +1,12 @@
+ion-content {
+  position: relative;
+}
 div.form-app {
   width: 100%;
   min-height: 100%;
   overflow: scroll;
   padding: 15px 25px;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -15,7 +18,7 @@ div.form-app span.sm {
   display: none;
 }
 div.form-app > div.form-app-core {
-  margin-top: 30%;
+  margin-top: 10%;
   width: 100%;
 }
 div.form-app > div.form-app-core ion-text {
@@ -23,8 +26,10 @@ div.form-app > div.form-app-core ion-text {
 }
 div.form-app > div.form-app-core-login,
 div.form-app > div.form-app-core-register {
-  margin-top: 50%;
-  /* padding-bottom: 25%; */
+  margin-top: 5%;
+}
+div.form-app > div.form-app-core-reset {
+  margin-top: 20%;
 }
 div.form-app > div.form-app-core form,
 div.form-app > div.form-app-core section {
@@ -45,6 +50,12 @@ div.form-app > div.form-app-core h3 {
 div.form-app > div.form-app-core ion-button > * {
   vertical-align: middle;
 }
+.alert-message {
+  line-height: 25px !important;
+}
+/* ion-input.code-placeholder input::placeholder {
+  letter-spacing: 10px;
+} */
 @media screen and (max-width: 300px) {
   div.form-app span.lg {
     display: none;

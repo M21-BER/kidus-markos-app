@@ -4,13 +4,14 @@ import {
   useIonLoading,
   useIonRouter,
   useIonToast,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { Preferences } from "@capacitor/preferences";
 import LoginContent from "./LoginContent";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { login_key, url, failMessage } from "../../utils/utils";
+import { login_key, url, failMessage, SIGNUP_KEY } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
 import {
   checkmarkCircleOutline,
@@ -26,13 +27,40 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const { isAuthed,refresh } = useContext(UserContext);
-  useEffect(() => {
-    if (isAuthed) {
-      router.goBack();
-    }
-  }, [isAuthed]);
+  const { isAuthed, refresh, wait } = useContext(UserContext);
+  const [stat, setStat] = useState<boolean>(false);
 
+  // useEffect(() => {
+  //   if (isAuthed) {
+  //     router.goBack();
+  //   }
+  // }, [isAuthed]);
+  // useEffect(() => {
+  //   if (!isAuthed) {
+  //     getSignStatus();
+  //   }
+  // }, []);
+  // console.log(isAuthed);
+
+  // if (!wait) {
+  //   console.log(isAuthed);
+  // }
+
+  // useIonViewWillEnter(() => {
+  //   refresh!();
+  // });
+  const getSignStatus = async () => {
+    try {
+      const SData = await Preferences.get({ key: SIGNUP_KEY });
+      if (SData && SData.value) {
+        setStat(true);
+      } else {
+        setStat(false);
+      }
+    } catch (error) {
+      setStat(false);
+    }
+  };
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
@@ -58,8 +86,8 @@ const Login: React.FC = () => {
               key: login_key,
               value: JSON.stringify(userData),
             });
+            refresh!();
             Toast(presentIonToast, login.data.message, checkmarkCircleOutline);
-              
             router.push("/", "root", "replace");
           } else {
             throw new Error(failMessage);
@@ -105,6 +133,7 @@ const Login: React.FC = () => {
           handleSubmit={handleSubmit}
           clientIdentity={clientIdentity}
           password={password}
+          stat={stat}
         />
       </>
     </IonPage>

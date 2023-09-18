@@ -6,16 +6,38 @@ import jwt_decode from "jwt-decode";
 const useUser = () => {
   const [user, setUser] = useState<any>(null);
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
+  const [wait, setWait] = useState<boolean>(true);
   const [update, setUpdate] = useState<boolean>(false);
   const removeUser = async () => {
     await Preferences.remove({ key: login_key });
+    setWait(false);
     setUser(null);
     setIsAuthed(false);
     setUpdate(false);
   };
-  const refresh = ()=>{
-   setUpdate(true); 
-  }
+  const refresh = () => {
+    setUpdate(true);
+  };
+  const updateSavedData = (Data: any) => {
+    const usd = async () => {
+      try {
+        const userData = await Preferences.get({ key: login_key });
+        if (userData && userData.value) {
+          Preferences.set({
+            key: login_key,
+            value: JSON.stringify(Data),
+          });
+          setWait(false);
+          setUser(userData);
+          setIsAuthed(true);
+          setUpdate(false);
+        }
+      } catch (error) {
+        await removeUser();
+      }
+    };
+    usd();
+  };
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -26,6 +48,7 @@ const useUser = () => {
             let currentDate = new Date();
             const userD: any = jwt_decode(parsedUserData.token);
             if (userD.exp * 1000 > currentDate.getTime()) {
+              setWait(false);
               setUser(parsedUserData);
               setIsAuthed(true);
               setUpdate(false);
@@ -36,11 +59,13 @@ const useUser = () => {
             await removeUser();
           }
         } else {
+          setWait(false);
           setUser(null);
           setIsAuthed(false);
           setUpdate(false);
         }
       } catch (error) {
+        setWait(false);
         setUser(null);
         setIsAuthed(false);
         setUpdate(false);
@@ -49,7 +74,7 @@ const useUser = () => {
     checkUser();
   }, [update]);
 
-  return { user, isAuthed,refresh };
+  return { user, isAuthed, refresh, wait, updateSavedData };
 };
 
 export { useUser };

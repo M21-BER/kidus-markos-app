@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { failMessage, url } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
-import { useIonToast } from "@ionic/react";
+import { useIonRouter, useIonToast } from "@ionic/react";
 
 interface Props {
   email: React.MutableRefObject<HTMLIonInputElement | null>;
@@ -36,7 +36,7 @@ const ResetPasswordContent: React.FC<Props> = ({
   const [resetState, setResetState] = useState<number>(0);
   const [generatedOTP, seGeneratedOTP] = useState<number>(0);
   const [userTempo, setUserTempo] = useState<any>(null);
-
+  const router = useIonRouter();
   const sendOTP = async (value: any) => {
     const OTP = Math.floor(Math.random() * 9000 + 1000);
     seGeneratedOTP(OTP);
@@ -45,7 +45,7 @@ const ResetPasswordContent: React.FC<Props> = ({
         recipient_email: value,
         OTP: OTP,
       });
-       
+
       if (mailer.status === 200 && mailer.data.status === true) {
         setUserTempo(mailer.data);
         setResetState(1);
@@ -72,7 +72,7 @@ const ResetPasswordContent: React.FC<Props> = ({
     );
     const checkEmail = async () => {
       try {
-        await present("verifying...");
+        await present("checking...");
         const changeEmailRes = await axios.get(
           `${url}/api/clients/searchMany/${inputEmail}`
         );
@@ -120,35 +120,28 @@ const ResetPasswordContent: React.FC<Props> = ({
     reset(email);
   };
 
-  const handleOtpSubmit = async(e: React.FormEvent) => {
+  const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const inputOtp = otp.current?.value;
-    if(inputOtp){
-    if (generatedOTP == inputOtp) {
-      Toast(
-        presentIonToast,
-        "code validated successfully",
-        checkmarkCircleOutline
-      );
-      dismiss();
-      reset(otp);
-      setResetState(2);
-
+    if (inputOtp) {
+      if (generatedOTP == inputOtp) {
+        Toast(
+          presentIonToast,
+          "code validated successfully",
+          checkmarkCircleOutline
+        );
+        reset(otp);
+        setResetState(2);
+      } else {
+        Toast(
+          presentIonToast,
+          "code mismatch please try again",
+          informationCircleOutline
+        );
+      }
     } else {
       dismiss();
-      Toast(
-        presentIonToast,
-        "code mismatch please try again",
-        informationCircleOutline
-      );
-    }
-    }else{
-    dismiss();
-    Toast(
-      presentIonToast,
-      "code can not be empty",
-      informationCircleOutline
-    );
+      Toast(presentIonToast, "code can not be empty", informationCircleOutline);
     }
   };
 
@@ -162,12 +155,12 @@ const ResetPasswordContent: React.FC<Props> = ({
     async function resetPassword() {
       try {
         await present("Resetting...");
-        const changePassword = await axios.post(
+        const changePassword = await axios.patch(
           `${url}/api/clients/${userTempo.client_id}`,
-          { password: newPassword },
+          { password: newPass },
           {
             headers: {
-              Authorization: `Basic ${userTempo.token}`,
+              Authorization: userTempo.token,
             },
           }
         );
@@ -176,13 +169,13 @@ const ResetPasswordContent: React.FC<Props> = ({
           changePassword.data.status === true ||
           changePassword.status === 200
         ) {
-          if (changePassword.data.client && changePassword.data.token) {
+          if (changePassword.data.updatedItem) {
             Toast(
               presentIonToast,
               changePassword.data.message,
               checkmarkCircleOutline
             );
-            // router.push("/", "root", "replace");
+            router.push("/app/login", "root", "replace");
           } else {
             throw new Error(failMessage);
           }
@@ -209,21 +202,34 @@ const ResetPasswordContent: React.FC<Props> = ({
     }
     if (newPass && repeatPass) {
       if (newPass == repeatPass) {
-         if(strongPassword.test(newPass.toString())){
-          resetPassword();
-         }else{
+        if (newPass.toString().length >= 6) {
+          if (newPass.toString().length <= 19) {
+            if (strongPassword.test(newPass.toString())) {
+              resetPassword();
+            } else {
+              Toast(
+                presentIonToast,
+                "password not strong enough",
+                informationCircleOutline,
+                6000
+              );
+            }
+          } else {
+            Toast(
+              presentIonToast,
+              "password length must be below 32 character",
+              informationCircleOutline
+            );
+          }
+        } else {
           Toast(
             presentIonToast,
-            "password not strong enough",
-            informationCircleOutline,6000
+            "password length must be at least 6 character",
+            informationCircleOutline
           );
-         }
+        }
       } else {
-        Toast(
-          presentIonToast,
-          "password mismatch, please confirm password",
-          informationCircleOutline
-        );
+        Toast(presentIonToast, "password mismatch", informationCircleOutline);
       }
     } else {
       Toast(
@@ -233,12 +239,26 @@ const ResetPasswordContent: React.FC<Props> = ({
       );
     }
     reset(newPassword);
+    reset(repeatPassword);
   };
-   
+
+  const handleOTPChange = (e: any) => {
+    if (e.detail.value.length >= 4) {
+      // @ts-ignore
+      otp.current.value = parseInt(e.detail.value.toString().slice(0, 4));
+    }
+  };
+
   if (resetState === 0) {
     return <EnterEmail email={email} handleEmailSubmit={handleEmailSubmit} />;
   } else if (resetState === 1) {
-    return <OTP otp={otp} handleOtpSubmit={handleOtpSubmit} />;
+    return (
+      <OTP
+        otp={otp}
+        handleOTPChange={handleOTPChange}
+        handleOtpSubmit={handleOtpSubmit}
+      />
+    );
   } else if (resetState === 2) {
     return (
       <ChangePassword

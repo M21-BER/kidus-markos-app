@@ -10,6 +10,7 @@ import {
   IonInput,
   IonRow,
   IonText,
+  IonTitle,
 } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import { useState } from "react";
@@ -25,67 +26,68 @@ const ChangePassword: React.FC<Props> = ({
   repeatPassword,
   handleUpdatePasswordSubmit,
 }) => {
-   
-  const [showPassword,setShowPassword] = useState<boolean>(false)
-   return (
-    <IonContent scrollY={true} className="ion-padding">
-    <IonGrid fixed>
-      <IonRow class="ion-justify-content-center">
-        <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
-          <IonCard color="warning">
-            <IonCardHeader>
-              <IonText>Change Password</IonText>
-            </IonCardHeader>
-            <IonCardContent>
-              <form onSubmit={handleUpdatePasswordSubmit}>
-                <IonInput
-                  className="ionInput"
-                  ref={newPassword}
-                  fill="outline"
-                  labelPlacement="floating"
-                  label="New Password"
-                  placeholder="New password"
-                  type={showPassword?"text":"password"} 
-                ></IonInput>
-                <IonInput
-                  className="ionInput ion-margin-top"
-                  ref={repeatPassword}
-                  fill="outline"
-                  labelPlacement="floating"
-                  label="Repeat Password"
-                  placeholder="Repeat Password"
-                  type={showPassword?"text":"password"} 
-                ></IonInput>
-                  <small  id="password-icon-parent">
-                        
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  return (
+    <IonContent scrollY={true} className="ion-no-padding">
+      <div className="form-app reset-email-screen-center">
+        <div>
+          <IonGrid>
+            <IonRow class="ion-justify-content-center">
+              <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
+                <IonCard color="warning">
+                  <IonCardHeader>
+                    <IonTitle className="margin-bottom ion-text-center">
+                      Change Password
+                    </IonTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <form onSubmit={handleUpdatePasswordSubmit}>
+                      <IonInput
+                        className="ionInput"
+                        ref={newPassword}
+                        fill="outline"
+                        aria-label="new password"
+                        placeholder="New password"
+                        type={showPassword ? "text" : "password"}
+                        required={false}
+                      ></IonInput>
+                      <IonInput
+                        className="ionInput ion-margin-top ion-margin-bottom"
+                        ref={repeatPassword}
+                        fill="outline"
+                        aria-label="confirm password"
+                        placeholder="confirm password"
+                        type={showPassword ? "text" : "password"}
+                        required={false}
+                      ></IonInput>
+                      <small id="password-icon-parent">
                         <IonIcon
-                      onClick={()=>{
-                       setShowPassword(!showPassword)
-                        
-                      }}     
-                      id="password-icon"
-                      color="medium"
-                      icon={showPassword?eye:eyeOff}
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
+                          id="password-icon"
+                          color="medium"
+                          icon={showPassword ? eye : eyeOff}
                         />
                         <span>show password</span>
-                        </small>
-                <IonButton
-                  className="ion-margin-top"
-                  type="submit"
-                  expand="block"
-                >
-                  Update Password
-                </IonButton>
-              </form>
-            </IonCardContent>
-          </IonCard>
-        </IonCol>
-      </IonRow>
-    </IonGrid>
-  </IonContent>
-   )
-
-  
+                      </small>
+                      <IonButton
+                        className="ion-margin-top"
+                        type="submit"
+                        expand="block"
+                      >
+                        Update Password
+                      </IonButton>
+                    </form>
+                  </IonCardContent>
+                </IonCard>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </div>
+      </div>
+    </IonContent>
+  );
 };
 
 export default ChangePassword;

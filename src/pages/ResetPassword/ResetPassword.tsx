@@ -1,10 +1,16 @@
-import { IonPage, useIonLoading, useIonRouter } from "@ionic/react";
+import {
+  IonPage,
+  useIonLoading,
+  useIonRouter,
+  useIonViewWillEnter,
+} from "@ionic/react";
 import ResetPasswordContent from "./ResetPasswordContent";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useUser } from "../../hooks/useUser";
 import Loader from "../../components/UI/Loader/Loader";
 import "./Reset.css";
+import { UserContext } from "../../context/AuthContext";
 const ResetPassword: React.FC = () => {
   const email = useRef<null | HTMLIonInputElement>(null);
   const otp = useRef<null | HTMLIonInputElement>(null);
@@ -12,10 +18,13 @@ const ResetPassword: React.FC = () => {
   const repeatPassword = useRef<null | HTMLIonInputElement>(null);
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
-
+  const { refresh } = useContext(UserContext);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
+  useIonViewWillEnter(() => {
+    refresh!();
+  });
   return (
     <IonPage>
       <>

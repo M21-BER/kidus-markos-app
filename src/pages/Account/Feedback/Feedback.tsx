@@ -7,60 +7,51 @@ import {
   useIonLoading,
   useIonToast,
 } from "@ionic/react";
-import React, { useContext, useRef } from "react";
-import RegisterContent from "./UpdateAccountContent";
+import React, { useRef } from "react";
+import FeedbackContent from "./FeedbackContent";
 import { OverlayEventDetail } from "@ionic/core/components";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import { Toast } from "../../../utils/CustomToast";
 import { errorResponse } from "../../../utils/errorResponse";
 import { checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
-import { UserContext } from "../../../context/AuthContext";
 
 interface Props {
-  openModal: boolean;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  user: any;
+  openModal_2: boolean;
+  setOpenModal_2: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
+const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   const [present, dismiss] = useIonLoading();
-  const first_name = useRef<null | HTMLIonInputElement>(null);
-  const last_name = useRef<null | HTMLIonInputElement>(null);
-  const gender = useRef<null | HTMLIonRadioGroupElement>(null);
+  const full_name = useRef<null | HTMLIonInputElement>(null);
+  const rating = useRef<null | HTMLIonInputElement>(null);
   const email = useRef<null | HTMLIonInputElement>(null);
-  const phone_number = useRef<null | HTMLIonInputElement>(null);
-  const password = useRef<null | HTMLIonInputElement>(null);
+  const feed_back = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
-  const { updateSavedData } = useContext(UserContext);
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
-      first_name: first_name.current?.value,
-      last_name: last_name.current?.value,
-      gender: gender.current?.value,
+      full_name: full_name.current?.value,
+      rating: rating.current?.value,
       email: email.current?.value,
-      phone_number: phone_number.current?.value,
+      feed_back: feed_back.current?.value,
     };
-    async function updateNow() {
-      await present("updating...");
+    async function addFeedback() {
+      await present("submitting...");
       try {
-        const update: any = await axios.patch(
-          `${url}/api/clients/${user.client_id}`,
-          data,
-          {
-            headers: {
-              Authorization: user.token,
-            },
-          }
+        const submit_feedback: any = await axios.post(
+          `${url}/api/customer/feedback/`,
+          data
         );
         dismiss();
-        if (update.data.status === true || update.status === 200) {
-          const passedData = {
-            ...user,
-            ...update.data.updatedItem,
-          };
-          updateSavedData!(passedData);
-          Toast(presentIonToast, update.data.message, checkmarkCircleOutline);
+        if (
+          submit_feedback.data.status === true ||
+          submit_feedback.status === 200
+        ) {
+          Toast(
+            presentIonToast,
+            submit_feedback.data.message,
+            checkmarkCircleOutline
+          );
         }
       } catch (error) {
         dismiss();
@@ -72,18 +63,12 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
         }
       }
     }
-    if (
-      data.first_name &&
-      data.last_name &&
-      data.gender &&
-      data.email &&
-      data.phone_number
-    ) {
-      updateNow();
+    if (data.full_name && data.rating && data.email && data.feed_back) {
+      addFeedback();
     } else {
       Toast(
         presentIonToast,
-        "update fields can not be empty",
+        "feedback fields can not be empty",
         checkmarkCircleOutline
       );
     }
@@ -102,14 +87,14 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
   return (
     <IonModal
       ref={modal}
-      trigger="open-modal"
-      isOpen={openModal}
+      trigger="open-modal_2"
+      isOpen={openModal_2}
       onWillDismiss={(ev) => onWillDismiss(ev)}
     >
       <IonHeader>
         <IonToolbar color="primary">
           <IonButtons slot="start">
-            <IonButton onClick={() => setOpenModal(false)}>Cancel</IonButton>
+            <IonButton onClick={() => setOpenModal_2(false)}>Cancel</IonButton>
           </IonButtons>
           <IonButtons slot="end">
             <IonButton strong={true} onClick={() => confirm()}>
@@ -118,18 +103,15 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <RegisterContent
-        user={user}
-        first_name={first_name}
-        last_name={last_name}
-        gender={gender}
+      <FeedbackContent
+        full_name={full_name}
+        rating={rating}
         email={email}
-        phone_number={phone_number}
-        password={password}
+        feed_back={feed_back}
         handleSubmit={handleSubmit}
       />
     </IonModal>
   );
 };
 
-export default UpdateAccount;
+export default Feedback;

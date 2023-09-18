@@ -1,12 +1,14 @@
-import { IonPage, useIonRouter } from "@ionic/react";
+import { IonPage, useIonViewWillEnter } from "@ionic/react";
 import HomeTab from "./HomeTab";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-import { useUser } from "../../hooks/useUser";
-import { useEffect } from "react";
+import { useContext } from "react";
+import { UserContext } from "../../context/AuthContext";
 
 const Home: React.FC = () => {
-  // const {refresh} = useUser();
-
+  const { refresh } = useContext(UserContext);
+  useIonViewWillEnter(() => {
+    refresh!();
+  });
   return (
     <IonPage>
       <ToolBarMain title="Home" />

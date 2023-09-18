@@ -4,7 +4,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   useIonViewWillEnter,
-  useIonLoading
+  useIonLoading,
 } from "@ionic/react";
 import { useState } from "react";
 import "../../Home/Home.css";
@@ -46,7 +46,6 @@ const Shop: React.FC = () => {
     setOrders(orders);
     setLoading(false);
   });
-
   const doRefresh = async (event: any) => {
     setLoading(true);
     const data = await getOrders();
@@ -54,7 +53,7 @@ const Shop: React.FC = () => {
     setLoading(false);
     event.detail.complete();
   };
-  const reload= async () => {
+  const reload = async () => {
     setLoading(true);
     await present("Refreshing...");
     const data = await getOrders();
@@ -65,7 +64,7 @@ const Shop: React.FC = () => {
   if (error) {
     return (
       <IonPage>
-         <ErrorFallBack error={error} reload={reload}/>
+        <ErrorFallBack error={error} reload={reload} />
       </IonPage>
     );
   } else {
@@ -73,7 +72,7 @@ const Shop: React.FC = () => {
       <IonPage>
         <IonContent>
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
-           {!loading && <IonRefresherContent />}
+            {!loading && <IonRefresherContent />}
           </IonRefresher>
           <OrderSkeleton loading={loading} />
           <OrderList orders={orders} />

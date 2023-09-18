@@ -6,7 +6,6 @@ import {
   IonRadio,
   IonRadioGroup,
   IonLabel,
-
 } from "@ionic/react";
 import { createOutline } from "ionicons/icons";
 import "../../Register/Radio.css";
@@ -18,7 +17,7 @@ interface Props {
   email: React.MutableRefObject<HTMLIonInputElement | null>;
   phone_number: React.MutableRefObject<HTMLIonInputElement | null>;
   password: React.MutableRefObject<HTMLIonInputElement | null>;
-  user:any
+  user: any;
 }
 
 const UpdateAccountContent: React.FC<Props> = ({
@@ -29,7 +28,7 @@ const UpdateAccountContent: React.FC<Props> = ({
   email,
   phone_number,
   password,
-  user
+  user,
 }) => {
   return (
     <IonContent className="ion-padding">
@@ -41,7 +40,7 @@ const UpdateAccountContent: React.FC<Props> = ({
           </h3>
           <form onSubmit={handleSubmit}>
             <IonInput
-              value={user.first_name?user.first_name:""}
+              value={user.first_name ? user.first_name : ""}
               ref={first_name}
               name="first_name"
               fill="outline"
@@ -50,10 +49,10 @@ const UpdateAccountContent: React.FC<Props> = ({
               placeholder="First Name"
               type="text"
               className="ion-margin-top"
-              required
+              required={false}
             ></IonInput>
             <IonInput
-              value={user.last_name?user.last_name:""}
+              value={user.last_name ? user.last_name : ""}
               ref={last_name}
               name="last_name"
               fill="outline"
@@ -62,11 +61,11 @@ const UpdateAccountContent: React.FC<Props> = ({
               placeholder="Last Name"
               type="text"
               className="ion-margin-top ion-margin-bottom"
-              required
+              required={false}
             ></IonInput>
             <IonRadioGroup
               name="gender"
-              value={user.gender?user.gender:"Male"}
+              value={user.gender ? user.gender : "Male"}
               ref={gender}
               className="ion-margin-top custom-radio-km"
             >
@@ -79,7 +78,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               </IonRadio>
             </IonRadioGroup>
             <IonInput
-              value={user.email?user.email:""}
+              value={user.email ? user.email : ""}
               ref={email}
               name="email"
               fill="outline"
@@ -88,10 +87,10 @@ const UpdateAccountContent: React.FC<Props> = ({
               placeholder="user@kidusmarkos.com"
               type="email"
               className="ion-margin-top"
-              required
+              required={false}
             ></IonInput>
             <IonInput
-              value={user.phone_number?user.phone_number:""}
+              value={user.phone_number ? user.phone_number : ""}
               ref={phone_number}
               name="phone_number"
               fill="outline"
@@ -100,7 +99,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               placeholder="+251---"
               type="text"
               className="ion-margin-top"
-              required
+              required={false}
             ></IonInput>
             <IonButton className="ion-margin-top" type="submit" expand="block">
               <span> Update Account</span>

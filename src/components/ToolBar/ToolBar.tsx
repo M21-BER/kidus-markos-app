@@ -12,9 +12,14 @@ import {
   useIonAlert,
   useIonToast,
 } from "@ionic/react";
-import { logOutOutline, logInOutline, checkmarkCircleOutline, informationCircleOutline } from "ionicons/icons";
+import {
+  logOutOutline,
+  logInOutline,
+  checkmarkCircleOutline,
+  informationCircleOutline,
+} from "ionicons/icons";
 import { logout } from "../../utils/logout";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 import { UserContext } from "../../context/AuthContext";
 import { Toast } from "../../utils/CustomToast";
 
@@ -24,7 +29,7 @@ interface Props {
 export const ToolBarMain: React.FC<Props> = ({ title }) => {
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
-  const { isAuthed,refresh } = useContext(UserContext);
+  const { isAuthed, refresh } = useContext(UserContext);
   const [presentIonToast] = useIonToast();
   const handleUserToolBar = () => {
     if (isAuthed) {
@@ -42,14 +47,22 @@ export const ToolBarMain: React.FC<Props> = ({ title }) => {
           {
             text: "OK",
             role: "confirm",
-            handler: async() => {
-             const status:boolean = await logout();
-               if(status){
+            handler: async () => {
+              const status: boolean = await logout();
+              if (status) {
                 refresh!();
-                Toast(presentIonToast, "Sign out successfully!", checkmarkCircleOutline);        
-               }else{
-                Toast(presentIonToast, "Sign out failed, please try again later!", informationCircleOutline); 
-               }
+                Toast(
+                  presentIonToast,
+                  "Sign out successfully!",
+                  checkmarkCircleOutline
+                );
+              } else {
+                Toast(
+                  presentIonToast,
+                  "Sign out failed, please try again later!",
+                  informationCircleOutline
+                );
+              }
             },
           },
         ],

@@ -6,6 +6,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import React, { useContext } from "react";
 import {
@@ -36,8 +37,7 @@ const Menu: React.FC = () => {
     { name: "Orders", url: "/app/myOrders", icon: calendarOutline },
     { name: "Account", url: "/app/account", icon: personCircleSharp },
   ];
-  const {isAuthed} = useContext(UserContext);
-
+  const { isAuthed } = useContext(UserContext);
   return (
     <IonPage>
       <IonTabs>

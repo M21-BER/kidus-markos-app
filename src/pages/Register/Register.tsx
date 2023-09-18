@@ -3,6 +3,7 @@ import {
   useIonRouter,
   useIonLoading,
   useIonToast,
+  useIonViewWillEnter,
 } from "@ionic/react";
 
 import React, { useRef, useEffect, useContext, useState } from "react";
@@ -30,29 +31,32 @@ const Register: React.FC = () => {
   const phone_number = useRef<null | HTMLIonInputElement>(null);
   const password = useRef<null | HTMLIonInputElement>(null);
   const confirm_password = useRef<null | HTMLIonInputElement>(null);
-  const [verify,setVerify] =useState<any>(null);
+  const verify = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
   const { isAuthed } = useContext(UserContext);
-  const [verifyStatus,setVerifyStatus] = useState<boolean>(false);
-  const [VRes,setVRes] = useState<any>(null);
+  const [verifyStatus, setVerifyStatus] = useState<boolean>(false);
+  const [VRes, setVRes] = useState<any>(null);
+  const { refresh } = useContext(UserContext);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
-    field.current ? (field.current.value = field.current.value) : "";
-    // field.current ? (field.current.value = "") : "";
+    field.current ? (field.current.value = "") : "";
   };
-  const setSignStatus = (data:any)=>{
+  const setSignStatus = (data: any) => {
     Preferences.set({
       key: SIGNUP_KEY,
       value: JSON.stringify(data),
     });
-  }
-  const getSignStatus = async()=>{
+  };
+  useIonViewWillEnter(() => {
+    refresh!();
+  });
+  const getSignStatus = async () => {
     try {
       const SData = await Preferences.get({ key: SIGNUP_KEY });
       if (SData && SData.value) {
         const parsedSData = jsonCheck(SData.value);
-           setVRes(parsedSData)
-           setVerifyStatus(true);
-      }else{
+        setVRes(parsedSData);
+        setVerifyStatus(true);
+      } else {
         setVRes(null);
         setVerifyStatus(false);
       }
@@ -60,7 +64,7 @@ const Register: React.FC = () => {
       setVRes(null);
       setVerifyStatus(false);
     }
-  }
+  };
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
@@ -85,14 +89,14 @@ const Register: React.FC = () => {
         dismiss();
         if (sign.data.status === true || sign.status === 200) {
           if (sign.data.newClient && sign.data.OTP) {
-            console.log(sign.data);
             Toast(presentIonToast, sign.data.message, checkmarkCircleOutline);
-            const VData= {
-             OTP:sign.data.OTP,
-             token: sign.data.token,
-             client_id: sign.data.client_id
-            }
-            setSignStatus(JSON.stringify(VData))
+            const VData = {
+              OTP: sign.data.OTP,
+              token: sign.data.token,
+              client_id: sign.data.client_id,
+              count: 0,
+            };
+            setSignStatus(JSON.stringify(VData));
             setVRes(VData);
             setVerifyStatus(true);
           } else {
@@ -118,38 +122,35 @@ const Register: React.FC = () => {
         reset(confirm_password);
       }
     };
-      if (
-        data.first_name &&
-        data.last_name &&
-        data.gender &&
-        data.email &&
-        data.phone_number &&
-        data.password &&
-        data.confirm_password
-      ) {
-      if(regex.test(data.email)){
-        if(data.password == data.confirm_password){
-          if(strongPassword.test(data.password)){
-          sign_up();
-          }else{
+    if (
+      data.first_name &&
+      data.last_name &&
+      data.gender &&
+      data.email &&
+      data.phone_number &&
+      data.password &&
+      data.confirm_password
+    ) {
+      if (regex.test(data.email)) {
+        if (data.password == data.confirm_password) {
+          if (strongPassword.test(data.password)) {
+            sign_up();
+          } else {
             Toast(
               presentIonToast,
               "password not strong enough",
-              informationCircleOutline,6000
+              informationCircleOutline,
+              6000
             );
             reset(password);
             reset(confirm_password);
           }
-        }else{
-          Toast(
-            presentIonToast,
-            "password mismatch",
-            informationCircleOutline
-          );
+        } else {
+          Toast(presentIonToast, "password mismatch", informationCircleOutline);
           reset(password);
           reset(confirm_password);
         }
-      }else{
+      } else {
         Toast(
           presentIonToast,
           "please enter valid email address",
@@ -157,83 +158,94 @@ const Register: React.FC = () => {
         );
         reset(email);
       }
-      } else {
-        Toast(
-          presentIonToast,
-          "registration filled can not be empty",
-          informationCircleOutline
-        );
-      }
+    } else {
+      Toast(
+        presentIonToast,
+        "registration filled can not be empty",
+        informationCircleOutline
+      );
+    }
   };
-  
-  const handleVerify = async(e:React.FormEvent)=>{
-    e.preventDefault(); 
-    if(verify){
-        if(parseInt(verify) === parseInt(VRes.OTP)){
-          try {
-          await axios.patch(`${url}/api/clients/${VRes.client_id}`,{active:true},{
-            headers:{
-              'Authorization': VRes.token
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const inputVerify: any = verify.current?.value;
+    if (inputVerify) {
+      if (parseInt(inputVerify) === parseInt(VRes.OTP)) {
+        try {
+          await axios.patch(
+            `${url}/api/clients/${VRes.client_id}`,
+            { active: true },
+            {
+              headers: {
+                Authorization: VRes.token,
+              },
             }
-          }); 
+          );
           await Preferences.remove({ key: SIGNUP_KEY });
           setVerifyStatus(false);
           Toast(
             presentIonToast,
             "account verified successfully",
             checkmarkCircleOutline
-          ); 
-          router.push('/app/login','root','replace'); 
-          } catch (error) {
-            Toast(
-              presentIonToast,
-              "account verified code expired",
-              informationCircleOutline
-            ); 
-          }
-        }else{
+          );
+          router.push("/app/login", "root", "replace");
+        } catch (error) {
           Toast(
             presentIonToast,
-            "invalid code",
+            "verification code expired",
             informationCircleOutline
           );
         }
-   }else{
-    Toast(
-      presentIonToast,
-      "code can not be empty",
-      informationCircleOutline
-    );
-   } 
-  }
+      } else {
+        Toast(presentIonToast, "invalid code", informationCircleOutline);
+      }
+    } else {
+      Toast(presentIonToast, "code can not be empty", informationCircleOutline);
+    }
+  };
+  const sendOTPAgain = () => {};
 
+  // const timer = () => {
+  //   let a: number = 10;
+  //   let b: number = a + 1;
+  //   console.log(b);
+  // };
   useEffect(() => {
     if (isAuthed) {
       router.goBack();
     }
   }, [isAuthed]);
-
-  useEffect(()=>{
+  useEffect(() => {
     getSignStatus();
-  },[])
+  }, []);
+  // useEffect(() => {
+  //   let interval: any = null;
+  //   if (verifyStatus) {
+  //     interval = setInterval(() => timer(), 1000);
+  //   }
+  //   return () => interval && clearInterval(interval);
+  // }, [verifyStatus]);
   return (
     <IonPage>
       <ToolBarMain title="Sign up" />
-       {
-        verifyStatus?
-        <Verify verify={verify} setVerify={setVerify} handleVerify={handleVerify}/>:
+      {verifyStatus ? (
+        <Verify
+          verify={verify}
+          sendOTPAgain={sendOTPAgain}
+          handleVerify={handleVerify}
+        />
+      ) : (
         <RegisterContent
-        first_name={first_name}
-        last_name={last_name}
-        gender={gender}
-        email={email}
-        phone_number={phone_number}
-        password={password}
-        confirm_password={confirm_password}
-        handleSubmit={handleSubmit}
-      />
-       }
-      
+          first_name={first_name}
+          last_name={last_name}
+          gender={gender}
+          email={email}
+          phone_number={phone_number}
+          password={password}
+          confirm_password={confirm_password}
+          handleSubmit={handleSubmit}
+        />
+      )}
     </IonPage>
   );
 };

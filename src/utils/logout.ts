@@ -1,13 +1,13 @@
 import { Preferences } from "@capacitor/preferences";
 import { login_key } from "./utils";
 
-export const logout = async() => {
+export const logout = async () => {
   let status = false;
-   try {
+  try {
     await Preferences.remove({ key: login_key });
     status = true;
-   } catch (error) {
-   status = false;
-   }
-   return status;
+  } catch (error) {
+    status = false;
+  }
+  return status;
 };

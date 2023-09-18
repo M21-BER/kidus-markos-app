@@ -12,29 +12,45 @@ import {
   IonIcon,
   IonButton,
   useIonAlert,
+  useIonViewWillEnter,
+  useIonToast,
 } from "@ionic/react";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 import "./Account.css";
 import { useUser } from "../../hooks/useUser";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Loader from "../../components/UI/Loader/Loader";
 import {
   briefcaseOutline,
   callOutline,
   cartOutline,
+  checkmarkCircleOutline,
   createOutline,
+  informationCircleOutline,
+  logOut,
   mailOutline,
   personOutline,
   trashBinOutline,
 } from "ionicons/icons";
 import UpdateAccount from "./UpdateAccount/UpdateAccount";
+import { UserContext } from "../../context/AuthContext";
+import { errorResponse } from "../../utils/errorResponse";
+import { Toast } from "../../utils/CustomToast";
+import { failMessage, url } from "../../utils/utils";
+import axios from "axios";
 import { logout } from "../../utils/logout";
+import Feedback from "./Feedback/Feedback";
 
 const Account: any = () => {
+  const { user, isAuthed, refresh } = useContext(UserContext);
+  useIonViewWillEnter(() => {
+    refresh!();
+  });
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
   const [openModal, setOpenModal] = useState<boolean>(false);
-
+  const [openModal_2, setOpenModal_2] = useState<boolean>(false);
+  const [presentIonToast] = useIonToast();
   const handleDeleteAccount = () => {
     presentAlert({
       header: "Sign out!",
@@ -50,8 +66,37 @@ const Account: any = () => {
         {
           text: "OK",
           role: "confirm",
-          handler: () => {
-            logout();
+          handler: async () => {
+            try {
+              const deleteAccount = await axios.delete(
+                `${url}/api/clients/app/${user.client_id}`,
+                {
+                  headers: {
+                    Authorization: user.token,
+                  },
+                }
+              );
+              if (
+                deleteAccount.data.status == true ||
+                deleteAccount.status == 200
+              ) {
+                await logout();
+                refresh!();
+                router.push("/", "root", "replace");
+                Toast(
+                  presentIonToast,
+                  deleteAccount.data.message,
+                  informationCircleOutline
+                );
+              }
+            } catch (error) {
+              const { message, status } = errorResponse(error);
+              if (message && status) {
+                Toast(presentIonToast, message, informationCircleOutline);
+              } else {
+                Toast(presentIonToast, failMessage, informationCircleOutline);
+              }
+            }
           },
         },
       ],
@@ -60,7 +105,9 @@ const Account: any = () => {
   const handleModal = () => {
     setOpenModal(true);
   };
-  const { user, isAuthed } = useUser();
+  const handleModal_2 = () => {
+    setOpenModal_2(true);
+  };
   if (!isAuthed) {
     return <Loader />;
   } else {
@@ -81,13 +128,13 @@ const Account: any = () => {
                     <IonIcon color="primary" icon={personOutline} />
                     <IonLabel>User:</IonLabel>
                   </div>
-                <div>
-                <IonText>
-                    {user.first_name && user.last_name
-                      ? `${user.first_name} ${user.last_name}`
-                      : ""}
-                  </IonText>
-                </div>
+                  <div>
+                    <IonText>
+                      {user.first_name && user.last_name
+                        ? `${user.first_name} ${user.last_name}`
+                        : ""}
+                    </IonText>
+                  </div>
                 </div>
 
                 <div>
@@ -95,30 +142,30 @@ const Account: any = () => {
                     <IonIcon color="primary" icon={callOutline} />
                     <IonLabel> Phone Number:</IonLabel>
                   </div>
-                <div>
-                <IonText>
-                    {user.phone_number ? user.phone_number : ""}
-                  </IonText>
+                  <div>
+                    <IonText>
+                      {user.phone_number ? user.phone_number : ""}
+                    </IonText>
+                  </div>
                 </div>
-                </div>
-                
+
                 <div>
                   <div>
                     <IonIcon color="primary" icon={mailOutline} />
                     <IonLabel>Email:</IonLabel>
                   </div>
-                 <div>
-                 <IonText>Neil_Oberbrunner65@hotmail.com</IonText>
-                 </div>
+                  <div>
+                    <IonText>Neil_Oberbrunner65@hotmail.com</IonText>
+                  </div>
                 </div>
 
                 <div>
                   <div>
-                    <IonIcon color="primary"icon={cartOutline} />
+                    <IonIcon color="primary" icon={cartOutline} />
                     <IonLabel>Shop Count:</IonLabel>
                   </div>
                   <div>
-                  <IonText>{user.shop_count ? user.shop_count : 0}</IonText>
+                    <IonText>{user.shop_count ? user.shop_count : 0}</IonText>
                   </div>
                 </div>
 
@@ -127,38 +174,53 @@ const Account: any = () => {
                     <IonIcon color="primary" icon={briefcaseOutline} />
                     <IonLabel>Order Count:</IonLabel>
                   </div>
-                 <div>
-                 <IonText>{user.order_count ? user.order_count : 0}</IonText>
-                 </div>
+                  <div>
+                    <IonText>{user.order_count ? user.order_count : 0}</IonText>
+                  </div>
                 </div>
 
                 <div className="reset-last-div" onClick={handleDeleteAccount}>
-                <div>  <IonIcon color="primary" icon={trashBinOutline} /></div>
-                 <div>
-                 <IonText>Delete Account</IonText>
-                 </div>
+                  <div>
+                    <IonIcon color="primary" icon={trashBinOutline} />
+                  </div>
+                  <div>
+                    <IonText>Delete Account</IonText>
+                  </div>
                 </div>
                 <div
                   className="reset-last-div"
                   onClick={handleModal}
                   id="open-modal"
                 >
-                 <div><IonIcon color="primary" icon={createOutline} /></div>
-                 <div>
-                 <IonText>Update Account</IonText>
-                 </div>
+                  <div>
+                    <IonIcon color="primary" icon={createOutline} />
+                  </div>
+                  <div>
+                    <IonText>Update Account</IonText>
+                  </div>
                 </div>
-                <div className="reset-last-div" onClick={handleModal}>
-                   <div> <IonIcon color="primary" icon={createOutline} /></div>
-                <div>
-                <IonText>My Orders</IonText>
-                </div>
+                <div
+                  className="reset-last-div"
+                  onClick={handleModal_2}
+                  id="open-modal_2"
+                >
+                  <div>
+                    <IonIcon color="primary" icon={createOutline} />
+                  </div>
+                  <div>
+                    <IonText>Feedback</IonText>
+                  </div>
                 </div>
               </IonList>
             </IonCardContent>
           </IonCard>
         </IonContent>
-        <UpdateAccount user={user} openModal={openModal} setOpenModal={setOpenModal} />
+        <UpdateAccount
+          user={user}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+        <Feedback openModal_2={openModal_2} setOpenModal_2={setOpenModal_2} />
       </IonPage>
     );
   }
