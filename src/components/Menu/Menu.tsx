@@ -6,7 +6,6 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  useIonViewWillEnter,
 } from "@ionic/react";
 import React, { useContext } from "react";
 import {

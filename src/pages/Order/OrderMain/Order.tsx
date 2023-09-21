@@ -6,7 +6,7 @@ import {
   useIonViewWillEnter,
   useIonLoading,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../Home/Home.css";
 import "../../Home/HomeDetail.css";
 import axios from "axios";
@@ -25,6 +25,7 @@ const Shop: React.FC = () => {
       const data = await axios(`${url}/api/products`, {
         signal: controller.signal,
       });
+      setError(null)
       return data.data;
     } catch (error: any) {
       if (error.name !== "CanceledError") {

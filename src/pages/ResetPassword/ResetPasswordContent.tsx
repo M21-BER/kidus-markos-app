@@ -74,7 +74,7 @@ const ResetPasswordContent: React.FC<Props> = ({
       try {
         await present("checking...");
         const changeEmailRes = await axios.get(
-          `${url}/api/clients/searchMany/${inputEmail}`
+          `${url}/api/clients/search/${inputEmail}`
         );
         if (changeEmailRes.status === 200) {
           if (changeEmailRes.data) {

@@ -8,6 +8,7 @@ const useUser = () => {
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
   const [wait, setWait] = useState<boolean>(true);
   const [update, setUpdate] = useState<boolean>(false);
+  let resetState = false;
   const removeUser = async () => {
     await Preferences.remove({ key: login_key });
     setWait(false);
@@ -43,6 +44,7 @@ const useUser = () => {
       try {
         const userData = await Preferences.get({ key: login_key });
         if (userData && userData.value) {
+          resetState = true;
           const parsedUserData = jsonCheck(userData.value);
           if (parsedUserData.token && jwt_decode(parsedUserData.token)) {
             let currentDate = new Date();
@@ -65,10 +67,15 @@ const useUser = () => {
           setUpdate(false);
         }
       } catch (error) {
-        setWait(false);
-        setUser(null);
-        setIsAuthed(false);
-        setUpdate(false);
+        if(resetState){
+          await removeUser();    
+          resetState = false;          
+        }else{
+          setWait(false);
+          setUser(null);
+          setIsAuthed(false);
+          setUpdate(false);
+        }
       }
     };
     checkUser();

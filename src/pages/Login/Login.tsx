@@ -29,17 +29,18 @@ const Login: React.FC = () => {
   const [presentIonToast] = useIonToast();
   const { isAuthed, refresh, wait } = useContext(UserContext);
   const [stat, setStat] = useState<boolean>(false);
-
+    console.log(isAuthed);
+    
+   useEffect(() => {
+    if (!isAuthed) {
+      getSignStatus();
+    }
+  }, []);
   // useEffect(() => {
   //   if (isAuthed) {
   //     router.goBack();
   //   }
   // }, [isAuthed]);
-  // useEffect(() => {
-  //   if (!isAuthed) {
-  //     getSignStatus();
-  //   }
-  // }, []);
   // console.log(isAuthed);
 
   // if (!wait) {

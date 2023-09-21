@@ -5,10 +5,12 @@ import { useContext } from "react";
 import { UserContext } from "../../context/AuthContext";
 
 const Home: React.FC = () => {
-  const { refresh } = useContext(UserContext);
-  useIonViewWillEnter(() => {
-    refresh!();
-  });
+  // const data = useContext(UserContext);
+  //  console.log(data);
+   
+  // useIonViewWillEnter(() => {
+  //   refresh!();
+  // });
   return (
     <IonPage>
       <ToolBarMain title="Home" />

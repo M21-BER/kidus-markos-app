@@ -7,20 +7,14 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonText,
-  useIonViewWillEnter,
+  IonText
 } from "@ionic/react";
 import { cartOutline } from "ionicons/icons";
-import React, { useContext } from "react";
-import { UserContext } from "../../context/AuthContext";
+import React from "react";
 interface Props {
   orders: any[];
 }
 const MyOrdersList: React.FC<Props> = ({ orders }) => {
-  const { refresh } = useContext(UserContext);
-  useIonViewWillEnter(() => {
-    refresh!();
-  });
   if (orders.length === 0) {
     return (
       <div className="ion-text-center NDA">
