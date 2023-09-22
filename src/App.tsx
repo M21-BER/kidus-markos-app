@@ -31,7 +31,6 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route path="/" render={() => <Menu />} />
           <Route exact path="/register" render={() => <Menu />} />
           <Route exact path="/reset" render={() => <Menu />} />
           <Route exact path="/login" render={() => <Menu />} />
@@ -41,6 +40,10 @@ const App: React.FC = () => {
           <Route exact path="/orderDetails/:id" render={() => <Menu />} />
           <Route exact path="/addOrder/:id" render={() => <Menu />} />
           <Route exact path="/payment" render={() => <Menu />} />
+          <Route exact path="/carts" render={() => <Menu />} />
+          <Route exact path="/tasks" render={() => <Menu />} />
+          <Route exact path="/myOrders" render={() => <Menu />} />
+          <Route path="/" render={() => <Menu />} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

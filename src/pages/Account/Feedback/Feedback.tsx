@@ -81,8 +81,7 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   }
 
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
-    if (ev.detail.role === "confirm") {
-    }
+    setOpenModal_2(false);
   }
   return (
     <IonModal

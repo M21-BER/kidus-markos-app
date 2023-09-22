@@ -1,16 +1,16 @@
 import { IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, useIonViewWillEnter } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { ToolBarMain } from '../../components/ToolBar/ToolBar';
-import { Preferences } from '@capacitor/preferences';
-import { CART_KEY, jsonCheck } from '../../utils/utils';
+import {failMessage, url } from '../../utils/utils';
 import MyOrdersList from './MyOrdersList';
 import './MyOrders.css'
-import { UserContext } from '../../context/AuthContext';
+import axios from 'axios';
 const MyOrders: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [orders, setOrders] = useState<any[]>([]);
-  // const data = useContext(UserContext);
-  // console.log(data);
+  const [error, setError] = useState<any>(null);
+  const controller: AbortController = new AbortController();
+
   useIonViewWillEnter(async () => {
     const cart = await getOrders();
     setOrders(cart);
@@ -18,12 +18,26 @@ const MyOrders: React.FC = () => {
   });
 
   const getOrders = async () => {
-      const cartE = await Preferences.get({ key: CART_KEY });
-      if (cartE.value) {
-        const parse: number[] = jsonCheck(cartE.value);
-        return parse;
+    try {
+      const data = await axios(`${url}/api/shops`, {
+        signal: controller.signal,
+      });
+      setError(null);
+      return data.data;
+    } catch (error: any) {
+      if (error.name !== "CanceledError") {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message
+        ) {
+          setError(error.response.data.error.message);
+        } else {
+          setError(failMessage);
+        }
       }
-     return [];
+    }
   };
 
   return (

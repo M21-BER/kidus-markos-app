@@ -29,6 +29,7 @@ const Shop: React.FC = () => {
       return data.data;
     } catch (error: any) {
       if (error.name !== "CanceledError") {
+        setOrders([]);
         if (
           error.response &&
           error.response.data &&

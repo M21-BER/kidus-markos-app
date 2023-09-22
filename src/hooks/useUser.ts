@@ -40,6 +40,8 @@ const useUser = () => {
     usd();
   };
   useEffect(() => {
+    console.log("Rendered");
+    
     const checkUser = async () => {
       try {
         const userData = await Preferences.get({ key: login_key });
@@ -47,17 +49,13 @@ const useUser = () => {
           resetState = true;
           const parsedUserData = jsonCheck(userData.value);
           if (parsedUserData.token && jwt_decode(parsedUserData.token)) {
-            let currentDate = new Date();
-            const userD: any = jwt_decode(parsedUserData.token);
-            if (userD.exp * 1000 > currentDate.getTime()) {
               setWait(false);
               setUser(parsedUserData);
               setIsAuthed(true);
               setUpdate(false);
-            } else {
-              await removeUser();
-            }
           } else {
+            console.log("error 1");
+          
             await removeUser();
           }
         } else {
@@ -67,6 +65,8 @@ const useUser = () => {
           setUpdate(false);
         }
       } catch (error) {
+        console.log("error 3");
+        
         if(resetState){
           await removeUser();    
           resetState = false;          

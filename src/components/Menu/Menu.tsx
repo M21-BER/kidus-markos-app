@@ -28,15 +28,16 @@ import ResetPassword from "../../pages/ResetPassword/ResetPassword";
 import { UserContext } from "../../context/AuthContext";
 import Carts from "../../pages/Carts/Carts";
 import MyOrders from "../../pages/MyOrders/MyOrders";
+import Tasks from "../../pages/Tasks/Tasks";
 
 const Menu: React.FC = () => {
+  const { isAuthed,wait } = useContext(UserContext);
   const paths: { name: string; url: string; icon: string }[] = [
     { name: "Home", url: "/app/home", icon: homeSharp },
     { name: "Cart", url: "/app/carts", icon: cartSharp },
-    { name: "Orders", url: "/app/myOrders", icon: calendarOutline },
+    { name: "Task", url: "/app/tasks", icon: calendarOutline },
     { name: "Account", url: "/app/account", icon: personCircleSharp },
   ];
-  const { isAuthed } = useContext(UserContext);
   return (
     <IonPage>
       <IonTabs>
@@ -62,7 +63,8 @@ const Menu: React.FC = () => {
           <Redirect exact path="/register" to="/app/register" />
           <Redirect exact path="/reset" to="/app/reset" />
           <Redirect exact path="/account" to="/app/account" />
-          <Redirect exact path="/carts" to="/app/settings" />
+          <Redirect exact path="/carts" to="/app/carts" />
+          <Redirect exact path="/tasks" to="/app/tasks" />
           <Redirect exact path="/myOrders" to="/app/myOrders" />
           {/* ....Redirect End.... */}
 
@@ -70,11 +72,12 @@ const Menu: React.FC = () => {
           <Route
             path="/app/account"
             render={(props) => {
-              return isAuthed ? <Account {...props} /> : <Login />;
+              return !wait && isAuthed ? <Account {...props} /> : <Login />;
             }}
             exact
           />
           <Route path="/app/carts" render={() => <Carts />} exact />
+          <Route path="/app/tasks" render={() => <Tasks />} exact />
           <Route path="/app/myOrders" render={() => <MyOrders />} exact />
           <Route path="/app/login" render={() => <Login />} exact />
           <Route path="/app/register" render={() => <Register />} exact />
@@ -82,7 +85,7 @@ const Menu: React.FC = () => {
           <Route
             path="/payment"
             render={(props) => {
-              return isAuthed ? <Payment /> : <Login />;
+              return !wait && isAuthed ? <Payment /> : <Login />;
             }}
             exact={true}
           />

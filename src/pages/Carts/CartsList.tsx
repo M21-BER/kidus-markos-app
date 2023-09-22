@@ -15,18 +15,15 @@ const CartsList: React.FC<Props> = ({carts}) => {
     }else{
         return (
             <>
-             <div>
-               <IonButton color='primary' expand='block' className='ion-text-center'>Batch Shop</IonButton>
-             </div>
              {
                 carts.map((cart, index) => (
                   <IonCard key={index} onClick={() => {}}>
                     <IonCardContent className="ion-no-padding">
                       <IonItem lines="none">
                         <IonAvatar slot="start">
-                         <IonIcon icon={cartOutline}/>
+                         <IonIcon color='light' style={{background:'rgba(54,23,5,1)',border:'1px solid rgba(0,0,0,0.1)',borderRadius:'100%',padding:'5px'}} icon={cartOutline} size='large'/>
                         </IonAvatar>
-                        <IonLabel>
+                        <IonLabel className='ion-margin-top'>
                           {cart.name}
                           <p>{cart.mode}</p>
                         </IonLabel>

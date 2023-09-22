@@ -5,6 +5,7 @@ import {
   useIonToast,
   IonContent,
   useIonRouter,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import { useParams } from "react-router";
@@ -53,20 +54,32 @@ const ShopDetails: React.FC = () => {
       ? jsonCheck(detail.product.s_product_colors)
       : [];
   }
-  useEffect(() => {
+  useIonViewWillEnter(()=>{
     const checkCart = async () => {
+     try {
       const cartE = await Preferences.get({ key: CART_KEY });
       if (cartE.value) {
         const parse: any = jsonCheck(cartE.value);
         if (parse) {
-          if (parseInt(id.id) === parseInt(parse.id)) {
+          const includes = parse.map(({ id }:{id:any}) => parseInt(id)).includes(parseInt(id.id))
+          if (includes) {
             setCartExist(true);
+          }else{
+            setCartExist(false);
           }
+        }else{
+          setCartExist(false);
         }
+      }else{
+        setCartExist(false);
       }
+     } catch (error) {
+      setCartExist(false);
+     }
     };
+
     checkCart();
-  }, []);
+  })
 
   const updateColor = (colorIndex: number) => {
     setSelectedColor(colorIndex);

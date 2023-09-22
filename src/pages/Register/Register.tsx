@@ -21,7 +21,8 @@ import { SIGNUP_KEY, failMessage, jsonCheck, url } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
 import Verify from "./Verify";
 import { Preferences } from "@capacitor/preferences";
-const Register: React.FC = () => {
+import Loader from "../../components/UI/Loader/Loader";
+const Register: React.FC  = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const first_name = useRef<null | HTMLIonInputElement>(null);
@@ -33,10 +34,9 @@ const Register: React.FC = () => {
   const confirm_password = useRef<null | HTMLIonInputElement>(null);
   const verify = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
-  const { isAuthed } = useContext(UserContext);
   const [verifyStatus, setVerifyStatus] = useState<boolean>(false);
   const [VRes, setVRes] = useState<any>(null);
-  const { refresh } = useContext(UserContext);
+  const {isAuthed,wait,refresh,setBackHref,setBackBtn } = useContext(UserContext);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
@@ -46,9 +46,16 @@ const Register: React.FC = () => {
       value: JSON.stringify(data),
     });
   };
-  useIonViewWillEnter(() => {
-    refresh!();
-  });
+  useEffect(()=>{
+    if (!wait && isAuthed) { 
+      router.goBack();
+    }else{
+      setBackHref!('/app/login');
+      setBackBtn!(true);
+      getSignStatus();
+    }
+  },[wait,isAuthed])
+
   const getSignStatus = async () => {
     try {
       const SData = await Preferences.get({ key: SIGNUP_KEY });
@@ -205,49 +212,33 @@ const Register: React.FC = () => {
   };
   const sendOTPAgain = () => {};
 
-  // const timer = () => {
-  //   let a: number = 10;
-  //   let b: number = a + 1;
-  //   console.log(b);
-  // };
-  useEffect(() => {
-    if (isAuthed) {
-      router.goBack();
-    }
-  }, [isAuthed]);
-  useEffect(() => {
-    getSignStatus();
-  }, []);
-  // useEffect(() => {
-  //   let interval: any = null;
-  //   if (verifyStatus) {
-  //     interval = setInterval(() => timer(), 1000);
-  //   }
-  //   return () => interval && clearInterval(interval);
-  // }, [verifyStatus]);
-  return (
-    <IonPage>
-      <ToolBarMain title="Sign up" />
-      {verifyStatus ? (
-        <Verify
-          verify={verify}
-          sendOTPAgain={sendOTPAgain}
-          handleVerify={handleVerify}
-        />
-      ) : (
-        <RegisterContent
-          first_name={first_name}
-          last_name={last_name}
-          gender={gender}
-          email={email}
-          phone_number={phone_number}
-          password={password}
-          confirm_password={confirm_password}
-          handleSubmit={handleSubmit}
-        />
-      )}
-    </IonPage>
-  );
+  if(!wait && !isAuthed){
+    return (
+      <IonPage>
+        <ToolBarMain title="Sign up" />
+        {verifyStatus ? (
+          <Verify
+            verify={verify}
+            sendOTPAgain={sendOTPAgain}
+            handleVerify={handleVerify}
+          />
+        ) : (
+          <RegisterContent
+            first_name={first_name}
+            last_name={last_name}
+            gender={gender}
+            email={email}
+            phone_number={phone_number}
+            password={password}
+            confirm_password={confirm_password}
+            handleSubmit={handleSubmit}
+          />
+        )}
+      </IonPage>
+    );
+  }else{
+    return <Loader/>
+  }
 };
 
 export default Register;

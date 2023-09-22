@@ -27,9 +27,11 @@ const Shop: React.FC = () => {
       const data = await axios(`${url}/api/shops`, {
         signal: controller.signal,
       });
+      setError(null);
       return data.data;
     } catch (error: any) {
       if (error.name !== "CanceledError") {
+        setShops([]);
         if (
           error.response &&
           error.response.data &&

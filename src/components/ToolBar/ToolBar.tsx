@@ -29,7 +29,7 @@ interface Props {
 export const ToolBarMain: React.FC<Props> = ({ title }) => {
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
-  const { isAuthed, refresh } = useContext(UserContext);
+  const { isAuthed, refresh,backHref,backBtn } = useContext(UserContext);
   const [presentIonToast] = useIonToast();
   const handleUserToolBar = () => {
     if (isAuthed) {
@@ -80,6 +80,13 @@ export const ToolBarMain: React.FC<Props> = ({ title }) => {
     <IonHeader>
       <IonToolbar color="primary">
         <IonTitle>{title || "KM"}</IonTitle>
+         {
+          backBtn && (
+            <IonButtons slot="start">
+            <IonBackButton defaultHref={backHref}></IonBackButton>
+          </IonButtons>
+          )
+         }
         <IonButtons slot="end">
           {isAuthed ? "Sign out" : "Sign in"}
           <IonButton onClick={handleUserToolBar}>

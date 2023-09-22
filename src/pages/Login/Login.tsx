@@ -9,7 +9,7 @@ import {
 import { Preferences } from "@capacitor/preferences";
 import LoginContent from "./LoginContent";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { login_key, url, failMessage, SIGNUP_KEY } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
@@ -27,15 +27,21 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const { isAuthed, refresh, wait } = useContext(UserContext);
+  const { isAuthed, refresh, wait,setBackBtn } = useContext(UserContext);
   const [stat, setStat] = useState<boolean>(false);
-    console.log(isAuthed);
+    // console.log(isAuthed);
     
-   useEffect(() => {
-    if (!isAuthed) {
-      getSignStatus();
+
+  useIonViewWillEnter(()=>{
+    if (isAuthed) {
+      router.goBack();
+    }else{
+      setBackBtn!(false);
+      if (!isAuthed) {
+        getSignStatus();
+      }  
     }
-  }, []);
+ })
   // useEffect(() => {
   //   if (isAuthed) {
   //     router.goBack();
@@ -75,7 +81,6 @@ const Login: React.FC = () => {
       try {
         await present("Logging in...");
         const login = await axios.post(`${url}/api/clients/login`, data);
-        dismiss();
         if (login.data.status === true || login.status === 200) {
           if (login.data.client && login.data.token) {
             const userData = {
@@ -83,21 +88,31 @@ const Login: React.FC = () => {
               token: login.data.token,
               logged: true,
             };
-            Preferences.set({
+
+            await Preferences.set({
               key: login_key,
               value: JSON.stringify(userData),
             });
+            dismiss();
             refresh!();
             Toast(presentIonToast, login.data.message, checkmarkCircleOutline);
-            router.push("/", "root", "replace");
+            router.push("/app/home", "root", "replace");
           } else {
+            dismiss();
+            reset(clientIdentity);
+            reset(password);
             throw new Error(failMessage);
           }
         } else {
+          dismiss();
+          reset(clientIdentity);
+          reset(password);
           throw new Error(failMessage);
         }
       } catch (error) {
         dismiss();
+        reset(clientIdentity);
+        reset(password);
         const { message, status } = errorResponse(error);
         if (message && status) {
           if (status === 404) {

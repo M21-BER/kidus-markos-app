@@ -96,8 +96,7 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
   }
 
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
-    if (ev.detail.role === "confirm") {
-    }
+    setOpenModal(false)
   }
   return (
     <IonModal
