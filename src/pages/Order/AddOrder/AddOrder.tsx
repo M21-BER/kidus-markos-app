@@ -1,14 +1,11 @@
 import { Camera, CameraResultType } from "@capacitor/camera";
 import {
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
   IonContent,
   IonIcon,
   IonInput,
   IonPage,
-  IonTitle,
+  IonText,
   useIonRouter,
   useIonToast,
 } from "@ionic/react";
@@ -28,6 +25,8 @@ import { b64toFile } from "../../../utils/Base64ToBlob";
 import "../Order.css";
 import { errorResponse } from "../../../utils/errorResponse";
 import { Toast } from "../../../utils/CustomToast";
+import flagImg from '../../../assets/Flag_of_Ethiopia.svg.png'
+import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 const AddOrder: React.FC = () => {
   const router = useIonRouter();
   const full_name = useRef<null | HTMLIonInputElement>(null);
@@ -38,16 +37,17 @@ const AddOrder: React.FC = () => {
   const thickness = useRef<null | HTMLIonInputElement>(null);
   const quantity = useRef<null | HTMLIonInputElement>(null);
   const [floorPlan, setFloorPlan] = useState<any[]>([]);
+  const [flag, setFlag] = useState<string>("");
   const id: any = useParams();
   const [presentIonToast] = useIonToast();
-  const [detail, isPending, error] = useAxios(`${url}/api/products/${id.id}`);
+  const [detail, isPending, error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
   let product_id: any = null;
   let product_category: any = null;
   let product_code: any = null;
   if (!isPending) {
-    product_id = detail.product.product_id;
-    product_category = detail.product.product_category;
-    product_code = detail.product.product_code;
+    product_id = detail.item.product_id;
+    product_category = detail.item.product_category;
+    product_code = detail.item.product_code;
   }
   const reset = () => {
     full_name.current ? (full_name.current.value = "") : "";
@@ -147,154 +147,174 @@ const AddOrder: React.FC = () => {
     };
     if (full_nameInput) {
       if (phone_numberInput) {
-        if (quantityInputInput && quantityInputInput !== 0) {
+        if (parseInt(quantityInputInput.toString()) !== 0) {
           addOrderNow();
         } else {
           Toast(
             presentIonToast,
-            "order quantity input can't be empty",
+            "please enter order quantity",
             informationCircleOutline
           );
         }
       } else {
         Toast(
           presentIonToast,
-          "phone number input can't be empty",
+          "please enter phone number",
           informationCircleOutline
         );
       }
     } else {
       Toast(
         presentIonToast,
-        "full name input can't be empty",
+        "please enter full name",
         informationCircleOutline
       );
     }
   };
+  const reload = ()=>{
+    setUpdate(true);
+  }
+  if(error){
+   return(
+    <IonPage>
+     <ToolBarDetails defaultValue={`/orderDetails/${id.id}`} title="Request Quotient"/>
+    <ErrorFallBack className='m_error_top' error={error} reload={reload} />
+  </IonPage>
+   );
+  }else{
   return (
     <IonPage>
-      <ToolBarDetails />
+      <ToolBarDetails defaultValue={`/orderDetails/${id.id}`} title="Request Quotient"/>
       <IonContent className="ion-padding">
-        <IonCard>
-          <IonCardHeader>
-            <IonTitle></IonTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <form onSubmit={handleSubmit}>
-              <IonInput
-                ref={full_name}
-                name="full_name"
-                fill="outline"
-                labelPlacement="floating"
-                label="Full Name"
-                placeholder="First Name"
-                type="text"
-                className="ion-margin-top"
-                required
-              ></IonInput>
-              <IonInput
-                ref={phone_number}
-                name="phone_number"
-                fill="outline"
-                labelPlacement="floating"
-                label="Phone Number"
-                placeholder="+251----"
-                type="text"
-                className="ion-margin-top ion-margin-bottom"
-                required
-              ></IonInput>
-              <IonInput
-                ref={length}
-                name="length"
-                fill="outline"
-                labelPlacement="floating"
-                label="Length"
-                placeholder="Length"
-                type="number"
-                className="ion-margin-top"
-                required
-              ></IonInput>
-              <IonInput
-                ref={height}
-                name="height"
-                fill="outline"
-                labelPlacement="floating"
-                label="Height"
-                placeholder="Height"
-                type="number"
-                className="ion-margin-top"
-                required
-              ></IonInput>
-              <IonInput
-                ref={width}
-                name="width"
-                fill="outline"
-                labelPlacement="floating"
-                label="Width"
-                placeholder="Width"
-                type="number"
-                className="ion-margin-top"
-                required
-              ></IonInput>
-              <IonInput
-                ref={thickness}
-                name="thickness"
-                fill="outline"
-                labelPlacement="floating"
-                label="Thickness"
-                placeholder="Thickness"
-                type="number"
-                className="ion-margin-top"
-                required
-              ></IonInput>
-              <IonInput
-                ref={quantity}
-                name="quantity"
-                fill="outline"
-                labelPlacement="floating"
-                label="quantity"
-                placeholder="order quantity"
-                type="number"
-                className="ion-margin-top"
-                required
-              ></IonInput>
+      <div className="form-app">
+        <div className="form-app-core form-app-core-register">
+          <h3>Request Quotation</h3>
+          <IonText color="medium">
+           Let us know about your needs so you can get the most of our services.
+          </IonText>
+      <form onSubmit={handleSubmit}>
+        <IonInput
+          ref={full_name}
+          name="full_name"
+          fill="outline"
+          labelPlacement="floating"
+          label="Full Name"
+          placeholder="First Name"
+          type="text"
+          className="ion-margin-top"
+          required
+        ></IonInput>
+        <div className="country-phone">
+        <img className={flag} src={flagImg}/>
+        <IonInput
+          onFocus={()=>{
+          setFlag("country-phone_img")
+          }}
+          onBlur={()=>{
+          setFlag("")
+          }}
+          ref={phone_number}
+          name="phone_number"
+          fill="outline"
+          labelPlacement="floating"
+          label="Phone Number"
+          placeholder="Phone Number"
+          type="number"
+          className="ion-margin-top ion-margin-bottom"
+          required
+        ></IonInput>
+        </div>
+   
+        <IonInput
+          ref={length}
+          name="length"
+          fill="outline"
+          labelPlacement="floating"
+          label="Length"
+          placeholder="Length"
+          type="number"
+          className="ion-margin-top"
+          required
+        ></IonInput>
+        <IonInput
+          ref={height}
+          name="height"
+          fill="outline"
+          labelPlacement="floating"
+          label="Height"
+          placeholder="Height"
+          type="number"
+          className="ion-margin-top"
+          required
+        ></IonInput>
+        <IonInput
+          ref={width}
+          name="width"
+          fill="outline"
+          labelPlacement="floating"
+          label="Width"
+          placeholder="Width"
+          type="number"
+          className="ion-margin-top"
+          required
+        ></IonInput>
+        <IonInput
+          ref={thickness}
+          name="thickness"
+          fill="outline"
+          labelPlacement="floating"
+          label="Thickness"
+          placeholder="Thickness"
+          type="number"
+          className="ion-margin-top"
+          required
+        ></IonInput>
+        <IonInput
+          ref={quantity}
+          name="Quantity"
+          fill="outline"
+          labelPlacement="floating"
+          label="Quantity"
+          placeholder="Quantity"
+          type="number"
+          className="ion-margin-top"
+          required
+        ></IonInput>
 
-              <div>
-                <p>Available FloorPlan:{floorPlan.length}/2</p>
-                <div className="add-order-image-btns">
-                  <IonButton
-                    fill="outline"
-                    className="ion-margin-top"
-                    onClick={takePicture}
-                    disabled={floorPlan.length >= 2 ? true : false}
-                  >
-                    Floor Plan
-                  </IonButton>
-                  {floorPlan.length >= 2 && (
-                    <IonButton
-                      fill="outline"
-                      className="ion-margin-top"
-                      onClick={resetImages}
-                    >
-                      Reset
-                    </IonButton>
-                  )}
-                </div>
-              </div>
+        <div className="availableFloorPlan--parent">
+          <p className="availableFloorPlan">Available Photo: <span>{floorPlan.length}/2</span></p>
+          <div className="add-order-image-btns">
+            {floorPlan.length >= 2?(
               <IonButton
-                className="ion-margin-top"
-                type="submit"
-                expand="block"
+                color="dark"
+                onClick={resetImages}
               >
-                Add Order
-                <IonIcon icon={addCircleSharp} slot="end" />
+                Reset File
               </IonButton>
-            </form>
-          </IonCardContent>
-        </IonCard>
+            ):(<IonButton
+              color="medium"
+              onClick={takePicture}
+              disabled={floorPlan.length >= 2 ? true : false}
+            >
+              Floor Plan
+            </IonButton>)}
+          </div>
+        </div>
+        <IonButton
+          className="ion-margin-top"
+          type="submit"
+          expand="block"
+        >
+          Request Quotation
+          <IonIcon icon={addCircleSharp} slot="end" />
+        </IonButton>
+      </form>
+      </div>
+      </div>
       </IonContent>
     </IonPage>
   );
+}
 };
 
 export default AddOrder;

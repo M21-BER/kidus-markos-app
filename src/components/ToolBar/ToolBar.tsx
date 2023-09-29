@@ -25,8 +25,9 @@ import { Toast } from "../../utils/CustomToast";
 
 interface Props {
   title?: string;
+  defaultValue?:string;
 }
-export const ToolBarMain: React.FC<Props> = ({ title }) => {
+export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
   const { isAuthed, refresh,backHref,backBtn } = useContext(UserContext);
@@ -108,13 +109,13 @@ export const ToolBarMain: React.FC<Props> = ({ title }) => {
     </IonHeader>
   );
 };
-export const ToolBarDetails: React.FC<Props> = ({ title }) => {
+export const ToolBarDetails: React.FC<Props> = ({ title,defaultValue }) => {
   return (
     <IonHeader>
       <IonToolbar color="primary">
         <IonTitle>{title || "KM"}</IonTitle>
         <IonButtons slot="start">
-          <IonBackButton defaultHref="/"></IonBackButton>
+          <IonBackButton defaultHref={defaultValue?defaultValue:'/'}></IonBackButton>
         </IonButtons>
       </IonToolbar>
     </IonHeader>

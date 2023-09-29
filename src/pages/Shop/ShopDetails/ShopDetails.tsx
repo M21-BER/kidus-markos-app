@@ -18,7 +18,6 @@ import {
   checkmarkCircleOutline,
   informationCircleOutline,
 } from "ionicons/icons";
-import CustomSlider from "../../../components/slider/custom.slider";
 import { formatDistance } from "date-fns";
 import { Preferences } from "@capacitor/preferences";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -32,7 +31,14 @@ import { errorResponse } from "../../../utils/errorResponse";
 import { Toast } from "../../../utils/CustomToast";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import { UserContext } from "../../../context/AuthContext";
-
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+const settings = {
+  showThumbs: false,
+  infiniteLoop: true,
+  emulateTouch: true,
+  interval: 4000,
+};
 const ShopDetails: React.FC = () => {
   const id: any = useParams();
   const [detail, isPending, error, setUpdate] = useAxios(
@@ -163,15 +169,17 @@ const ShopDetails: React.FC = () => {
     }
   };
   const shopping = () => {
-    router.push("/payment");
+    router.push(`/payment/${id.id}`);
   };
-  const reload= ()=>{
 
-  }
+  const reload = async () => {
+    setUpdate(true);
+};
   if (error) {
     return (
       <IonPage>
-        <ErrorFallBack error={error} reload={reload}/>
+        <ToolBarDetails/>
+        <ErrorFallBack className='m_error_top' error={error} reload={reload} />
       </IonPage>
     );
   } else {
@@ -181,20 +189,22 @@ const ShopDetails: React.FC = () => {
         <IonContent className="ion-no-padding">
           {!isPending && (
             <div className="shop-details">
-              <CustomSlider>
-                {jsonCheck(detail.product.s_product_images).map(
+              <Carousel {...settings} autoPlay>
+              {jsonCheck(detail.product.s_product_images).map(
                   (image: any, index: number) => {
                     return (
-                      <ImageComponent
-                        key={index}
+                      <div key={index}>
+                        <ImageComponent
                         src={image.url}
                         hash={image.hash}
                         label={detail.product.s_product_name}
                       />
+                      </div>
+                  
                     );
                   }
                 )}
-              </CustomSlider>
+          </Carousel>
               <div className="km-detail-card">
                 <IonCard className="km-detail-card-main" color="warning">
                   <IonCardContent>

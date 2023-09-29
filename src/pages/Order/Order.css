@@ -1,7 +1,49 @@
 .add-order-image-btns {
   display: flex;
+  align-items: center;
+  /* border: 1px solid red; */
 }
 .add-order-image-btns ion-button {
   flex: 1;
   text-transform: capitalize;
+  /* border: 1px solid rgba(0, 0, 0, 0.1) !important; */
+}
+.availableFloorPlan {
+  text-indent: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  border-radius: 5px;
+}
+.availableFloorPlan--parent {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.country-phone {
+  position: relative;
+}
+.country-phone img {
+  width: 20px;
+  height: 10px;
+  box-shadow: 1px 1px 1px #2222;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+.country-phone_img {
+  opacity: 1 !important;
+}
+
+@media (max-width: 300px) {
+  .availableFloorPlan--parent {
+    display: block;
+  }
+  .availableFloorPlan {
+    text-align: center;
+    width: 100%;
+  }
 }

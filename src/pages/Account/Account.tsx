@@ -10,24 +10,20 @@ import {
   IonCardContent,
   IonText,
   IonIcon,
-  IonButton,
   useIonAlert,
   useIonViewWillEnter,
   useIonToast,
 } from "@ionic/react";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 import "./Account.css";
-import { useUser } from "../../hooks/useUser";
 import { useContext, useState } from "react";
 import Loader from "../../components/UI/Loader/Loader";
 import {
   briefcaseOutline,
   callOutline,
   cartOutline,
-  checkmarkCircleOutline,
   createOutline,
   informationCircleOutline,
-  logOut,
   mailOutline,
   personOutline,
   trashBinOutline,

@@ -83,7 +83,7 @@ const Menu: React.FC = () => {
           <Route path="/app/register" render={() => <Register />} exact />
           <Route path="/app/reset" render={() => <ResetPassword />} exact />
           <Route
-            path="/payment"
+            path="/payment/:id"
             render={(props) => {
               return !wait && isAuthed ? <Payment /> : <Login />;
             }}

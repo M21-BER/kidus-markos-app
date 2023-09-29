@@ -1,6 +1,13 @@
 ion-content {
   position: relative;
 }
+.control-arrow {
+  background: transparent !important;
+}
+.carousel-status {
+  display: none;
+}
+
 div.form-app {
   width: 100%;
   min-height: 100%;

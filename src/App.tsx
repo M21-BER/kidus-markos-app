@@ -39,7 +39,7 @@ const App: React.FC = () => {
           <Route exact path="/shopDetails/:id" render={() => <Menu />} />
           <Route exact path="/orderDetails/:id" render={() => <Menu />} />
           <Route exact path="/addOrder/:id" render={() => <Menu />} />
-          <Route exact path="/payment" render={() => <Menu />} />
+          <Route exact path="/payment/:id" render={() => <Menu />} />
           <Route exact path="/carts" render={() => <Menu />} />
           <Route exact path="/tasks" render={() => <Menu />} />
           <Route exact path="/myOrders" render={() => <Menu />} />
