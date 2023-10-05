@@ -29,6 +29,7 @@ import { UserContext } from "../../context/AuthContext";
 import Carts from "../../pages/Carts/Carts";
 import MyOrders from "../../pages/MyOrders/MyOrders";
 import Tasks from "../../pages/Tasks/Tasks";
+import ViewTask from "../../pages/Tasks/ViewTask";
 
 const Menu: React.FC = () => {
   const { isAuthed,wait } = useContext(UserContext);
@@ -77,7 +78,14 @@ const Menu: React.FC = () => {
             exact
           />
           <Route path="/app/carts" render={() => <Carts />} exact />
-          <Route path="/app/tasks" render={() => <Tasks />} exact />
+
+          <Route
+            path="/app/tasks"
+            render={(props) => {
+              return !wait && isAuthed ? <Tasks /> : <Login />;
+            }}
+            exact
+          />
           <Route path="/app/myOrders" render={() => <MyOrders />} exact />
           <Route path="/app/login" render={() => <Login />} exact />
           <Route path="/app/register" render={() => <Register />} exact />
@@ -86,6 +94,13 @@ const Menu: React.FC = () => {
             path="/payment/:id"
             render={(props) => {
               return !wait && isAuthed ? <Payment /> : <Login />;
+            }}
+            exact={true}
+          />
+          <Route
+            path="/task_view/:id"
+            render={(props) => {
+              return !wait && isAuthed ? <ViewTask /> : <Login />;
             }}
             exact={true}
           />

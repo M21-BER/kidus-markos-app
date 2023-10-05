@@ -46,15 +46,14 @@ const Payment: React.FC = () => {
                 !isPending && <div className='payment-details'>
                   <div><IonTitle className='ion-text-center ion-margin-bottom ion-margin-top'>Payment</IonTitle></div>
                    <div className='payment-desc'>
-                    <p><IonIcon color='primary' icon={informationCircleSharp}/> Transfer the amount to the banks listed below to complete the purchase</p>
+                    <IonText><IonIcon color='primary' icon={informationCircleSharp}/> Transfer the amount to one of the banks listed below to complete the purchase.</IonText>
                    </div>
                   <div>
                    {
                     bankData.map((item:any,index:number)=>{
                       return (
-                        <IonCard key={index} className='ion-margin-bottom gopHolder'>
-                        <IonCardHeader color='primary'><IonCardTitle>{item.name}</IonCardTitle></IonCardHeader>
-
+                    <IonCard key={index} className='ion-margin-bottom gopHolder'>
+                    <IonCardHeader  className='ion-no-padding payment-card-header' color='primary'><IonCardTitle>{item.name}</IonCardTitle></IonCardHeader>
                       <IonCardContent className='ion-no-padding gop'>
                       <div className='card-con'>
                       <img src={banks[index]} alt={item.name}/>
@@ -70,17 +69,17 @@ const Payment: React.FC = () => {
                    }
                   </div>  
                   <div  className='ctpm'>
-                      <IonButton id="open-modal-payment"  onClick={handleModal}>Continue to payment method</IonButton>
+                      <IonButton expand='block' id="open-modal" onClick={handleModal}>Continue to payment method</IonButton>
                   </div>
                 
                 </div> 
               }
         <IonModal 
+        ref={modal}
         className='modal-task'  
+        trigger="open-modal" 
         isOpen={openModal}
         onWillDismiss={(ev) => onWillDismiss(ev)}
-        ref={modal}
-        trigger="open-modal-payment" 
         initialBreakpoint={1} breakpoints={[0, 1]}>
         <div className="block">Block of Content</div>
         </IonModal>

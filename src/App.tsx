@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import { IonApp, IonContent, IonPage, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 /* Core CSS required for Ionic components to work properly */
@@ -24,12 +24,37 @@ import "./theme/shared.css";
 
 /* Pages, Screens & Components */
 import Menu from "./components/Menu/Menu";
+import { Preferences } from "@capacitor/preferences";
+import { useEffect, useState } from "react";
+import Intro from "./components/Intro/Intro";
+import {INTRO_KEY } from './utils/utils'
 setupIonicReact();
 
 const App: React.FC = () => {
+
+const [introSeen, setIntroSeen] = useState<boolean>(true);
+  useEffect(() => {
+    const checkStorage = async () => {
+      const seen = await Preferences.get({ key: INTRO_KEY });
+      setIntroSeen(seen.value === 'true');
+    };
+    checkStorage();
+  }, []);
+
+  const finishIntro = async () => {
+    setIntroSeen(true);
+    Preferences.set({ key: INTRO_KEY, value: 'true' });
+  };
   return (
     <IonApp>
-      <IonReactRouter>
+        {!introSeen ? (
+           <IonPage>
+           <IonContent>
+           <Intro onFinish={finishIntro}/> 
+           </IonContent>
+           </IonPage> 
+        ) : (
+           <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/register" render={() => <Menu />} />
           <Route exact path="/reset" render={() => <Menu />} />
@@ -42,12 +67,18 @@ const App: React.FC = () => {
           <Route exact path="/payment/:id" render={() => <Menu />} />
           <Route exact path="/carts" render={() => <Menu />} />
           <Route exact path="/tasks" render={() => <Menu />} />
+          <Route exact path="/task_view/:id" render={() => <Menu />} />
           <Route exact path="/myOrders" render={() => <Menu />} />
           <Route path="/" render={() => <Menu />} />
         </IonRouterOutlet>
       </IonReactRouter>
+        )
+      }
+     
     </IonApp>
   );
 };
 
 export default App;
+
+

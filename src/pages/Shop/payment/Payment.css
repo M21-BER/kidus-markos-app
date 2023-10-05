@@ -22,14 +22,23 @@
 }
 .payment-desc {
   width: 100%;
-  background: #ffffff;
+  background: transparent;
   padding: 10px;
 }
+.payment-desc ion-text {
+  color: rgba(0, 0, 0, 0.6);
+}
+.payment-desc ion-icon {
+  position: relative;
+  top: 2px;
+}
 .ctpm {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 95%;
+  margin: 0 auto;
 }
 .ctpm ion-button {
   text-transform: capitalize;
+}
+ion-card-header.payment-card-header {
+  padding: 10px 15px;
 }

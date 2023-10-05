@@ -2,9 +2,9 @@ import { IonButton, IonText,} from '@ionic/react';
 import React from 'react';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import 'swiper/css';
-import Intro1Svg from '../../assets/intro/1.svg';
-import Intro2Svg from '../../assets/intro/2.svg';
-import Intro3Svg from '../../assets/intro/3.svg';
+import Intro1 from '../../assets/intro/01.jpg';
+import Intro2 from '../../assets/intro/02.jpg';
+import Intro3 from '../../assets/intro/03.jpg';
 import './Intro.css';
 
 interface ContainerProps {
@@ -20,26 +20,21 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
   return (
     <Swiper>
       <SwiperSlide>
-        <img src={Intro1Svg} alt="Intro 1" />
-        <IonText>
-          <h3>Build awesome apps with Ionic UI components!</h3>
-        </IonText>
+        <img src={Intro1} alt="Intro 1" />
+        <IonText className='ion-padding ion-no-margin intro-text' color="medium">Kidus Markos Woodworks, a leading woodworking company with over 25 years of experience able to create high-quality wooden products
+ for a variety of uses thanks to a talented team of craftsmen and modern machinery</IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
 
       <SwiperSlide>
-        <img src={Intro2Svg} alt="Intro 2" />
-        <IonText>
-          <h3>Create powerful native apps with Capacitor.</h3>
-        </IonText>
+        <img src={Intro2} alt="Intro 2" />
+        <IonText className='ion-padding ion-no-margin intro-text' color="medium">We create our distinctive antique-style furniture for Kuriftu the Diplomat Restaurant, Negash Lodge, Paradise Lodge, Yod Abyssinia Cultural Restaurant, Capital Hotel, Wudasse Hotel, and many others</IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
-
+      
       <SwiperSlide>
-        <img src={Intro3Svg} alt="Intro 3" />
-        <IonText>
-          <h3>Enjoy learning to code!</h3>
-        </IonText>
+        <img src={Intro3} alt="Intro 3" />
+        <IonText className='ion-padding ion-no-margin intro-text' color="medium">Our team of experts can help you plan, design, and furnish your space to create the perfect environment for your family or business.</IonText>
         <IonButton onClick={() => onFinish()}>Finish</IonButton>
       </SwiperSlide>
     </Swiper>
@@ -47,3 +42,5 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
 };
 
 export default Intro;
+
+

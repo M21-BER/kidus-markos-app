@@ -11,6 +11,266 @@ section.task-status {
   justify-content: center;
 }
 
-ion-modal.modal-task {
+/* ion-modal.modal-task {
   --height: auto;
+} */
+
+section.task_progress {
+  width: 100%;
+}
+section.task_progress h3 {
+  text-align: center;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items_confirm_parent {
+  flex-direction: column;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items_confirm_parent
+  > div:nth-of-type(1) {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  position: relative;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items_confirm_parent
+  > div:nth-of-type(2) {
+  border-top: 1px solid rgba(149, 157, 165, 0.2);
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  flex-direction: column;
+  margin: 5px 0;
+  transition: all 200ms ease-in-out;
+}
+span.choice_dropdown {
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  color: rgba(54, 23, 5, 0.7);
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items_confirm_parent
+  > div.off {
+  display: none !important;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items_confirm_parent
+  > div.on {
+  display: flex !important;
+}
+section.task_progress > div.task_progress-box > div.task_progress-box--items {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  div.view_task_backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: block !important;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  div.view_task_backdrop.red {
+  background: rgba(146, 94, 26, 0.3);
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  div.view_task_backdrop.green {
+  background: rgba(26, 146, 36, 0.3);
+}
+
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  div.view_task_backdrop.backdrop_hide {
+  display: none !important;
+}
+section.task_progress > div.task_progress-box > div.task_progress-box--items {
+  padding: 10px 15px;
+  margin: 10px auto;
+  min-height: 100px;
+  background: #ffff;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  h4
+  .done {
+  text-shadow: 1px 1px 1px #000;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2dd36f;
+  border-radius: 100%;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  h4
+  .pending {
+  text-shadow: 1px 1px 1px #000;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(185, 125, 46);
+  border-radius: 100%;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  ion-chip {
+  flex: 0.5;
+  display: flex;
+  justify-content: center;
+  background: #558faa;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  ion-text {
+  flex: 2;
+}
+section.task_progress
+  > div.task_progress-box
+  > div.task_progress-box--items
+  ion-button {
+  flex: 2;
+}
+
+section.tps-progress-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  transition: all 400ms ease-in-out;
+}
+section.tps-progress-bar-header {
+  position: relative;
+}
+.tps-progress-bar-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+section.tps-progress-bar.bar-off {
+  display: none !important;
+}
+section.tps-progress-bar.bar-on {
+  display: flex !important;
+}
+
+section.tps-progress-bar .single-chart {
+  width: 33%;
+  justify-content: space-around;
+}
+
+section.tps-progress-bar .circular-chart {
+  display: block;
+  margin: 10px auto;
+  max-width: 80%;
+  max-height: 100px;
+}
+
+section.tps-progress-bar .circle-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 3.8;
+}
+
+section.tps-progress-bar .circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+section.tps-progress-bar .circular-chart.green .circle {
+  stroke: #4cc790;
+}
+section.tps-progress-bar .percentage {
+  fill: #666;
+  font-family: sans-serif;
+  font-size: 0.5em;
+  text-anchor: middle;
+}
+
+form.my_accessories > div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 10px;
+  margin: 10px 0;
+}
+form.my_accessories ion-item {
+  border-bottom: 1px solid rgba(54, 23, 5, 0.1);
+  text-align: right;
+  width: 95%;
+  margin: 0 auto;
+}
+div.customer_feedback ion-item:hover,
+div.customer_feedback ion-item:focus {
+  --background: transparent !important;
+}
+
+div.customer_feedback ion-radio {
+  --border-radius: 4px;
+  --inner-border-radius: 4px;
+  --color: #ddd;
+  --color-checked: #40ec15;
+}
+div.customer_feedback ion-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+div.customer_feedback ion-radio.ios {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+div.customer_feedback .radio-checked.ios {
+  border-color: #40ec15;
+}
+div.customer_feedback .customer_satisfaction ion-list {
+  margin-bottom: 20px;
+}
+div.customer_feedback .customer_satisfaction {
+  padding: 10px 15px;
 }

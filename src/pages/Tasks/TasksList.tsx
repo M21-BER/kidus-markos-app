@@ -1,21 +1,21 @@
 import {
     IonAvatar,
-    IonButton,
     IonCard,
     IonCardContent,
     IonChip,
     IonIcon,
     IonItem,
     IonLabel,
-    IonText
+    IonText,
+    useIonRouter
   } from "@ionic/react";
   import { analyticsOutline } from "ionicons/icons";
   import { formatDistance } from "date-fns";
   interface Props {
     tasks: any[];
-    handleModal:(task:any)=>void;
   }
-  const TasksList: React.FC<Props> = ({ tasks,handleModal }) => {
+  const TasksList: React.FC<Props> = ({ tasks }) => {
+    const navigate = useIonRouter();
     if (tasks.length === 0) {
       return (
         <div className="ion-text-center NDA">
@@ -26,8 +26,8 @@ import {
       return (
         <>
           {tasks.map((task, index) => (
-            <IonCard key={index}  id="open-modal" onClick={()=>{
-              handleModal(task)
+            <IonCard key={index} onClick={()=>{
+             navigate.push(`/task_view/${task.task_id}`)
             }}>
               <IonCardContent className="ion-no-padding">
                 <IonItem lines="none">
@@ -35,7 +35,7 @@ import {
                     <IonIcon size="large" style={{background:'rgba(54,23,5,0.1)',border:'1px solid rgba(0,0,0,0.1)',borderRadius:'100%',padding:'5px'}} icon={analyticsOutline} />
                   </IonAvatar>
                   <IonLabel>
-                    {task.detail}
+                    {task.task_title}
                     <p>{formatDistance(new Date(task.createdAt), new Date(), {
       addSuffix: true,
     })}</p>

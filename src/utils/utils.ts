@@ -8,6 +8,8 @@ export const CART_KEY = "KidusMarkosCart436";
 
 export const SIGNUP_KEY = "KidusMarkosSIGNUP12066";
 
+export const INTRO_KEY = 'intro-seen-FOA9goHffY';
+
 export const jsonCheck = (json: any) => {
   try {
     if (typeof json === "object") {
