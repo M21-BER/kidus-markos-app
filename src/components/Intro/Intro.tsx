@@ -21,14 +21,16 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
     <Swiper>
       <SwiperSlide>
         <img src={Intro1} alt="Intro 1" />
-        <IonText className='ion-padding ion-no-margin intro-text' color="medium">Kidus Markos Woodworks, a leading woodworking company with over 25 years of experience able to create high-quality wooden products
- for a variety of uses thanks to a talented team of craftsmen and modern machinery</IonText>
+        <IonText className='ion-padding ion-no-margin intro-text' color="medium">Kidus Markos Woodworks, a leading woodworking company est. in 1987 G.C. to create high-quality wooden products
+ for a variety of uses thanks to a talented team of craftsmen and modern machineries.</IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
 
       <SwiperSlide>
         <img src={Intro2} alt="Intro 2" />
-        <IonText className='ion-padding ion-no-margin intro-text' color="medium">We create our distinctive antique-style furniture for Kuriftu the Diplomat Restaurant, Negash Lodge, Paradise Lodge, Yod Abyssinia Cultural Restaurant, Capital Hotel, Wudasse Hotel, and many others</IonText>
+        <IonText className='ion-padding ion-no-margin intro-text' color="medium">We have created our distinctive antique-style furniture for Kuriftu Resort (Debre Zeyit & Bahirdar), Diplomat Restaurant, 
+Negash Lodge, Paradise Lodge, Yod Abyssinia Cultural Restaurant,
+ Capital Hotel, Wudasse Hotel, and many others</IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
       

@@ -13,6 +13,7 @@ import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import {
   addCircleSharp,
   closeCircleOutline,
+  imagesOutline,
   informationCircleOutline,
 } from "ionicons/icons";
 import { useRef, useState } from "react";
@@ -62,17 +63,22 @@ const AddOrder: React.FC = () => {
     setFloorPlan([]);
   };
   const takePicture = async () => {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Base64,
-    });
-
-    const img = `data:image/jpeg;base64,${image.base64String}`;
-    let imgSplit = img.split(";")[1].split(",")[1];
-    setFloorPlan((pre) => {
-      return [...pre, b64toFile(imgSplit, "image/png")];
-    });
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+      });
+  
+      const img = `data:image/jpeg;base64,${image.base64String}`;
+      let imgSplit = img.split(";")[1].split(",")[1];
+      setFloorPlan((pre) => {
+        return [...pre, b64toFile(imgSplit, "image/png")];
+      });
+    } catch (error) {
+     Toast(presentIonToast,"Asset Cancelled",imagesOutline,1000,'light');
+      
+    }
   };
 
   const handleSubmit = (event: React.FormEvent) => {

@@ -42,3 +42,17 @@
 ion-card-header.payment-card-header {
   padding: 10px 15px;
 }
+div.ept-con {
+  margin-top: 50px !important;
+}
+div.ept-con form ion-input {
+  margin-bottom: 20px !important;
+}
+div.ept-con h3 {
+  margin-bottom: 20px !important;
+}
+div.payment_transaction {
+  padding: 10px;
+}
+div.payment_transaction form.payment_transaction {
+}

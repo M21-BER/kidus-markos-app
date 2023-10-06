@@ -240,23 +240,23 @@ const ViewTask: React.FC = () => {
                         if(validator(task,'machine',"bool")){
                           defaultReturn.step10 = 2;
                           defaultReturn.step11 = 1;
-                          setPercentage(30)
+                          setPercentage(40)
                           if(validator(task,'carpentry',"bool")){
                             defaultReturn.step11 = 2;
                             defaultReturn.step12 = 1;
-                            setPercentage(45)
+                            setPercentage(55)
                             if(validator(task,'sanding',"bool")){
                               defaultReturn.step12 = 2;
                               defaultReturn.step13 = 1;
-                              setPercentage(55)
+                              setPercentage(70)
                               if(validator(task,'final_payment_request',"bool")){
                                 defaultReturn.step13 = 2;
                                 defaultReturn.step14 = 1;
-                                setPercentage(60);
+                                setPercentage(75);
                                 if(validator(task,'painting',"bool")){
                                   defaultReturn.step14 = 2;
                                   defaultReturn.step15 = 1;
-                                  setPercentage(72)
+                                  setPercentage(87)
                                   if(validator(task,'assembly',"bool")){
                                     defaultReturn.step15 = 2;
                                     defaultReturn.step16 = 1;
@@ -388,7 +388,7 @@ const ViewTask: React.FC = () => {
   const handleCommentSub = (e: any) => {
     if (e.detail.value.length >= 80) {
       // @ts-ignore
-      review.current.value = e.detail.value.toString().slice(0, 80);
+      comment.current.value = e.detail.value.toString().slice(0, 80);
       Toast(presentIonToast,"comment must be below 80 character",informationCircleOutline);
     }
   };
