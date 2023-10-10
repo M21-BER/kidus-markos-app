@@ -104,6 +104,9 @@ div.review-card {
   gap: 5px;
   padding: 14px;
 }
+div.review-card ion-text.review-card-msg {
+  padding-left: 2px;
+}
 div.review-card ion-text:nth-of-type(1) {
   font-size: 13px;
 }

@@ -20,6 +20,7 @@ import {
 } from "ionicons/icons";
 import { Toast } from "../../utils/CustomToast";
 import { UserContext } from "../../context/AuthContext";
+import Loader from "../../components/UI/Loader/Loader";
 
 const Login: React.FC = () => {
   const clientIdentity = useRef<null | HTMLIonInputElement>(null);
@@ -29,8 +30,6 @@ const Login: React.FC = () => {
   const [presentIonToast] = useIonToast();
   const { isAuthed, refresh, wait,setBackBtn } = useContext(UserContext);
   const [stat, setStat] = useState<boolean>(false);
-    // console.log(isAuthed);
-    
 
   useIonViewWillEnter(()=>{
     if (isAuthed) {
@@ -42,20 +41,6 @@ const Login: React.FC = () => {
       }  
     }
  })
-  // useEffect(() => {
-  //   if (isAuthed) {
-  //     router.goBack();
-  //   }
-  // }, [isAuthed]);
-  // console.log(isAuthed);
-
-  // if (!wait) {
-  //   console.log(isAuthed);
-  // }
-
-  // useIonViewWillEnter(() => {
-  //   refresh!();
-  // });
   const getSignStatus = async () => {
     try {
       const SData = await Preferences.get({ key: SIGNUP_KEY });
@@ -141,19 +126,27 @@ const Login: React.FC = () => {
     }
   };
 
-  return (
+  if(wait){
+  return(
     <IonPage>
-      <>
-        <ToolBarMain title="Sign in" />
-        <LoginContent
-          handleSubmit={handleSubmit}
-          clientIdentity={clientIdentity}
-          password={password}
-          stat={stat}
-        />
-      </>
+      <Loader/>
     </IonPage>
-  );
+  )
+  }else{
+    return (
+      <IonPage>
+        <>
+          <ToolBarMain title="Sign in" />
+          <LoginContent
+            handleSubmit={handleSubmit}
+            clientIdentity={clientIdentity}
+            password={password}
+            stat={stat}
+          />
+        </>
+      </IonPage>
+    );
+  }
 };
 
 export default Login;

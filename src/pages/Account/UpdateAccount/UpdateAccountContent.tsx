@@ -34,8 +34,7 @@ const UpdateAccountContent: React.FC<Props> = ({
     <IonContent className="ion-padding">
       <div className="form-app">
         <div className="form-app-core">
-          <h3>
-            <IonIcon icon={createOutline} />
+          <h3 style={{marginBottom:'40px'}}>
             <span>Update Account</span>
           </h3>
           <form onSubmit={handleSubmit}>

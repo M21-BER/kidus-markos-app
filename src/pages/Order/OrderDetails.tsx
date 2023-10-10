@@ -29,14 +29,14 @@ const OrderDetails: React.FC = () => {
     if (error) {
       return (
         <IonPage>
-          <ToolBarDetails defaultValue='/app/home/order' title={!isPending && detail.item.product_name}/>
+          <ToolBarDetails defaultValue='/app/home/order' title="Order Details"/>
           <ErrorFallBack className='m_error_top' error={error} reload={reload} />
         </IonPage>
       );
     } else {
     return (
         <IonPage>
-         <ToolBarDetails defaultValue='/app/home/order' title={!isPending && detail.item.product_name}/>
+         <ToolBarDetails defaultValue='/app/home/order' title={!isPending && detail && detail.item && detail.item.product_name}/>
         <IonContent className="ion-no-padding">
          {!isPending && 
          (

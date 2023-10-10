@@ -1,4 +1,4 @@
-import {IonAvatar, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useContext, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../../components/ToolBar/ToolBar';
 import { useAxios } from '../../../hooks/useAxios';
@@ -15,8 +15,10 @@ import { Toast } from '../../../utils/CustomToast';
 import { errorResponse } from '../../../utils/errorResponse';
 import axios from 'axios';
 import { UserContext } from '../../../context/AuthContext';
+import { useParams } from 'react-router';
 
 const Payment: React.FC = () => {
+    const {id}: any = useParams();
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/settings`);
     let bankData:[] = [];
     let banks = [image1,image2,image3,image4];
@@ -24,7 +26,7 @@ const Payment: React.FC = () => {
     const modal = useRef<HTMLIonModalElement>(null);
     const transaction = useRef<HTMLIonInputElement>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const {user} = useContext(UserContext);
+    const {user,shopPayment,shopColor} = useContext(UserContext);
      if(!isPending){
       bankData = jsonCheck(detail[0].data).bank_option
      }
@@ -49,15 +51,19 @@ const Payment: React.FC = () => {
            });
          if(paymentRes.data.status){
            if(typeof paymentRes.data.items === 'object' &&  paymentRes.data.items.length > 0){
-            //  if(){
-            //   paymentRes.data.items.length
-            //  }
-             Toast(presentIonToast,"validated successfully",checkmarkCircleOutline);
+             let op = paymentRes.data.items.filter((f:any)=>{
+              return  f.transaction_code === transaction_code && f.delivered === false
+           })
+             if(op.length !== 0){
+              Toast(presentIonToast,"validated successfully product will be delivered with 3 days",checkmarkCircleOutline);
+             }else{
+              Toast(presentIonToast,"Invalid Transaction Code",checkmarkCircleOutline)
+             }
            }else{
             Toast(presentIonToast,"wait a bit longer please",checkmarkCircleOutline)
            }
            }else{
-            throw new Error("server error...")
+            throw new Error(failMessage)
            }
         } catch (error) {
           const {message,status} = errorResponse(error);
@@ -82,7 +88,7 @@ const Payment: React.FC = () => {
      if(error){
       return (
         <IonPage>
-          <ToolBarDetails defaultValue={`/shopDetails/9`} title="Proceed to Payment"/>
+          <ToolBarDetails  title="Proceed to Payment"/>
           <ErrorFallBack className='m_error_top' error={error} reload={reload} />
         </IonPage>
       );
@@ -93,9 +99,37 @@ const Payment: React.FC = () => {
             <IonContent className="ion-padding">
               {
                 !isPending && <div className='payment-details'>
-                  <div><IonTitle className='ion-text-center ion-margin-bottom ion-margin-top'>Payment</IonTitle></div>
                    <div className='payment-desc'>
                     <IonText><IonIcon color='primary' icon={informationCircleSharp}/> Transfer the amount to one of the banks listed below to complete the purchase.</IonText>
+                   </div>
+                   <div className='shop-payment-details'>
+                     <table>
+                      <tbody>
+                      <tr className='span-tr'>
+                      <td colSpan={2}>Shop payment details</td>
+                      </tr>
+                      <tr>
+                      <th>Product</th>
+                      <td>{shopPayment?shopPayment.s_product_name:"unavailable"}</td>
+                      </tr>
+                      <tr>
+                      <th>Price</th>
+                      <td>{shopPayment?`${shopPayment.s_product_price}.ETB`:"unavailable"}</td>
+                      </tr>
+                      <tr>
+                      <th>Category</th>
+                      <td>{shopPayment?`${shopPayment.s_product_category}`:"unavailable"}</td>
+                      </tr>
+                      <tr>
+                      <th>Color</th>
+                      <td><div className='shop-payment-details-color' style={{background:`${shopColor}`}}></div></td>
+                      </tr>
+                      <tr>
+                      <th>Delivery</th>
+                      <td>within 1 day</td>
+                      </tr>
+                      </tbody>
+                     </table>
                    </div>
                   <div>
                    {

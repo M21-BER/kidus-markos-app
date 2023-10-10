@@ -3,7 +3,7 @@ import { checkmarkCircleSharp } from "ionicons/icons";
 
 interface Props {
 colors:[]
-updateColor:(i:number)=>void
+updateColor:(i:number,color:string)=>void
 selectedColor:React.SetStateAction<number>
 }
 const ColorList: React.FC<Props> = ({colors,updateColor,selectedColor}) => {
@@ -15,7 +15,7 @@ const ColorList: React.FC<Props> = ({colors,updateColor,selectedColor}) => {
         {
              colors.map((color:string,index:number)=>{
                  return (<div key={index} className='pickColorParent' style={{background:color}}>  
-                   <div onClick={()=>{updateColor(index)}}>
+                   <div onClick={()=>{updateColor(index,color)}}>
                     {(selectedColor == index) && <IonIcon icon={checkmarkCircleSharp} /> }
                     <p>{color}</p>
                     </div>

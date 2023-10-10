@@ -87,7 +87,7 @@ const Carts: React.FC = () => {
 
   return (
     <IonPage>
-      <ToolBarMain />
+      <ToolBarMain title="My Carts"/>
       <IonCard className="ion-no-margin">
               <IonCardContent>
               <div className='km-btns'>

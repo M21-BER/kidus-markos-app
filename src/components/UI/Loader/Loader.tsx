@@ -1,12 +1,10 @@
 import { IonContent, IonPage, IonText } from '@ionic/react';
 import { PacmanLoader } from 'react-spinners';
-import { ToolBarMain } from '../../ToolBar/ToolBar';
 import './Loader.css'
 const Loader: React.FC = () => {
 
     return (
         <IonPage>
-        <ToolBarMain/>
         <IonContent>
         <div className="loader">
         <div>

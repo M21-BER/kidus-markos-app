@@ -54,5 +54,31 @@ div.ept-con h3 {
 div.payment_transaction {
   padding: 10px;
 }
+div.shop-payment-details {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  list-style-type: none;
+  padding: 10px 20px;
+}
+div.shop-payment-details table {
+  width: 100%;
+}
+div.shop-payment-details table .span-tr td {
+  text-align: center;
+}
+div.shop-payment-details div.shop-payment-details-color {
+  width: 100%;
+  height: 20px;
+}
+div.shop-payment-details table,
+div.shop-payment-details th,
+div.shop-payment-details td {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+}
+div.shop-payment-details th,
+div.shop-payment-details td {
+  padding: 5px;
+  text-align: left;
+}
 div.payment_transaction form.payment_transaction {
 }

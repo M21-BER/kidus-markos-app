@@ -14,13 +14,13 @@ const useUser = () => {
     setWait(false);
     setUser(null);
     setIsAuthed(false);
-    setUpdate(false);
   };
   const refresh = () => {
-    setUpdate(true);
+    setWait(true);
+    setUpdate(!update);
   };
   const updateSavedData = (Data: any) => {
-    const usd = async () => {
+    (async () => {
       try {
         const userData = await Preferences.get({ key: login_key });
         if (userData && userData.value) {
@@ -28,20 +28,17 @@ const useUser = () => {
             key: login_key,
             value: JSON.stringify(Data),
           });
-          setWait(false);
           setUser(userData);
           setIsAuthed(true);
-          setUpdate(false);
+          setWait(true);
+          setUpdate(!update);
         }
       } catch (error) {
-        await removeUser();
+         removeUser();
       }
-    };
-    usd();
+    });
   };
   useEffect(() => {
-    console.log("Rendered");
-    
     const checkUser = async () => {
       try {
         const userData = await Preferences.get({ key: login_key });
@@ -49,39 +46,36 @@ const useUser = () => {
           resetState = true;
           const parsedUserData = jsonCheck(userData.value);
           if (parsedUserData.token && jwt_decode(parsedUserData.token)) {
+            console.log("Rendered successfully");
               setWait(false);
               setUser(parsedUserData);
               setIsAuthed(true);
-              setUpdate(false);
-          } else {
-            console.log("error 1");
-          
+          } else {   
+            console.log("Rendered with error");
             await removeUser();
           }
         } else {
+          console.log("Rendered with error");
           setWait(false);
           setUser(null);
           setIsAuthed(false);
-          setUpdate(false);
         }
-      } catch (error) {
-        console.log("error 3");
-        
+      } catch (error) {     
+        console.log("Rendered with error");
         if(resetState){
-          await removeUser();    
+          removeUser();    
           resetState = false;          
         }else{
           setWait(false);
           setUser(null);
           setIsAuthed(false);
-          setUpdate(false);
         }
       }
     };
     checkUser();
   }, [update]);
 
-  return { user, isAuthed, refresh, wait, updateSavedData };
+  return { user, isAuthed, wait,refresh, updateSavedData };
 };
 
 export { useUser };

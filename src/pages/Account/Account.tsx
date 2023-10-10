@@ -38,10 +38,10 @@ import { logout } from "../../utils/logout";
 import Feedback from "./Feedback/Feedback";
 
 const Account: any = () => {
-  const { user, isAuthed, refresh } = useContext(UserContext);
-  useIonViewWillEnter(() => {
-    refresh!();
-  });
+  const { user, wait, refresh } = useContext(UserContext);
+  // useIonViewWillEnter(() => {
+  //   refresh!();
+  // });
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -104,17 +104,18 @@ const Account: any = () => {
   const handleModal_2 = () => {
     setOpenModal_2(true);
   };
-  if (!isAuthed) {
+  
+  if (wait) {
     return <Loader />;
   } else {
     return (
       <IonPage>
-        <ToolBarMain />
+        <ToolBarMain title="My Account"/>
         <IonContent className="ion-no-padding">
           <IonCard>
             <IonCardHeader>
               <IonCardTitle color="medium" className="ion-text-center">
-                My Profile
+                 Account & Settings
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>

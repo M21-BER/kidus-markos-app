@@ -91,9 +91,6 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);
 
-  function confirm() {
-    modal.current?.dismiss(input.current?.value, "confirm");
-  }
 
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
     setOpenModal(false)
@@ -109,11 +106,6 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
         <IonToolbar color="primary">
           <IonButtons slot="start">
             <IonButton onClick={() => setOpenModal(false)}>Cancel</IonButton>
-          </IonButtons>
-          <IonButtons slot="end">
-            <IonButton strong={true} onClick={() => confirm()}>
-              Confirm
-            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

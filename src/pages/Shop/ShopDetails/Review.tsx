@@ -1,5 +1,5 @@
 import { IonButton, IonCard, IonCardContent, IonIcon, IonInput, IonItem, IonText, useIonToast } from "@ionic/react";
-import { informationCircleOutline, paperPlaneSharp } from "ionicons/icons";
+import { informationCircleOutline, paperPlaneSharp, personCircleOutline } from "ionicons/icons";
 import { jsonCheck } from "../../../utils/utils";
 import { formatDistance } from "date-fns";
 import { Toast } from "../../../utils/CustomToast";
@@ -11,13 +11,20 @@ reviewList:any[];
 const Review: React.FC<Props> = ({handleReview,review,reviewList}) => {
   const [presentIonToast] = useIonToast();
   const handleReviewSub = (e: any) => {
-    if (e.detail.value.length >= 80) {
+    if (e.detail.value.length >= 200) {
       // @ts-ignore
-      review.current.value = e.detail.value.toString().slice(0, 80);
-      Toast(presentIonToast,"review must be below 80 character",informationCircleOutline);
+      review.current.value = e.detail.value.toString().slice(0, 200);
+      Toast(presentIonToast,"review must be below 200 character",informationCircleOutline);
     }
   };
-
+  const rev  = (arr:[])=>{
+    let arr1:[] = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+      arr1.push(arr[i]);
+    }
+    return arr1;
+  }
+  
 return (
     <>
 <IonCard className='km-detail-review' color='warning'>
@@ -34,13 +41,13 @@ return (
       {
         (reviewList.length === 0)? 
         <div className='km-card-content ion-text-center'><IonText color='medium'>No reviews for this item</IonText></div>:
-        jsonCheck(reviewList).map((r:any,index:number)=>{
+        rev(jsonCheck(reviewList)).map((r:any,index:number)=>{
            return <IonCard key={index}   color='warning'>
               <IonCardContent className="ion-no-padding review-card-parent"  color='warning'>
                 <div className="review-card">
-                <IonText>{r.name}</IonText>
+                <IonText style={{textTransform:'capitalize',display:'flex',justifyContent:'flex-start',alignItems:'center',gap:'3px'}}><IonIcon icon={personCircleOutline}/> {r.name}</IonText>
                 <IonText className="ion-margin-top" color="medium">{formatDistance(new Date(parseInt(r.reviewTime)), new Date(),{addSuffix: true, })}</IonText>
-                <IonText className="ion-margin-bottom" color="medium">{r.msg}</IonText>
+                <IonText className="ion-margin-bottom review-card-msg" color="medium">{r.msg}</IonText>
                 </div>
               </IonCardContent>
            </IonCard>

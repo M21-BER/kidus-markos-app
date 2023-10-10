@@ -10,7 +10,7 @@ import {
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import { useParams } from "react-router";
 import { useAxios } from "../../../hooks/useAxios";
-import { url, jsonCheck, CART_KEY } from "../../../utils/utils";
+import { url, jsonCheck, CART_KEY, failMessage } from "../../../utils/utils";
 import ImageComponent from "../../../components/UI/Image";
 import "../../Home/HomeDetail.css";
 import {
@@ -51,7 +51,7 @@ const ShopDetails: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
-  const { user, isAuthed } = useContext(UserContext);
+  const { user, isAuthed,setShopPayment,setShopColor } = useContext(UserContext);
   if (!isPending) {
     distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
       addSuffix: true,
@@ -87,14 +87,16 @@ const ShopDetails: React.FC = () => {
     checkCart();
   })
 
-  const updateColor = (colorIndex: number) => {
+  const updateColor = (colorIndex: number,color:string) => {
     setSelectedColor(colorIndex);
+    setShopColor!(color)
   };
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
   const handleReview = (e: React.FormEvent) => {
     e.preventDefault();
+    let checkReview = review.current?.value;
     const addReview = async () => {
       try {
         const s_product_reviews = JSON.stringify({
@@ -104,7 +106,7 @@ const ShopDetails: React.FC = () => {
           reviewTime: Date.now(),
         });
        await axios.patch(
-          `${url}/api/shops/${id.id}/empty`,
+          `${url}/api/shops/client/${id.id}/empty`,
           { s_product_reviews },
           {
             headers: {
@@ -115,6 +117,8 @@ const ShopDetails: React.FC = () => {
         setUpdate(true);
         Toast(presentIonToast, "Review Added Successfully", checkmarkCircleOutline);
       } catch (error) {
+        console.log(error);
+        
         const { message, status } = errorResponse(error);
         if (status && status == 401) {
           Toast(presentIonToast, message, informationCircleOutline);
@@ -127,16 +131,24 @@ const ShopDetails: React.FC = () => {
         }
       }
     };
-    if (isAuthed) {
-      if (!review.current?.value) {
-        Toast(presentIonToast,"Please write your message first",informationCircleOutline)
-      } else {
-        addReview();
+   if(checkReview){
+    if (checkReview.toString().length <= 200) {
+      if (isAuthed) {
+        if (!review.current?.value) {
+          Toast(presentIonToast,"Please write your message first",informationCircleOutline)
+        } else {
+          addReview();
+        }
+      }else{
+        Toast(presentIonToast,"Please login first",informationCircleOutline);
+        return router.push('/app/login')
       }
     }else{
-      Toast(presentIonToast,"Please login first",informationCircleOutline);
-      return router.push('/app/login')
+      Toast(presentIonToast,"review must be below 80 character",informationCircleOutline);
     }
+   }else{
+    Toast(presentIonToast,"please write review first",informationCircleOutline);
+   }
     reset(review);
   };
   const addToCart = async () => {
@@ -168,8 +180,34 @@ const ShopDetails: React.FC = () => {
       console.log("error on adding cart");
     }
   };
-  const shopping = () => {
-    router.push(`/payment/${id.id}`);
+  const shopping = async() => {
+   try {
+    const field = {
+      s_product_id:id.id,
+      client_id:user.client_id}  
+    if(user && isAuthed){
+      const addShop = await axios.post(`${url}/api/payment`,field,{
+        headers:{
+          Authorization:user.token
+        }
+      })
+      if(addShop.status === 201 && addShop.data.status === true){
+        setShopPayment!(detail?detail.product:null);
+        router.push(`/payment/${id.id}`);
+      }else{
+        throw Error(failMessage);
+      }
+    }else{
+     Toast(presentIonToast,"please login first",informationCircleOutline)
+    }
+   } catch (error) {
+    const {message,status} = errorResponse(error);
+    if(message && status){
+     Toast(presentIonToast,message,informationCircleOutline)
+    }else{
+      Toast(presentIonToast,failMessage,informationCircleOutline)
+    }
+   }
   };
 
   const reload = async () => {
@@ -178,14 +216,14 @@ const ShopDetails: React.FC = () => {
   if (error) {
     return (
       <IonPage>
-        <ToolBarDetails/>
+        <ToolBarDetails title="Shop Details"/>
         <ErrorFallBack className='m_error_top' error={error} reload={reload} />
       </IonPage>
     );
   } else {
     return (
       <IonPage>
-        <ToolBarDetails />
+         <ToolBarDetails title={detail && detail.product?detail.product.s_product_name:`Shop Details`}/>
         <IonContent className="ion-no-padding">
           {!isPending && (
             <div className="shop-details">

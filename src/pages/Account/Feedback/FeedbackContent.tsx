@@ -20,9 +20,8 @@ const FeedbackContent: React.FC<Props> = ({
     <IonContent className="ion-padding">
       <div className="form-app">
         <div className="form-app-core">
-          <h3>
-            <IonIcon icon={addCircleOutline} />
-            <span>Add Feedback</span>
+          <h3 style={{marginBottom:'40px'}}>
+            <span>Customer Feedback</span>
           </h3>
           <form onSubmit={handleSubmit}>
             <IonInput

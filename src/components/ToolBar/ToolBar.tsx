@@ -11,6 +11,7 @@ import {
   useIonRouter,
   useIonAlert,
   useIonToast,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import {
   logOutOutline,
@@ -69,7 +70,7 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
         ],
       });
     } else {
-      router.push("/app/login", "root", "replace");
+      router.push("/app/login", "root");
     }
   };
   const searchValue = useRef<null | HTMLIonSearchbarElement>(null);
@@ -77,6 +78,9 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
     e.preventDefault();
     console.log(searchValue.current?.value);
   };
+  useIonViewWillEnter(()=>{
+    refresh!();
+  })
   return (
     <IonHeader>
       <IonToolbar color="primary">
@@ -89,7 +93,6 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
           )
          }
         <IonButtons slot="end">
-          {isAuthed ? "Sign out" : "Sign in"}
           <IonButton onClick={handleUserToolBar}>
             <IonIcon
               slot="icon-only"

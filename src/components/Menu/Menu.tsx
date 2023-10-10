@@ -6,6 +6,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import React, { useContext } from "react";
 import {
@@ -32,13 +33,14 @@ import Tasks from "../../pages/Tasks/Tasks";
 import ViewTask from "../../pages/Tasks/ViewTask";
 
 const Menu: React.FC = () => {
-  const { isAuthed,wait } = useContext(UserContext);
+  const { isAuthed } = useContext(UserContext);
   const paths: { name: string; url: string; icon: string }[] = [
     { name: "Home", url: "/app/home", icon: homeSharp },
-    { name: "Cart", url: "/app/carts", icon: cartSharp },
+    { name: "Shop", url: "/app/carts", icon: cartSharp },
     { name: "Task", url: "/app/tasks", icon: calendarOutline },
     { name: "Account", url: "/app/account", icon: personCircleSharp },
   ];
+
   return (
     <IonPage>
       <IonTabs>
@@ -73,7 +75,7 @@ const Menu: React.FC = () => {
           <Route
             path="/app/account"
             render={(props) => {
-              return !wait && isAuthed ? <Account {...props} /> : <Login />;
+              return isAuthed ? <Account {...props} /> : <Login />;
             }}
             exact
           />
@@ -82,7 +84,7 @@ const Menu: React.FC = () => {
           <Route
             path="/app/tasks"
             render={(props) => {
-              return !wait && isAuthed ? <Tasks /> : <Login />;
+              return isAuthed ? <Tasks /> : <Login />;
             }}
             exact
           />
@@ -93,14 +95,14 @@ const Menu: React.FC = () => {
           <Route
             path="/payment/:id"
             render={(props) => {
-              return !wait && isAuthed ? <Payment /> : <Login />;
+              return isAuthed ? <Payment /> : <Login />;
             }}
             exact={true}
           />
           <Route
             path="/task_view/:id"
             render={(props) => {
-              return !wait && isAuthed ? <ViewTask /> : <Login />;
+              return isAuthed ? <ViewTask /> : <Login />;
             }}
             exact={true}
           />

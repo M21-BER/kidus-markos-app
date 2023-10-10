@@ -7,13 +7,19 @@ import './Tasks.css'
 import axios from 'axios';
 import { UserContext } from '../../context/AuthContext';
 import ErrorFallBack from '../../components/error/ErrorFallBack/ErrorFallBack';
+import Loader from '../../components/UI/Loader/Loader';
 const Tasks: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [tasks, setTasks] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const [present, dismiss] = useIonLoading();
   const controller: AbortController = new AbortController();
-  const {user} = useContext(UserContext); 
+  const {user,wait,refresh} = useContext(UserContext); 
+  const [screenLoading,setScreenLoading] = useState<boolean>(wait!);
+  useIonViewWillEnter(() => {
+    refresh!();
+    setScreenLoading(wait!);
+  });
   useIonViewWillEnter(async () => {
     const tasks = await getTasks();
     setTasks(tasks);
@@ -68,17 +74,22 @@ const Tasks: React.FC = () => {
     return tk.filter((t:any)=> (t.completed === false)).length 
    }
   }
+ if(screenLoading){ 
+   return (
+    <Loader/>
+   )
+ }else{
   if (error) {
     return (
       <IonPage>
-        <ToolBarMain defaultValue='/'/>
+        <ToolBarMain defaultValue='/' title='My Tasks'/>
         <ErrorFallBack error={error} reload={reload} />
       </IonPage>
     );
   } else {
   return (
     <IonPage>
-       <ToolBarMain defaultValue='/'/>
+       <ToolBarMain defaultValue='/' title='My Tasks'/>
        <IonContent>
        <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}
@@ -115,6 +126,7 @@ const Tasks: React.FC = () => {
     </IonPage>
   );
 }
+ }
 };
 
 export default Tasks;
