@@ -51,7 +51,7 @@ const ShopDetails: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
-  const { user, isAuthed,setShopPayment,setShopColor } = useContext(UserContext);
+  const { user, isAuthed,setShopPayment,setShopColor,shopColor } = useContext(UserContext);
   if (!isPending) {
     distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
       addSuffix: true,
@@ -59,6 +59,7 @@ const ShopDetails: React.FC = () => {
     colors = jsonCheck(detail.product.s_product_colors)
       ? jsonCheck(detail.product.s_product_colors)
       : [];
+
   }
   useIonViewWillEnter(()=>{
     const checkCart = async () => {
@@ -83,7 +84,7 @@ const ShopDetails: React.FC = () => {
       setCartExist(false);
      }
     };
-
+     
     checkCart();
   })
 
@@ -184,6 +185,7 @@ const ShopDetails: React.FC = () => {
    try {
     const field = {
       s_product_id:id.id,
+      selected_color:colors?colors[0]:"#361705",
       client_id:user.client_id}  
     if(user && isAuthed){
       const addShop = await axios.post(`${url}/api/payment`,field,{

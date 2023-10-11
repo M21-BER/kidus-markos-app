@@ -65,6 +65,7 @@ const [introSeen, setIntroSeen] = useState<boolean>(true);
           <Route exact path="/orderDetails/:id" render={() => <Menu />} />
           <Route exact path="/addOrder/:id" render={() => <Menu />} />
           <Route exact path="/payment/:id" render={() => <Menu />} />
+          <Route exact path="/myshops" render={() => <Menu />} />
           <Route exact path="/carts" render={() => <Menu />} />
           <Route exact path="/tasks" render={() => <Menu />} />
           <Route exact path="/task_view/:id" render={() => <Menu />} />

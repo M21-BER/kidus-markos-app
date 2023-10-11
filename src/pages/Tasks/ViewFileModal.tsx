@@ -12,7 +12,7 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 // Import styles of default layout plugin
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-import pdf from '../../assets/floor_plan.pdf'
+import pdf from '../../assets/task_pdf.pdf'
 import { url } from '../../utils/utils';
 
 
@@ -28,8 +28,7 @@ taskStatus:any;
 
 const ViewFileModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismiss,openModal,setOpenModal,confirm}) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
-    const [defaultPdfFile] = useState(pdf);
-  
+    const [defaultPdfFile] = useState(taskStatus?`${url}${taskStatus[taskStatus.type]}`:pdf);
     return (
         <IonModal 
         className='modal-task'
@@ -56,7 +55,7 @@ const ViewFileModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDi
            <div className="pdf-container">
             {
                 defaultPdfFile && <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                    <Viewer  fileUrl={pdf} plugins={[defaultLayoutPluginInstance]}/>
+                    <Viewer  fileUrl={taskStatus?`${url}${taskStatus[taskStatus.type]}`:pdf} plugins={[defaultLayoutPluginInstance]}/>
                 </Worker>
             }
            </div>

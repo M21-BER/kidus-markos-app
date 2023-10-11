@@ -79,7 +79,7 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
     console.log(searchValue.current?.value);
   };
   useIonViewWillEnter(()=>{
-    refresh!();
+  refresh!();
   })
   return (
     <IonHeader>
@@ -94,11 +94,12 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
          }
         <IonButtons slot="end">
           <IonButton onClick={handleUserToolBar}>
-            <IonIcon
+          {isAuthed ? "Logout" : "Login"}     
+            {/* <IonIcon
               slot="icon-only"
               icon={isAuthed ? logOutOutline : logInOutline}
               color={"light"}
-            />
+            /> */}
           </IonButton>
         </IonButtons>
       </IonToolbar>

@@ -31,12 +31,14 @@ import Carts from "../../pages/Carts/Carts";
 import MyOrders from "../../pages/MyOrders/MyOrders";
 import Tasks from "../../pages/Tasks/Tasks";
 import ViewTask from "../../pages/Tasks/ViewTask";
+import MyShops from "../../pages/MyShops/MyShops";
 
 const Menu: React.FC = () => {
   const { isAuthed } = useContext(UserContext);
+
   const paths: { name: string; url: string; icon: string }[] = [
     { name: "Home", url: "/app/home", icon: homeSharp },
-    { name: "Shop", url: "/app/carts", icon: cartSharp },
+    { name: "Shop", url: "/app/myshops", icon: cartSharp },
     { name: "Task", url: "/app/tasks", icon: calendarOutline },
     { name: "Account", url: "/app/account", icon: personCircleSharp },
   ];
@@ -67,11 +69,12 @@ const Menu: React.FC = () => {
           <Redirect exact path="/reset" to="/app/reset" />
           <Redirect exact path="/account" to="/app/account" />
           <Redirect exact path="/carts" to="/app/carts" />
+          <Redirect exact path="/myshops" to="/app/myshops" />
           <Redirect exact path="/tasks" to="/app/tasks" />
           <Redirect exact path="/myOrders" to="/app/myOrders" />
           {/* ....Redirect End.... */}
 
-          <Route path="/app/home" component={Home} />
+          <Route path="/app/home"render={() => <Home />} />
           <Route
             path="/app/account"
             render={(props) => {
@@ -80,7 +83,13 @@ const Menu: React.FC = () => {
             exact
           />
           <Route path="/app/carts" render={() => <Carts />} exact />
-
+          <Route
+            path="/app/myshops"
+            render={(props) => {
+              return isAuthed ? <MyShops /> : <Login />;
+            }}
+            exact
+          />
           <Route
             path="/app/tasks"
             render={(props) => {

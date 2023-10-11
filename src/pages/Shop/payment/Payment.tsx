@@ -1,4 +1,4 @@
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useContext, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../../components/ToolBar/ToolBar';
 import { useAxios } from '../../../hooks/useAxios';
@@ -16,7 +16,8 @@ import { errorResponse } from '../../../utils/errorResponse';
 import axios from 'axios';
 import { UserContext } from '../../../context/AuthContext';
 import { useParams } from 'react-router';
-
+import ImageComponent from '../../../components/UI/Image';
+import sample_payment from '../../../assets/sample_payment.jpg'
 const Payment: React.FC = () => {
     const {id}: any = useParams();
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/settings`);
@@ -26,6 +27,7 @@ const Payment: React.FC = () => {
     const modal = useRef<HTMLIonModalElement>(null);
     const transaction = useRef<HTMLIonInputElement>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
+    const [openModal1, setOpenModal1] = useState<boolean>(false);
     const {user,shopPayment,shopColor} = useContext(UserContext);
      if(!isPending){
       bankData = jsonCheck(detail[0].data).bank_option
@@ -38,6 +40,11 @@ const Payment: React.FC = () => {
     }
     const handleModal = ()=>{
       setOpenModal(true); 
+      setOpenModal1(false); 
+     }
+    const handleModal1 = ()=>{
+      setOpenModal(false); 
+      setOpenModal1(true); 
      }
     const handle_transaction_submit = async(e:React.FormEvent)=>{
       e.preventDefault();
@@ -152,8 +159,9 @@ const Payment: React.FC = () => {
                    }
                   </div>  
                   <div  className='ctpm'>
-                      <IonButton expand='block' id="open-modal-payment" onClick={handleModal}>Continue to payment method</IonButton>
-                      <IonModal 
+   <IonButton fill='outline' id="open-modal-sample-payment" onClick={handleModal1} expand='block' className='ion-margin-bottom'>Get tips on How</IonButton>
+   <IonButton expand='block' id="open-modal-payment" onClick={handleModal}>Continue to payment method</IonButton>
+      <IonModal 
         ref={modal}
         className='modal-task'  
         trigger="open-modal-payment" 
@@ -176,7 +184,38 @@ const Payment: React.FC = () => {
             </div>    
             </div>
          </IonContent>
-        </IonModal>
+      </IonModal>
+      <IonModal 
+        ref={modal}
+        className='modal-task'  
+        trigger="open-modal-sample-payment" 
+        isOpen={openModal1}
+        onWillDismiss={(ev) => onWillDismiss(ev)}
+        initialBreakpoint={0.8}
+        breakpoints={[0, 0.25, 0.8]}
+        handleBehavior="cycle"
+        >
+         <IonContent className='ion-padding'>
+              <h3 style={{textAlign:'center',marginBottom:'30px'}}>
+                <span>Payment Tips</span>
+              </h3>
+            <div  className='sample-payment_transaction'>
+            <div className="payment-tip">
+            <IonText color="medium"><IonChip>1.</IonChip> First transfer required fee</IonText>
+            <IonText color="medium"><IonChip>2.</IonChip> After transfer you will see 12 digit transaction code on the payment receipt</IonText>
+            <IonText color="medium"><IonChip>3.</IonChip> Click proceed to payment & enter 12 digit code </IonText>
+            </div>
+            <div className='sample-payment-image'>
+            <ImageComponent
+              src={sample_payment}
+              hash="L3Q0swSO~qe800xJD*bv00,[n5Xm"
+              label="sample payment tag"
+              notServer={true}
+              />
+            </div>  
+            </div>    
+         </IonContent>
+      </IonModal>
                   </div>
                 
                 </div> 

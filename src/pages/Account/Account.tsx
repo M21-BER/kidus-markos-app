@@ -104,7 +104,10 @@ const Account: any = () => {
   const handleModal_2 = () => {
     setOpenModal_2(true);
   };
-  
+  useIonViewWillEnter(()=>{
+    console.log("account page");
+    
+  }) 
   if (wait) {
     return <Loader />;
   } else {

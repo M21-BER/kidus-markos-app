@@ -43,7 +43,7 @@ const ImageComponent: React.FC<Props> = ({
           src={!notServer ? `${url}${src}` : src}
           alt={label}
           {...props}
-          loading="lazy"
+          loading="eager"
           style={{ display: !imageLoaded ? "none" : display }}
         />
       </>
