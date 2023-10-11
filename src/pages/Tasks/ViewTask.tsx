@@ -392,6 +392,33 @@ const ViewTask: React.FC = () => {
       Toast(presentIonToast,"comment must be below 80 character",informationCircleOutline);
     }
   };
+  const finalPaymentCheck = ()=>{
+    var y = new Date().getFullYear();
+    var m = new Date().getMonth();
+    var d = new Date().getDay();  
+   const lastTimeUpdatedAt = async()=>{
+     const lastTime = await getTasks();
+     if(lastTime){
+      let temp = lastTime.updatedAt.toString().split("T")[0].split("-");
+      return  `${temp[1]}/${temp[2]}/${temp[0]}`;
+     }else{
+      return `${m}/${d}/${y}`;
+     }
+   }  
+   let step = stepChecker().step13;
+   let res = true;
+   var date = `${m}/${d}/${y}`;
+   var lastTimeUpdatedAtReturn:any = lastTimeUpdatedAt();
+   let Difference_In_Time = new Date(date).getTime() -  new Date(lastTimeUpdatedAtReturn).getTime();
+   var Difference_In_Days = Math.round(Math.abs(Difference_In_Time / (1000 * 3600 * 24))); 
+  
+   if(step === 1){
+    if(Difference_In_Days > 15){
+     res = false;
+    }
+   }
+   return res;
+  }
   if (error) {
     return (
       <IonPage>
@@ -427,8 +454,8 @@ const ViewTask: React.FC = () => {
                 </svg>
               </div>
                <div className='tps-progress-bar-day'>
-                <p ref={du}><strong ref={du_strong}>Task Duration : </strong> {stepChecker().step7 !== 0  &&  validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2?validator(task,'task_due_date').split(":")[1]:"Not Available"}</p>
-                <p ref={ti}><strong ref={ti_strong}>Time Left : </strong> {stepChecker().step7 !== 0  && validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2 ?timeLeft(new Date(),new Date(validator(task,'task_due_date').split(":")[0])):"Not Available"}</p>
+                <p ref={du}><strong ref={du_strong}>Task Duration : </strong> {finalPaymentCheck() && stepChecker().step7 !== 0  &&  validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2?validator(task,'task_due_date').split(":")[1]:"Not Available"}</p>
+                <p ref={ti}><strong ref={ti_strong}>Time Left : </strong> {finalPaymentCheck() && stepChecker().step7 !== 0  && validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2 ?timeLeft(new Date(),new Date(validator(task,'task_due_date').split(":")[0])):"Not Available"}</p>
                </div>
             </section>
             
