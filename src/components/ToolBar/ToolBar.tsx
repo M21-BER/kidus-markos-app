@@ -18,6 +18,7 @@ import {
   logInOutline,
   checkmarkCircleOutline,
   informationCircleOutline,
+  arrowBackOutline,
 } from "ionicons/icons";
 import { logout } from "../../utils/logout";
 import { useContext, useRef } from "react";
@@ -26,7 +27,7 @@ import { Toast } from "../../utils/CustomToast";
 
 interface Props {
   title?: string;
-  defaultValue?:string;
+  defaultValue?:any;
 }
 export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
   const router = useIonRouter();
@@ -83,7 +84,7 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
   })
   return (
     <IonHeader>
-      <IonToolbar color="primary">
+      <IonToolbar color="primary"  style={{height:'80px',padding:"10px 0"}}>
         <IonTitle>{title || "KM"}</IonTitle>
          {
           backBtn && (
@@ -103,23 +104,26 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
           </IonButton>
         </IonButtons>
       </IonToolbar>
-      <IonToolbar color="primary">
+      {/* <IonToolbar color="primary">
         <IonItem color="primary">
           <form onSubmit={handleSearch}>
             <IonSearchbar ref={searchValue} />
           </form>
         </IonItem>
-      </IonToolbar>
+      </IonToolbar> */}
     </IonHeader>
   );
 };
 export const ToolBarDetails: React.FC<Props> = ({ title,defaultValue }) => {
+  const {navigate} = useContext(UserContext);
   return (
     <IonHeader>
       <IonToolbar color="primary">
         <IonTitle>{title || "KM"}</IonTitle>
-        <IonButtons slot="start">
-          <IonBackButton defaultHref={defaultValue?defaultValue:'/'}></IonBackButton>
+        <IonButtons slot="start" onClick={()=>{
+          navigate!(defaultValue.path,defaultValue.id,defaultValue.info)
+        }}>
+          <IonIcon icon={arrowBackOutline}  className="back-btn"/>
         </IonButtons>
       </IonToolbar>
     </IonHeader>

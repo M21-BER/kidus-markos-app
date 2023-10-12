@@ -12,10 +12,9 @@ import { url, jsonCheck } from "../../../utils/utils";
 
 interface Props {
   orders: any[];
+  navigate:any;
 }
-const OrderList: React.FC<Props> = ({ orders }) => {
-  const router = useIonRouter();
-
+const OrderList: React.FC<Props> = ({ orders,navigate }) => {
   if (orders.length === 0) {
     return (
       <div className="ion-text-center NDA">
@@ -31,7 +30,7 @@ const OrderList: React.FC<Props> = ({ orders }) => {
             color="warning"
             key={index}
             onClick={() => {
-              router.push(`/orderDetails/${order.product_id}`);
+              navigate("orderDetails",order.product_id,null)
             }}
           >
             <IonCardContent className="ion-no-padding">

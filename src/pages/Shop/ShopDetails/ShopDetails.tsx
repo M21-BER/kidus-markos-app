@@ -33,6 +33,7 @@ import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack
 import { UserContext } from "../../../context/AuthContext";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import LoaderUI from "../../../components/UI/Loader/LoaderUI";
 const settings = {
   showThumbs: false,
   infiniteLoop: true,
@@ -40,7 +41,8 @@ const settings = {
   interval: 4000,
 };
 const ShopDetails: React.FC = () => {
-  const id: any = useParams();
+  const { user, isAuthed,setShopPayment,setShopColor,route,navigate } = useContext(UserContext);
+  const id: any = {id:route?.id};
   const [detail, isPending, error, setUpdate] = useAxios(
     `${url}/api/shops/index/${id.id}`
   );
@@ -51,7 +53,6 @@ const ShopDetails: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
-  const { user, isAuthed,setShopPayment,setShopColor,shopColor } = useContext(UserContext);
   if (!isPending) {
     distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
       addSuffix: true,
@@ -181,51 +182,57 @@ const ShopDetails: React.FC = () => {
       console.log("error on adding cart");
     }
   };
-  const shopping = async() => {
-   try {
-    const field = {
-      s_product_id:id.id,
-      selected_color:colors?colors[0]:"#361705",
-      client_id:user.client_id}  
-    if(user && isAuthed){
-      const addShop = await axios.post(`${url}/api/payment`,field,{
-        headers:{
-          Authorization:user.token
+  const shopping = () => {
+  const goToPayment = async()=>{
+    try {
+      const field = {
+        s_product_id:id.id,
+        selected_color:colors?colors[0]:"#361705",
+        client_id:user.client_id}  
+        const addShop = await axios.post(`${url}/api/payment`,field,{
+          headers:{
+            Authorization:user.token
+          }
+        })
+        if(addShop.status === 201 && addShop.data.status === true){
+          setShopPayment!(detail?detail.product:null);
+          navigate!("payment",id.id,null);
+        }else{
+          throw Error(failMessage);
         }
-      })
-      if(addShop.status === 201 && addShop.data.status === true){
-        setShopPayment!(detail?detail.product:null);
-        router.push(`/payment/${id.id}`);
+  
+     } catch (error) {
+      const {message,status} = errorResponse(error);
+      if(message && status){
+       Toast(presentIonToast,message,informationCircleOutline)
       }else{
-        throw Error(failMessage);
+        Toast(presentIonToast,failMessage,informationCircleOutline)
       }
-    }else{
-     Toast(presentIonToast,"please login first",informationCircleOutline)
-    }
-   } catch (error) {
-    const {message,status} = errorResponse(error);
-    if(message && status){
-     Toast(presentIonToast,message,informationCircleOutline)
-    }else{
-      Toast(presentIonToast,failMessage,informationCircleOutline)
-    }
-   }
+     }
+  }
+  if(user && isAuthed){
+   goToPayment()
+  }else{
+    Toast(presentIonToast,"please login first",informationCircleOutline)
+  }
   };
 
   const reload = async () => {
     setUpdate(true);
 };
+if(!isPending){
   if (error) {
     return (
       <IonPage>
-        <ToolBarDetails title="Shop Details"/>
+        <ToolBarDetails defaultValue={{path:"Home",id:id.id,info:null}} title="Shop Details"/>
         <ErrorFallBack className='m_error_top' error={error} reload={reload} />
       </IonPage>
     );
   } else {
     return (
       <IonPage>
-         <ToolBarDetails title={detail && detail.product?detail.product.s_product_name:`Shop Details`}/>
+         <ToolBarDetails title={detail && detail.product?detail.product.s_product_name:`Shop Details`} defaultValue={{path:"Home",id:null,info:null}}/>
+    
         <IonContent className="ion-no-padding">
           {!isPending && (
             <div className="shop-details">
@@ -283,6 +290,16 @@ const ShopDetails: React.FC = () => {
       </IonPage>
     );
   }
+}else{
+  return (
+    <IonPage>
+      <ToolBarDetails defaultValue={{path:"Home",id:null,info:null}} title="Shop Details"/>
+      <IonContent>
+        <LoaderUI/>
+      </IonContent>
+    </IonPage>
+  );
+}
 };
 
 export default ShopDetails;

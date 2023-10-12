@@ -6,15 +6,13 @@ import {
   IonItem,
   IonLabel,
   IonText,
-  useIonRouter,
 } from "@ionic/react";
 import { url, jsonCheck } from "../../../utils/utils";
-
 interface Props {
   shops: any[];
+  navigate:any;
 }
-const ShopList: React.FC<Props> = ({ shops }) => {
-  const router = useIonRouter();
+const ShopList: React.FC<Props> = ({ shops,navigate }) => {
 
   if (shops.length === 0) {
     return (
@@ -31,7 +29,7 @@ const ShopList: React.FC<Props> = ({ shops }) => {
             color="warning"
             key={index}
             onClick={() => {
-              router.push(`/shopDetails/${shop.s_product_id}`);
+              navigate("shopDetails",shop.s_product_id,null)
             }}
           >
             <IonCardContent className="ion-no-padding">

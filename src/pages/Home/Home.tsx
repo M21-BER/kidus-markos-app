@@ -9,7 +9,8 @@ const Home: React.FC = () => {
   //  console.log(data);
    
   // useIonViewWillEnter(() => {
-  //   refresh!();
+  // console.log("Hello Guys");
+  
   // });
   return (
     <IonPage>

@@ -18,8 +18,10 @@ import { UserContext } from '../../../context/AuthContext';
 import { useParams } from 'react-router';
 import ImageComponent from '../../../components/UI/Image';
 import sample_payment from '../../../assets/sample_payment.jpg'
+import LoaderUI from '../../../components/UI/Loader/LoaderUI';
 const Payment: React.FC = () => {
-    const {id}: any = useParams();
+    const {user,shopPayment,shopColor,route} = useContext(UserContext);
+    const id: any = {id:route?.id};
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/settings`);
     let bankData:[] = [];
     let banks = [image1,image2,image3,image4];
@@ -28,7 +30,6 @@ const Payment: React.FC = () => {
     const transaction = useRef<HTMLIonInputElement>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [openModal1, setOpenModal1] = useState<boolean>(false);
-    const {user,shopPayment,shopColor} = useContext(UserContext);
      if(!isPending){
       bankData = jsonCheck(detail[0].data).bank_option
      }
@@ -92,17 +93,18 @@ const Payment: React.FC = () => {
         Toast(presentIonToast,"transaction code must be exactly 12 character",informationCircleSharp);
       }
     };
+    if(!isPending){
      if(error){
       return (
         <IonPage>
-          <ToolBarDetails  title="Proceed to Payment"/>
+           <ToolBarDetails defaultValue={{path:"shopDetails",id:id.id,info:null}} title="Proceed to Payment"/>
           <ErrorFallBack className='m_error_top' error={error} reload={reload} />
         </IonPage>
       );
      }else{
     return (
         <IonPage>
-           <ToolBarDetails title="Proceed to Payment"/>
+            <ToolBarDetails defaultValue={{path:"shopDetails",id:id.id,info:null}} title="Proceed to Payment"/>
             <IonContent className="ion-padding">
               {
                 !isPending && <div className='payment-details'>
@@ -224,6 +226,16 @@ const Payment: React.FC = () => {
         </IonPage>
     );
   }
+}else{
+  return (
+    <IonPage>
+    <ToolBarDetails defaultValue={{path:"shopDetails",id:id.id,info:null}} title="Proceed to Payment"/>
+      <IonContent>
+       <LoaderUI/>
+      </IonContent>
+    </IonPage>
+  );
+}
 };
 
 export default Payment;

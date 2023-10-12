@@ -39,7 +39,9 @@ const useAxios = (url: string) => {
         }
       }
     }
+   setTimeout(()=>{
     getData();
+   },5000)
     return () => controller.abort();
   }, [url, update]);
 

@@ -17,21 +17,21 @@ const ShopTab: React.FC = () => {
     <IonContent>
       <IonTabs>
         <IonTabBar slot="top">
-          <IonTabButton tab="tab1" href="/app/home/shop">
+          <IonTabButton tab="Shop" href="/shop">
             <IonIcon icon={cartOutline} />
             <IonLabel>Shop</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/app/home/order">
+          <IonTabButton tab="Order" href="/order">
             <IonIcon icon={bagAddOutline} />
             <IonLabel>Order</IonLabel>
           </IonTabButton>
         </IonTabBar>
 
         <IonRouterOutlet>
-          <Route path="/app/home/shop" component={Shop} exact />
-          <Route path="/app/home/order" component={Order} exact />
-          <Route exact path="/app/home">
-            <Redirect to="/app/home/shop" />
+          <Route path="/shop" component={Shop} exact />
+          <Route path="/order" component={Order} exact />
+          <Route exact path="/">
+            <Redirect to="/shop" />
           </Route>
         </IonRouterOutlet>
       </IonTabs>

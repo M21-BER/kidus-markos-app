@@ -6,7 +6,6 @@ import {
   IonInput,
   IonPage,
   IonText,
-  useIonRouter,
   useIonToast,
 } from "@ionic/react";
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
@@ -16,7 +15,7 @@ import {
   imagesOutline,
   informationCircleOutline,
 } from "ionicons/icons";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import { useParams } from "react-router";
@@ -28,8 +27,9 @@ import { errorResponse } from "../../../utils/errorResponse";
 import { Toast } from "../../../utils/CustomToast";
 import flagImg from '../../../assets/Flag_of_Ethiopia.svg.png'
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
+import LoaderUI from "../../../components/UI/Loader/LoaderUI";
+import { UserContext } from "../../../context/AuthContext";
 const AddOrder: React.FC = () => {
-  const router = useIonRouter();
   const full_name = useRef<null | HTMLIonInputElement>(null);
   const phone_number = useRef<null | HTMLIonInputElement>(null);
   const length = useRef<null | HTMLIonInputElement>(null);
@@ -39,7 +39,8 @@ const AddOrder: React.FC = () => {
   const quantity = useRef<null | HTMLIonInputElement>(null);
   const [floorPlan, setFloorPlan] = useState<any[]>([]);
   const [flag, setFlag] = useState<string>("");
-  const id: any = useParams();
+  const {route}= useContext(UserContext);
+  const id: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
   const [detail, isPending, error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
   let product_id: any = null;
@@ -180,17 +181,18 @@ const AddOrder: React.FC = () => {
   const reload = ()=>{
     setUpdate(true);
   }
+  if(!isPending){
   if(error){
    return(
     <IonPage>
-     <ToolBarDetails defaultValue={`/orderDetails/${id.id}`} title="Request Quotient"/>
+    <ToolBarDetails defaultValue={{path:"orderDetails",id:id.id,info:null}} title="Request Quotient"/>
     <ErrorFallBack className='m_error_top' error={error} reload={reload} />
   </IonPage>
    );
   }else{
   return (
     <IonPage>
-      <ToolBarDetails defaultValue={`/orderDetails/${id.id}`} title="Request Quotient"/>
+ <ToolBarDetails defaultValue={{path:"orderDetails",id:id.id,info:null}} title="Request Quotient"/>
       <IonContent className="ion-padding">
       <div className="form-app">
         <div className="form-app-core form-app-core-register">
@@ -321,6 +323,16 @@ const AddOrder: React.FC = () => {
     </IonPage>
   );
 }
+  }else{
+   return(
+    <IonPage>
+    <ToolBarDetails defaultValue={{path:"orderDetails",id:id.id,info:null}} title="Request Quotient"/>
+    <IonContent>
+    <LoaderUI/>
+     </IonContent>
+    </IonPage>
+   )
+  }
 };
 
 export default AddOrder;

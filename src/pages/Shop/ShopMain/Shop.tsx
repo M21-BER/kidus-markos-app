@@ -6,7 +6,7 @@ import {
   useIonViewWillEnter,
   useIonLoading,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import "../../Home/Home.css";
@@ -14,6 +14,7 @@ import "../../Home/HomeDetail.css";
 import ShopList from "./ShopList";
 import ShopSkeleton from "./ShopSkeleton";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
+import { UserContext } from "../../../context/AuthContext";
 
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -21,7 +22,7 @@ const Shop: React.FC = () => {
   const [shops, setShops] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const controller: AbortController = new AbortController();
-
+  const {navigate} = useContext(UserContext)
   const getShops = async () => {
     try {
       const data = await axios(`${url}/api/shops`, {
@@ -75,12 +76,12 @@ const Shop: React.FC = () => {
   } else {
     return (
       <IonPage>
-        <IonContent>
+        <IonContent className="_under_drawer">
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}
           </IonRefresher>
           <ShopSkeleton loading={loading} />
-          <ShopList shops={shops} />
+          <ShopList shops={shops} navigate={navigate}/>
         </IonContent>
       </IonPage>
     );

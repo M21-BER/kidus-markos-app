@@ -26,7 +26,7 @@ const EnterEmail: React.FC<Props> = ({ email, handleEmailSubmit }) => {
                 <IonCard color="warning">
                   <IonCardHeader>
                     <IonText color="medium" className="ion-text-center">
-                      Enter email for password reset
+                     Account Verification
                     </IonText>
                   </IonCardHeader>
                   <IonCardContent>
@@ -36,7 +36,7 @@ const EnterEmail: React.FC<Props> = ({ email, handleEmailSubmit }) => {
                         ref={email}
                         fill="outline"
                         aria-label="Email"
-                        placeholder="enter email address"
+                        placeholder="phone number"
                         type="text"
                         required={false}
                       ></IonInput>
@@ -45,7 +45,7 @@ const EnterEmail: React.FC<Props> = ({ email, handleEmailSubmit }) => {
                         type="submit"
                         expand="block"
                       >
-                        Submit
+                        Verify
                       </IonButton>
                     </form>
                   </IonCardContent>

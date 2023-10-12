@@ -46,7 +46,7 @@ const LoginContent: React.FC<Props> = ({
             <IonRow className="ion-justify-content-center">
               <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                 <div className="ion-text-center ion-padding">
-                  <img src={Logo} alt="Kidus Markos Logo" width="40%" />
+                  <img src={Logo} loading="eager" alt="Kidus Markos Logo" width="45%" />
                 </div>
               </IonCol>
             </IonRow>

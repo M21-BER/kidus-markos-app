@@ -6,7 +6,7 @@ import {
   useIonViewWillEnter,
   useIonLoading,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../../Home/Home.css";
 import "../../Home/HomeDetail.css";
 import axios from "axios";
@@ -14,12 +14,14 @@ import { failMessage, url } from "../../../utils/utils";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import OrderList from "./OrderList";
 import OrderSkeleton from "./OrderSkeleton";
+import { UserContext } from "../../../context/AuthContext";
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const controller: AbortController = new AbortController();
   const [present, dismiss] = useIonLoading();
+  const {navigate} = useContext(UserContext)
   const getOrders = async () => {
     try {
       const data = await axios(`${url}/api/products`, {
@@ -66,7 +68,7 @@ const Shop: React.FC = () => {
   if (error) {
     return (
       <IonPage>
-        <ErrorFallBack error={error} reload={reload} />
+     <ErrorFallBack error={error} reload={reload} />
       </IonPage>
     );
   } else {
@@ -77,7 +79,7 @@ const Shop: React.FC = () => {
             {!loading && <IonRefresherContent />}
           </IonRefresher>
           <OrderSkeleton loading={loading} />
-          <OrderList orders={orders} />
+          <OrderList orders={orders} navigate={navigate} />
         </IonContent>
       </IonPage>
     );

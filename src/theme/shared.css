@@ -60,8 +60,16 @@ div.form-app > div.form-app-core ion-button > * {
 .alert-message {
   line-height: 25px !important;
 }
+ion-icon.back-btn {
+  font-size: 25px;
+  color: #fff;
+  padding: 13px;
+}
 /* ion-input.code-placeholder input::placeholder {
   letter-spacing: 10px;
+} */
+/* ion-content._under_drawer {
+  border: 1px solid rgb(46, 8, 107) !important;
 } */
 @media screen and (max-width: 300px) {
   div.form-app span.lg {

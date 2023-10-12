@@ -2,6 +2,16 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { Preferences } from "@capacitor/preferences";
 import { login_key, jsonCheck } from "../utils/utils";
 import jwt_decode from "jwt-decode";
+export type routeType = {
+  path:string,
+  id:number | null,
+  info:any | null
+  }
+export type routesFuncType = {
+  key:string,
+  value:any
+  }
+
 interface Props {
   user: any;
   isAuthed: boolean;
@@ -9,9 +19,11 @@ interface Props {
   updateSavedData: (userData: any) => void;
   wait: boolean;
   backHref:string;
+  route:routeType;
   shopColor:string;
   setShopColor:React.Dispatch<React.SetStateAction<string>>;
   setBackHref:React.Dispatch<React.SetStateAction<string>>;
+  navigate:(value:any,id:any,info:any)=>void;
   backBtn:boolean;
   setBackBtn:React.Dispatch<React.SetStateAction<boolean>>
   shopPayment:any;
@@ -28,6 +40,11 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
   const [wait, setWait] = useState<boolean>(true);
   const [update, setUpdate] = useState<boolean>(false);
+  const [route, setRoute] = useState<routeType>({
+    path:"Home",
+    id:null,
+    info:null
+  });
   let resetState = false;
   const removeUser = async () => {
     await Preferences.remove({ key: login_key });
@@ -57,6 +74,16 @@ export default function UserProvider({ children }: { children: ReactNode }) {
       }
     });
   };
+  const navigate = (value:any,id:any = null,info:any = null)=>{
+  setRoute((pre)=>{
+    return {
+      ...pre,
+       path:value,
+       id:id?id:pre.id,
+       info:info?info:pre.info,
+    }
+  })
+  }
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -92,7 +119,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   }, [update]);
   return (
     <UserContext.Provider
-      value={{ user, isAuthed,wait, refresh, updateSavedData,backHref,setBackHref,backBtn,setBackBtn,shopPayment,setShopPayment,shopColor,setShopColor }}
+      value={{ user, isAuthed,wait, refresh, updateSavedData,backHref,setBackHref,backBtn,setBackBtn,shopPayment,setShopPayment,shopColor,setShopColor,route, navigate }}
     >
       {children}
     </UserContext.Provider>

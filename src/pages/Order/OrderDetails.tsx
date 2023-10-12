@@ -9,6 +9,9 @@ import "../Home/HomeDetail.css";
 import ErrorFallBack from '../../components/error/ErrorFallBack/ErrorFallBack';
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import LoaderUI from '../../components/UI/Loader/LoaderUI';
+import { useContext } from 'react';
+import { UserContext } from '../../context/AuthContext';
 const settings = {
   showThumbs: false,
   infiniteLoop: true,
@@ -16,27 +19,28 @@ const settings = {
   interval: 4000,
 };
 const OrderDetails: React.FC = () => {
-    const id:any =  useParams();
+    const {route,navigate} =useContext(UserContext);
+    const id:any =  {id:route?.id}
     const router = useIonRouter();
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
     const orderProduct = ()=>{
-      router.push(`/addOrder/${id.id}`)
+      navigate!("addOrder",id.id,null)
     }
-    
     const reload = async () => {
       setUpdate(true);
   };
+  if(!isPending){
     if (error) {
       return (
         <IonPage>
-          <ToolBarDetails defaultValue='/app/home/order' title="Order Details"/>
-          <ErrorFallBack className='m_error_top' error={error} reload={reload} />
+        <ToolBarDetails defaultValue={{path:"Home",id:null,info:null}} title="Order Details"/>
+        <ErrorFallBack className='m_error_top' error={error} reload={reload} />
         </IonPage>
       );
     } else {
     return (
         <IonPage>
-         <ToolBarDetails defaultValue='/app/home/order' title={!isPending && detail && detail.item && detail.item.product_name}/>
+         <ToolBarDetails defaultValue={{path:"Home",id:null,info:null}} title={!isPending && detail && detail.item && detail.item.product_name}/>
         <IonContent className="ion-no-padding">
          {!isPending && 
          (
@@ -84,6 +88,16 @@ const OrderDetails: React.FC = () => {
         </IonPage>
     );
   }
+}else{
+  return (
+    <IonPage>
+      <ToolBarDetails defaultValue={{path:"Home",id:null,info:null}} title="Order Details"/>
+    <IonContent>
+    <LoaderUI/>
+    </IonContent>
+    </IonPage>
+  );
+}
 };
 
 export default OrderDetails;
