@@ -1,5 +1,5 @@
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
-import React, { useContext, useRef, useState } from 'react';
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, useIonToast } from '@ionic/react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../../components/ToolBar/ToolBar';
 import { useAxios } from '../../../hooks/useAxios';
 import { failMessage, jsonCheck, url } from '../../../utils/utils';
@@ -15,7 +15,6 @@ import { Toast } from '../../../utils/CustomToast';
 import { errorResponse } from '../../../utils/errorResponse';
 import axios from 'axios';
 import { UserContext } from '../../../context/AuthContext';
-import { useParams } from 'react-router';
 import ImageComponent from '../../../components/UI/Image';
 import sample_payment from '../../../assets/sample_payment.jpg'
 import LoaderUI from '../../../components/UI/Loader/LoaderUI';
@@ -86,13 +85,14 @@ const Payment: React.FC = () => {
         Toast(presentIonToast,"please enter transaction code",informationCircleSharp)
       }
      }
-     const handleTransactionSub = (e: any) => {
+    const handleTransactionSub = (e: any) => {
       if (e.detail.value.length > 12) {
         // @ts-ignore
         transaction.current.value = e.detail.value.toString().slice(0, 12);
         Toast(presentIonToast,"transaction code must be exactly 12 character",informationCircleSharp);
       }
     };
+
     if(!isPending){
      if(error){
       return (
@@ -223,6 +223,7 @@ const Payment: React.FC = () => {
                 </div> 
               }
             </IonContent>
+            <div className="spacer_drawer"></div>
         </IonPage>
     );
   }

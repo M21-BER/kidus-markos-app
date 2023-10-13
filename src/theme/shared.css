@@ -1,6 +1,11 @@
 ion-content {
   position: relative;
 }
+div.spacer_drawer {
+  height: 50px;
+  width: 100%;
+  background: transparent;
+}
 .control-arrow {
   background: transparent !important;
 }

@@ -1,9 +1,5 @@
 import {
-  IonButton,
-  IonButtons,
-  IonHeader,
   IonModal,
-  IonToolbar,
   useIonLoading,
   useIonToast,
 } from "@ionic/react";
@@ -25,7 +21,8 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   const full_name = useRef<null | HTMLIonInputElement>(null);
   const rating = useRef<null | HTMLIonInputElement>(null);
   const email = useRef<null | HTMLIonInputElement>(null);
-  const feed_back = useRef<null | HTMLIonInputElement>(null);
+  const feed_back = useRef<null | HTMLIonTextareaElement>(null);
+  const modal = useRef<HTMLIonModalElement>(null);
   const [presentIonToast] = useIonToast();
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -73,9 +70,6 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
       );
     }
   };
-  const modal = useRef<HTMLIonModalElement>(null);
-  const input = useRef<HTMLIonInputElement>(null);
-
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
     setOpenModal_2(false);
   }
@@ -85,14 +79,10 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
       trigger="open-modal_2"
       isOpen={openModal_2}
       onWillDismiss={(ev) => onWillDismiss(ev)}
+      initialBreakpoint={0.8}
+      breakpoints={[0, 0.25, 0.8]}
+      handleBehavior="cycle"
     >
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton onClick={() => setOpenModal_2(false)}>Cancel</IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
       <FeedbackContent
         full_name={full_name}
         rating={rating}

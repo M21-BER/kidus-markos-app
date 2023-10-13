@@ -10,7 +10,6 @@ import {
   IonButton,
   IonIcon,
   IonText,
-  useIonRouter,
 } from "@ionic/react";
 import { logInOutline, eyeOff, eye } from "ionicons/icons";
 import Logo from "../../assets/Logo.png";
@@ -21,20 +20,21 @@ interface Props {
   clientIdentity: React.MutableRefObject<HTMLIonInputElement | null>;
   password: React.MutableRefObject<HTMLIonInputElement | null>;
   stat: boolean;
+  navigate:any
 }
 const LoginContent: React.FC<Props> = ({
   handleSubmit,
   clientIdentity,
   password,
   stat,
+  navigate
 }) => {
-  const router = useIonRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleLoginAction = (btn: number) => {
     if (btn === 1) {
-      router.push("/app/register", "root");
+      navigate('Register',null,null)
     } else if (btn === 2) {
-      router.push("/app/reset", "root");
+      navigate('ResetPassword',null,null)
     }
   };
 

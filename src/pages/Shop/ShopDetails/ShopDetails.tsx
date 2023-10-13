@@ -8,7 +8,6 @@ import {
   useIonViewWillEnter,
 } from "@ionic/react";
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
-import { useParams } from "react-router";
 import { useAxios } from "../../../hooks/useAxios";
 import { url, jsonCheck, CART_KEY, failMessage } from "../../../utils/utils";
 import ImageComponent from "../../../components/UI/Image";
@@ -220,6 +219,7 @@ const ShopDetails: React.FC = () => {
   const reload = async () => {
     setUpdate(true);
 };
+
 if(!isPending){
   if (error) {
     return (
@@ -287,6 +287,7 @@ if(!isPending){
             </div>
           )}
         </IonContent>
+        <div className="spacer_drawer"></div>
       </IonPage>
     );
   }

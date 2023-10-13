@@ -3,11 +3,11 @@ import {
   useIonRouter,
   useIonLoading,
   useIonToast,
-  useIonViewWillEnter,
+  IonContent,
 } from "@ionic/react";
 
 import React, { useRef, useEffect, useContext, useState } from "react";
-import { ToolBarMain } from "../../components/ToolBar/ToolBar";
+import { ToolBarMainAddOn } from "../../components/ToolBar/ToolBar";
 import RegisterContent from "./RegisterContent";
 import { UserContext } from "../../context/AuthContext";
 import axios from "axios";
@@ -21,7 +21,7 @@ import { SIGNUP_KEY, failMessage, jsonCheck, url } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
 import Verify from "./Verify";
 import { Preferences } from "@capacitor/preferences";
-import Loader from "../../components/UI/Loader/Loader";
+import LoaderUI from "../../components/UI/Loader/LoaderUI";
 const Register: React.FC  = () => {
   const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
@@ -36,7 +36,7 @@ const Register: React.FC  = () => {
   const [presentIonToast] = useIonToast();
   const [verifyStatus, setVerifyStatus] = useState<boolean>(false);
   const [VRes, setVRes] = useState<any>(null);
-  const {isAuthed,wait,refresh,setBackHref,setBackBtn } = useContext(UserContext);
+  const {isAuthed,wait,refresh,navigate,route } = useContext(UserContext);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
@@ -47,11 +47,9 @@ const Register: React.FC  = () => {
     });
   };
   useEffect(()=>{
-    if (!wait && isAuthed) { 
-      router.goBack();
+    if (isAuthed) { 
+      navigate!(route?.path,route?.id,null);
     }else{
-      setBackHref!('/app/login');
-      setBackBtn!(true);
       getSignStatus();
     }
   },[wait,isAuthed])
@@ -212,10 +210,10 @@ const Register: React.FC  = () => {
   };
   const sendOTPAgain = () => {};
 
-  if(!wait && !isAuthed){
+  if(!wait){
     return (
       <IonPage>
-        <ToolBarMain title="Sign up" />
+        <ToolBarMainAddOn title="Sign up" defaultValue={{path:"Login",id:null,info:null}} />
         {verifyStatus ? (
           <Verify
             verify={verify}
@@ -234,10 +232,17 @@ const Register: React.FC  = () => {
             handleSubmit={handleSubmit}
           />
         )}
+           <div className="spacer_drawer"></div>
       </IonPage>
     );
   }else{
-    return <Loader/>
+    return (
+    <IonPage>
+    <ToolBarMainAddOn title="Sign up" defaultValue={{path:"Login",id:null,info:null}} />
+    <IonContent>
+    <LoaderUI/>
+    </IonContent>
+    </IonPage>)
   }
 };
 

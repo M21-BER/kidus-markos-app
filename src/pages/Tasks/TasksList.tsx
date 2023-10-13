@@ -7,19 +7,18 @@ import {
     IonItem,
     IonLabel,
     IonText,
-    useIonRouter
   } from "@ionic/react";
   import { analyticsOutline } from "ionicons/icons";
   import { formatDistance } from "date-fns";
   interface Props {
     tasks: any[];
+    navigate:any;
   }
-  const TasksList: React.FC<Props> = ({ tasks }) => {
-    const navigate = useIonRouter();
+  const TasksList: React.FC<Props> = ({ tasks,navigate}) => {
     if (tasks.length === 0) {
       return (
         <div className="ion-text-center NDA">
-          <IonText color="medium">No available product order</IonText>
+          <IonText color="medium">No available tasks</IonText>
         </div>
       );
     } else {
@@ -27,7 +26,7 @@ import {
         <>
           {tasks.map((task, index) => (
             <IonCard key={index} onClick={()=>{
-             navigate.push(`/task_view/${task.task_id}`)
+             navigate("task_view",task.task_id,null)
             }}>
               <IonCardContent className="ion-no-padding">
                 <IonItem lines="none">

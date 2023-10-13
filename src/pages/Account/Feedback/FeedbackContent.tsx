@@ -1,12 +1,12 @@
-import { IonInput, IonButton, IonIcon, IonContent } from "@ionic/react";
-import { addCircleOutline } from "ionicons/icons";
+import { IonInput, IonButton, IonIcon, IonContent, IonTextarea } from "@ionic/react";
+import { addCircleOutline, sendOutline } from "ionicons/icons";
 import "../../Register/Radio.css";
 interface Props {
   handleSubmit: (event: React.FormEvent) => void;
   full_name: React.MutableRefObject<HTMLIonInputElement | null>;
   rating: React.MutableRefObject<HTMLIonInputElement | null>;
   email: React.MutableRefObject<HTMLIonInputElement | null>;
-  feed_back: React.MutableRefObject<HTMLIonInputElement | null>;
+  feed_back: React.MutableRefObject<HTMLIonTextareaElement | null>;
 }
 
 const FeedbackContent: React.FC<Props> = ({
@@ -44,6 +44,8 @@ const FeedbackContent: React.FC<Props> = ({
               placeholder="Rating"
               type="number"
               step="0.1"
+              min={1}
+              max={10}
               className="ion-margin-top ion-margin-bottom"
               required={false}
             ></IonInput>
@@ -59,20 +61,20 @@ const FeedbackContent: React.FC<Props> = ({
               className="ion-margin-top"
               required={false}
             ></IonInput>
-            <IonInput
+            <IonTextarea
+              style={{height:"100px"}}
               ref={feed_back}
               name="feed_back"
               fill="outline"
               labelPlacement="stacked"
               label="Feedback"
-              placeholder="write here"
-              type="text"
-              className="ion-margin-top"
+              placeholder="write something here..."
+              className="ion-margin-top ion-margin-bottom"
               required={false}
-            ></IonInput>
-            <IonButton className="ion-margin-top" type="submit" expand="block">
+            ></IonTextarea>
+            <IonButton  className="ion-margin-top" type="submit" expand="block">
               <span>Submit Feedback</span>
-              <IonIcon icon={addCircleOutline} slot="end" />
+              <IonIcon icon={sendOutline} slot="start" />
             </IonButton>
           </form>
         </div>

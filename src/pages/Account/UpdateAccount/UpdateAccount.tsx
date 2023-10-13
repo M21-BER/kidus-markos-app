@@ -8,7 +8,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import React, { useContext, useRef } from "react";
-import RegisterContent from "./UpdateAccountContent";
+import UpdateAccountContent from "./UpdateAccountContent";
 import { OverlayEventDetail } from "@ionic/core/components";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
@@ -26,18 +26,16 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
   const [present, dismiss] = useIonLoading();
   const first_name = useRef<null | HTMLIonInputElement>(null);
   const last_name = useRef<null | HTMLIonInputElement>(null);
-  const gender = useRef<null | HTMLIonRadioGroupElement>(null);
   const email = useRef<null | HTMLIonInputElement>(null);
   const phone_number = useRef<null | HTMLIonInputElement>(null);
-  const password = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
   const { updateSavedData } = useContext(UserContext);
+  const modal = useRef<HTMLIonModalElement>(null);
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
       first_name: first_name.current?.value,
       last_name: last_name.current?.value,
-      gender: gender.current?.value,
       email: email.current?.value,
       phone_number: phone_number.current?.value,
     };
@@ -75,7 +73,6 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
     if (
       data.first_name &&
       data.last_name &&
-      data.gender &&
       data.email &&
       data.phone_number
     ) {
@@ -88,9 +85,6 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
       );
     }
   };
-  const modal = useRef<HTMLIonModalElement>(null);
-  const input = useRef<HTMLIonInputElement>(null);
-
 
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
     setOpenModal(false)
@@ -101,22 +95,16 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
       trigger="open-modal"
       isOpen={openModal}
       onWillDismiss={(ev) => onWillDismiss(ev)}
+      initialBreakpoint={0.8}
+      breakpoints={[0, 0.25, 0.8]}
+      handleBehavior="cycle"
     >
-      <IonHeader>
-        <IonToolbar color="primary">
-          <IonButtons slot="start">
-            <IonButton onClick={() => setOpenModal(false)}>Cancel</IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <RegisterContent
+      <UpdateAccountContent
         user={user}
         first_name={first_name}
         last_name={last_name}
-        gender={gender}
         email={email}
         phone_number={phone_number}
-        password={password}
         handleSubmit={handleSubmit}
       />
     </IonModal>

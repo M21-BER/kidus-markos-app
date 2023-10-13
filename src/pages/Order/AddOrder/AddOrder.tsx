@@ -15,7 +15,7 @@ import {
   imagesOutline,
   informationCircleOutline,
 } from "ionicons/icons";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import { useParams } from "react-router";

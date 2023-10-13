@@ -1,8 +1,8 @@
 //10000
 import {
+  IonContent,
   IonPage,
   useIonLoading,
-  useIonRouter,
   useIonToast,
   useIonViewWillEnter,
 } from "@ionic/react";
@@ -20,22 +20,20 @@ import {
 } from "ionicons/icons";
 import { Toast } from "../../utils/CustomToast";
 import { UserContext } from "../../context/AuthContext";
-import Loader from "../../components/UI/Loader/Loader";
+import LoaderUI from "../../components/UI/Loader/LoaderUI";
 
 const Login: React.FC = () => {
   const clientIdentity = useRef<null | HTMLIonInputElement>(null);
   const password = useRef<null | HTMLIonInputElement>(null);
-  const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const { isAuthed, refresh, wait,setBackBtn } = useContext(UserContext);
+  const { isAuthed, refresh, wait,route,navigate} = useContext(UserContext);
   const [stat, setStat] = useState<boolean>(false);
 
   useIonViewWillEnter(()=>{
     if (isAuthed) {
-      router.goBack();
+      navigate!(route?.path,route?.id,null);
     }else{
-      setBackBtn!(false);
       if (!isAuthed) {
         getSignStatus();
       }  
@@ -81,7 +79,7 @@ const Login: React.FC = () => {
             dismiss();
             refresh!();
             Toast(presentIonToast, login.data.message, checkmarkCircleOutline);
-            router.push("/app/home", "root", "replace");
+            navigate!("Home",null,null);
           } else {
             dismiss();
             reset(clientIdentity);
@@ -125,11 +123,13 @@ const Login: React.FC = () => {
       );
     }
   };
-
   if(wait){
   return(
     <IonPage>
-      <Loader/>
+     <ToolBarMain title="Sign in" />
+     <IonContent>
+        <LoaderUI/>  
+     </IonContent>
     </IonPage>
   )
   }else{
@@ -142,8 +142,10 @@ const Login: React.FC = () => {
             clientIdentity={clientIdentity}
             password={password}
             stat={stat}
+            navigate={navigate}
           />
         </>
+        <div className="spacer_drawer"></div>
       </IonPage>
     );
   }

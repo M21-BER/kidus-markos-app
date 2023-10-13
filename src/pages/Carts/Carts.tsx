@@ -12,9 +12,8 @@ import {
   IonSkeletonText,
   useIonAlert,
   useIonToast,
-  useIonViewWillEnter,
 } from "@ionic/react";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 import { Preferences } from "@capacitor/preferences";
 import { CART_KEY, jsonCheck } from "../../utils/utils";
@@ -26,18 +25,20 @@ import { Toast } from "../../utils/CustomToast";
 const Carts: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [carts, setCarts] = useState<any[]>([]);
-  const { refresh } = useContext(UserContext);
+  const {isAuthed, refresh ,navigate} = useContext(UserContext);
   const [presentAlert] = useIonAlert();
   const [presentIonToast] = useIonToast();
-  useIonViewWillEnter(async () => {
-    const cart = await getCarts();
+  useEffect(()=>{ 
+    refresh!();
+    !isAuthed && navigate!("Login",null,null);
+  },[]);
+  useEffect(()=>{ 
+    (async()=>{
+      const cart = await getCarts();
     setCarts(cart);
     setLoading(false);
-  });
-
-  useIonViewWillEnter(async () => {
-    refresh!();
-  });
+    })()
+  },[]);
 
   const getCarts = async () => {
     const cartE = await Preferences.get({ key: CART_KEY });

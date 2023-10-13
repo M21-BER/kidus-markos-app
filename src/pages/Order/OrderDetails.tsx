@@ -1,6 +1,5 @@
-import { IonButton, IonCard, IonCardContent, useIonRouter, IonContent, IonIcon, IonPage, IonText} from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonContent, IonIcon, IonPage, IonText} from '@ionic/react';
 import {ToolBarDetails} from '../../components/ToolBar/ToolBar';
-import { useParams } from 'react-router';
 import { useAxios } from '../../hooks/useAxios';
 import { jsonCheck, url } from '../../utils/utils';
 import {addCircleSharp } from 'ionicons/icons';
@@ -10,7 +9,7 @@ import ErrorFallBack from '../../components/error/ErrorFallBack/ErrorFallBack';
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import LoaderUI from '../../components/UI/Loader/LoaderUI';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserContext } from '../../context/AuthContext';
 const settings = {
   showThumbs: false,
@@ -21,7 +20,6 @@ const settings = {
 const OrderDetails: React.FC = () => {
     const {route,navigate} =useContext(UserContext);
     const id:any =  {id:route?.id}
-    const router = useIonRouter();
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
     const orderProduct = ()=>{
       navigate!("addOrder",id.id,null)
@@ -95,6 +93,7 @@ const OrderDetails: React.FC = () => {
     <IonContent>
     <LoaderUI/>
     </IonContent>
+    <div className="spacer_drawer"></div>
     </IonPage>
   );
 }

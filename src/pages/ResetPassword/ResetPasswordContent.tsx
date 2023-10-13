@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { failMessage, url } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
-import { useIonRouter, useIonToast } from "@ionic/react";
+import {useIonToast } from "@ionic/react";
 
 interface Props {
   email: React.MutableRefObject<HTMLIonInputElement | null>;
@@ -21,6 +21,7 @@ interface Props {
   reset: (field: React.MutableRefObject<HTMLIonInputElement | null>) => void;
   present: any;
   dismiss: any;
+  navigate:any;
 }
 
 const ResetPasswordContent: React.FC<Props> = ({
@@ -31,12 +32,12 @@ const ResetPasswordContent: React.FC<Props> = ({
   reset,
   present,
   dismiss,
+  navigate
 }) => {
   const [presentIonToast] = useIonToast();
   const [resetState, setResetState] = useState<number>(0);
   const [generatedOTP, seGeneratedOTP] = useState<number>(0);
   const [userTempo, setUserTempo] = useState<any>(null);
-  const router = useIonRouter();
   const sendOTP = async (value: any) => {
     const OTP = Math.floor(Math.random() * 9000 + 1000);
     seGeneratedOTP(OTP);
@@ -175,7 +176,7 @@ const ResetPasswordContent: React.FC<Props> = ({
               changePassword.data.message,
               checkmarkCircleOutline
             );
-            router.push("/app/login", "root", "replace");
+            navigate("Login",null,null)
           } else {
             throw new Error(failMessage);
           }

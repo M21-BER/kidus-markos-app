@@ -2,16 +2,11 @@ import {
   IonHeader,
   IonToolbar,
   IonButtons,
-  IonBackButton,
   IonTitle,
   IonButton,
   IonIcon,
-  IonSearchbar,
-  IonItem,
-  useIonRouter,
   useIonAlert,
   useIonToast,
-  useIonViewWillEnter,
 } from "@ionic/react";
 import {
   logOutOutline,
@@ -21,7 +16,7 @@ import {
   arrowBackOutline,
 } from "ionicons/icons";
 import { logout } from "../../utils/logout";
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../context/AuthContext";
 import { Toast } from "../../utils/CustomToast";
 
@@ -30,9 +25,8 @@ interface Props {
   defaultValue?:any;
 }
 export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
-  const router = useIonRouter();
   const [presentAlert] = useIonAlert();
-  const { isAuthed, refresh,backHref,backBtn } = useContext(UserContext);
+  const { isAuthed, refresh,navigate } = useContext(UserContext);
   const [presentIonToast] = useIonToast();
   const handleUserToolBar = () => {
     if (isAuthed) {
@@ -54,6 +48,7 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
               const status: boolean = await logout();
               if (status) {
                 refresh!();
+                navigate!("Login",null,null);
                 Toast(
                   presentIonToast,
                   "Sign out successfully!",
@@ -71,46 +66,90 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
         ],
       });
     } else {
-      router.push("/app/login", "root");
+      navigate!("Login",null,null);
     }
   };
-  const searchValue = useRef<null | HTMLIonSearchbarElement>(null);
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(searchValue.current?.value);
-  };
-  useIonViewWillEnter(()=>{
-  refresh!();
-  })
   return (
     <IonHeader>
       <IonToolbar color="primary"  style={{height:'80px',padding:"10px 0"}}>
         <IonTitle>{title || "KM"}</IonTitle>
-         {
-          backBtn && (
-            <IonButtons slot="start">
-            <IonBackButton defaultHref={backHref}></IonBackButton>
-          </IonButtons>
-          )
-         }
         <IonButtons slot="end">
-          <IonButton onClick={handleUserToolBar}>
-          {isAuthed ? "Logout" : "Login"}     
-            {/* <IonIcon
+          <IonButton onClick={handleUserToolBar}> 
+            <IonIcon
               slot="icon-only"
               icon={isAuthed ? logOutOutline : logInOutline}
               color={"light"}
-            /> */}
+            />
           </IonButton>
         </IonButtons>
       </IonToolbar>
-      {/* <IonToolbar color="primary">
-        <IonItem color="primary">
-          <form onSubmit={handleSearch}>
-            <IonSearchbar ref={searchValue} />
-          </form>
-        </IonItem>
-      </IonToolbar> */}
+    </IonHeader>
+  );
+};
+export const ToolBarMainAddOn: React.FC<Props> = ({ title,defaultValue }) => {
+  const [presentAlert] = useIonAlert();
+  const { isAuthed, refresh,navigate } = useContext(UserContext);
+  const [presentIonToast] = useIonToast();
+  const handleUserToolBar = () => {
+    if (isAuthed) {
+      presentAlert({
+        header: "Sign out!",
+        message: "Are you sure you want to sign out?",
+        backdropDismiss: false,
+        keyboardClose: true,
+        animated: true,
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+          },
+          {
+            text: "OK",
+            role: "confirm",
+            handler: async () => {
+              const status: boolean = await logout();
+              if (status) {
+                refresh!();
+                navigate!("Login",null,null);
+                Toast(
+                  presentIonToast,
+                  "Sign out successfully!",
+                  checkmarkCircleOutline
+                );
+              } else {
+                Toast(
+                  presentIonToast,
+                  "Sign out failed, please try again later!",
+                  informationCircleOutline
+                );
+              }
+            },
+          },
+        ],
+      });
+    } else {
+      navigate!("Login",null,null)
+    }
+  };
+  return (
+    <IonHeader>
+      <IonToolbar color="primary"  style={{height:'80px',padding:"10px 0"}}>
+        <IonTitle>{title || "KM"}</IonTitle>
+        <IonButtons slot="start" onClick={()=>{
+          navigate!(defaultValue.path,defaultValue.id,defaultValue.info)
+        }}>
+          <IonIcon icon={arrowBackOutline}  className="back-btn"/>
+        </IonButtons>
+        <IonButtons slot="end">
+          <IonButton onClick={handleUserToolBar}>     
+            <IonIcon
+              slot="icon-only"
+              icon={isAuthed ? logOutOutline : logInOutline}
+              color={"light"}
+            />
+          </IonButton>
+        </IonButtons>
+      </IonToolbar>
     </IonHeader>
   );
 };

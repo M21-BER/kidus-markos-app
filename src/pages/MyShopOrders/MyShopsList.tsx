@@ -3,9 +3,10 @@ import { cartOutline, checkmark, checkmarkCircleOutline, closeCircleOutline, clo
 import React, { useContext } from 'react';
 import { UserContext } from '../../context/AuthContext';
 interface Props{
-shops:any   
+shops:any;
+navigate:any;   
 }
-const MyShopsList: React.FC<Props> = ({shops}) => {
+const MyShopsList: React.FC<Props> = ({shops,navigate}) => {
    const findProd = (id:any)=>{
     return shops.data2.filter((i:any)=>{
       return i.s_product_id === id
@@ -27,7 +28,7 @@ const MyShopsList: React.FC<Props> = ({shops}) => {
                   <IonCard disabled={shop.delivered?true:false} key={index} onClick={() => {
                     setShopColor!(shop.selected_color?shop.selected_color:"#361705")
                     setShopPayment!(findProd(shop.s_product_id)[0]?findProd(shop.s_product_id)[0]:null);
-                    router.push(`/payment/${shop.s_product_id}`);
+                    navigate("payment",shop.s_product_id,null);
                   }}>
                     <IonCardContent className="ion-no-padding">
                       <IonItem lines="none">
@@ -44,6 +45,7 @@ const MyShopsList: React.FC<Props> = ({shops}) => {
                   </IonCard>
                 ))
              }
+             
             </>
             );
     }

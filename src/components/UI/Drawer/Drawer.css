@@ -9,6 +9,7 @@ section.bottom-drawer {
   bottom: 0;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  overflow: hidden;
 }
 
 .bottom-tab-icon > div {
@@ -21,11 +22,15 @@ section.bottom-drawer {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px;
-  width: 23px;
-  height: 23px;
+  width: 18px;
+  height: 18px;
   border-radius: 100%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: transform 200ms linear;
+}
+.bottom-tab-icon > div > div > ion-icon.on {
+  transform: translateY(-3px);
 }
 .bottom-tab-icon > div > ion-label {
   font-size: 10px;

@@ -83,6 +83,7 @@ const Shop: React.FC = () => {
           <ShopSkeleton loading={loading} />
           <ShopList shops={shops} navigate={navigate}/>
         </IonContent>
+        <div className="spacer_drawer"></div>
       </IonPage>
     );
   }

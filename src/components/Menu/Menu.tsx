@@ -31,7 +31,7 @@ import Carts from "../../pages/Carts/Carts";
 import MyOrders from "../../pages/MyOrders/MyOrders";
 import Tasks from "../../pages/Tasks/Tasks";
 import ViewTask from "../../pages/Tasks/ViewTask";
-import MyShops from "../../pages/MyShops/MyShops";
+import MyShops from "../../pages/MyShopOrders/MyShops";
 
 const Menu: React.FC = () => {
   const { isAuthed } = useContext(UserContext);

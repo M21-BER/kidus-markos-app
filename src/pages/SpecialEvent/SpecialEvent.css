@@ -1,0 +1,20 @@
+.special-event {
+  width: 100%;
+  position: relative;
+}
+.special-event img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.special-event .blurhash-img {
+  width: 100% !important;
+  height: 200px !important;
+}
+.carousel .slide .legend {
+  background: #361705 !important;
+}
+.carousel .slide .legend:hover {
+  background: #361705 !important;
+  opacity: 0.8 !important;
+}

@@ -3,42 +3,50 @@ import {
   IonButton,
   IonIcon,
   IonContent,
-  IonRadio,
-  IonRadioGroup,
-  IonLabel,
+  useIonToast,
 } from "@ionic/react";
-import { createOutline } from "ionicons/icons";
-import "../../Register/Radio.css";
+import {  informationCircleOutline, saveOutline } from "ionicons/icons";
+import Toggle from "../../../components/UI/Toggle/Toggle";
+import { useState } from "react";
+import { Toast } from "../../../utils/CustomToast";
 interface Props {
   handleSubmit: (event: React.FormEvent) => void;
   first_name: React.MutableRefObject<HTMLIonInputElement | null>;
   last_name: React.MutableRefObject<HTMLIonInputElement | null>;
-  gender: React.MutableRefObject<HTMLIonRadioGroupElement | null>;
   email: React.MutableRefObject<HTMLIonInputElement | null>;
   phone_number: React.MutableRefObject<HTMLIonInputElement | null>;
-  password: React.MutableRefObject<HTMLIonInputElement | null>;
   user: any;
 }
-
 const UpdateAccountContent: React.FC<Props> = ({
   handleSubmit,
   first_name,
   last_name,
-  gender,
   email,
   phone_number,
-  password,
   user,
 }) => {
+  const [toggle,setToggle] = useState<boolean>(true);
+  const [presentIonToast] = useIonToast();
   return (
     <IonContent className="ion-padding">
       <div className="form-app">
         <div className="form-app-core">
-          <h3 style={{marginBottom:'40px'}}>
+          <h3 style={{marginBottom:'40px',position:'relative'}}>
             <span>Update Account</span>
+            <div style={{position:'absolute',right:0}}>
+            <Toggle change={()=>{
+              if(!toggle){
+               Toast(presentIonToast,"update disabled",informationCircleOutline,500);       
+              }else{
+                Toast(presentIonToast,"update enabled",informationCircleOutline,500);   
+              }
+              setToggle(!toggle)}}
+              />
+            </div>
           </h3>
           <form onSubmit={handleSubmit}>
             <IonInput
+              disabled={toggle}
               value={user.first_name ? user.first_name : ""}
               ref={first_name}
               name="first_name"
@@ -51,6 +59,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+              disabled={toggle}
               value={user.last_name ? user.last_name : ""}
               ref={last_name}
               name="last_name"
@@ -62,21 +71,8 @@ const UpdateAccountContent: React.FC<Props> = ({
               className="ion-margin-top ion-margin-bottom"
               required={false}
             ></IonInput>
-            <IonRadioGroup
-              name="gender"
-              value={user.gender ? user.gender : "Male"}
-              ref={gender}
-              className="ion-margin-top custom-radio-km"
-            >
-              <IonLabel>Sex: </IonLabel>
-              <IonRadio value="Male">
-                <span>Male</span>
-              </IonRadio>
-              <IonRadio value="Female">
-                <span>Female</span>
-              </IonRadio>
-            </IonRadioGroup>
             <IonInput
+              disabled={toggle}
               value={user.email ? user.email : ""}
               ref={email}
               name="email"
@@ -89,6 +85,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+              disabled={toggle}
               value={user.phone_number ? user.phone_number : ""}
               ref={phone_number}
               name="phone_number"
@@ -101,8 +98,8 @@ const UpdateAccountContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonButton className="ion-margin-top" type="submit" expand="block">
-              <span> Update Account</span>
-              <IonIcon icon={createOutline} slot="end" />
+              <span>Save</span>
+              <IonIcon icon={saveOutline} slot="start" />
             </IonButton>
           </form>
         </div>

@@ -1,29 +1,6 @@
-import { Redirect, Route, Router } from "react-router-dom";
-import { IonApp, IonButton, IonContent, IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from "@ionic/react";
+import { Route } from "react-router-dom";
+import { IonAlert, IonApp, IonContent, IonPage, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-
-
-/* Core CSS required for Ionic components to work properly */
-import "@ionic/react/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
-import "@ionic/react/css/normalize.css";
-import "@ionic/react/css/structure.css";
-import "@ionic/react/css/typography.css";
-
-/* Optional CSS utils that can be commented out */
-import "@ionic/react/css/padding.css";
-import "@ionic/react/css/float-elements.css";
-import "@ionic/react/css/text-alignment.css";
-import "@ionic/react/css/text-transformation.css";
-import "@ionic/react/css/flex-utils.css";
-import "@ionic/react/css/display.css";
-
-/* Theme variables */
-import "./theme/variables.css";
-import "./theme/shared.css";
-
-/* Pages, Screens & Components */
 import Drawer from "./components/UI/Drawer/Drawer";
 import { Preferences } from "@capacitor/preferences";
 import React, { useContext, useEffect, useState } from "react";
@@ -34,23 +11,40 @@ import Account from "./pages/Account/Account";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Tasks from "./pages/Tasks/Tasks";
-import MyShops from "./pages/MyShops/MyShops";
+import MyShops from "./pages/MyShopOrders/MyShops";
 import Home from "./pages/Home/Home";
-import { homeSharp, cartSharp, calendarOutline, personCircleSharp } from "ionicons/icons";
 import Carts from "./pages/Carts/Carts";
-import MyOrders from "./pages/MyOrders/MyOrders";
 import AddOrder from "./pages/Order/AddOrder/AddOrder";
 import OrderDetails from "./pages/Order/OrderDetails";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import ShopDetails from "./pages/Shop/ShopDetails/ShopDetails";
 import Payment from "./pages/Shop/payment/Payment";
 import ViewTask from "./pages/Tasks/ViewTask";
+import { App as Intent } from "@capacitor/app";
+/* Core CSS required for Ionic components to work properly */
+import "@ionic/react/css/core.css";
+/* Basic CSS for apps built with Ionic */
+import "@ionic/react/css/normalize.css";
+import "@ionic/react/css/structure.css";
+import "@ionic/react/css/typography.css";
+/* Optional CSS utils that can be commented out */
+import "@ionic/react/css/padding.css";
+import "@ionic/react/css/float-elements.css";
+import "@ionic/react/css/text-alignment.css";
+import "@ionic/react/css/text-transformation.css";
+import "@ionic/react/css/flex-utils.css";
+import "@ionic/react/css/display.css";
+/* Theme variables */
+import "./theme/variables.css";
+import "./theme/shared.css";
+/* Pages, Screens & Components */
 setupIonicReact();
 
 const App: React.FC = () => {
-const {isAuthed,route, navigate} = useContext(UserContext)
+const {isAuthed,route, navigate,screenStack,pullStack} = useContext(UserContext)
 const [introSeen, setIntroSeen] = useState<boolean>(true);
-
+const [showBackAlert, setShowBackAlert] = useState<boolean>(false);
+  
   useEffect(() => {
     const checkStorage = async () => {
       const seen = await Preferences.get({ key: INTRO_KEY });
@@ -63,7 +57,6 @@ const [introSeen, setIntroSeen] = useState<boolean>(true);
     Preferences.set({ key: INTRO_KEY, value: 'true' });
   };
   const changeScreen = (screen:string)=>{
-    // routes?(path,screen)
     navigate!(screen,null,null)
   }
   const activities = ()=>{
@@ -75,23 +68,72 @@ const [introSeen, setIntroSeen] = useState<boolean>(true);
           <Route path="/" component={Home}/>
           </IonRouterOutlet> 
       </IonReactRouter>
-    )
-   case  "Shop":
-    return isAuthed?<MyShops/>:<Login/>
-   case  "Task":
-    return isAuthed?<MyShops/>:<Login/>
-   case  "Account":
-    return isAuthed?<MyShops/>:<Login/>
+    );
    case  "shopDetails":
-    return <ShopDetails/>
+    return <ShopDetails/>;
    case  "payment":
-    return <Payment/>
+    return <Payment/>;
    case  "orderDetails":
-    return <OrderDetails/>
+    return <OrderDetails/>;
    case  "addOrder":
-    return <AddOrder/>  
+    return <AddOrder/>; 
+   case  "MyShop":
+    return isAuthed?<MyShops/>:<Login/> 
+   case  "Task":
+    return isAuthed?<Tasks/>:<Login/>
+   case  "task_view":
+    return <ViewTask/>;   
+   case  "Account":
+    return isAuthed?<Account/>:<Login/>; 
+   case  "Carts":
+    return isAuthed?<Carts/>:<Login/>; 
+   case  "Login":
+    return <Login/>; 
+   case  "Register":
+    return <Register/>; 
+   case  "ResetPassword":
+    return <ResetPassword/>; 
   } 
   }
+  
+  function ExitAlert(){
+    return (
+      <IonAlert
+      isOpen={showBackAlert}
+      header={'Please Confirm!'}
+      message={'Do you really want to exit our App?'}
+      buttons={[
+        {
+          text: 'Exit',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {}
+        },
+        {
+          text: 'Cancel',
+          handler: () => {
+            Intent.exitApp();
+          }
+        }
+      ]}
+      onDidDismiss={() => setShowBackAlert(false)}
+      className='my-custom-class'
+    />
+    )
+  }
+   document.addEventListener('ionBackButton', (ev: any) => {
+  ev.detail.register(-1, () => {
+  if(screenStack?.length !== 0){
+    if (screenStack![screenStack!.length-1]?.path === 'Home') {
+      setShowBackAlert(true);
+    }else{
+     let tempo = screenStack![screenStack!.length-2] 
+     pullStack!(screenStack!.length-1); 
+     navigate!(tempo?.path,tempo?.id,tempo?.info); 
+    } 
+  }
+  });
+});
   return (
     <IonApp>
         {!introSeen ? (
@@ -102,6 +144,7 @@ const [introSeen, setIntroSeen] = useState<boolean>(true);
            </IonPage> 
         ) : (
         <>
+       <ExitAlert/> 
        {activities()}
        <Drawer changeScreen={changeScreen} route={route?.path}/>
        </>

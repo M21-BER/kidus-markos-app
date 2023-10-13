@@ -1,6 +1,6 @@
 import { formatDuration, intervalToDuration } from 'date-fns'
-import { useIonAlert,useIonLoading,IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, useIonViewWillEnter, IonRefresher, IonRefresherContent, IonText, IonModal, IonButton, IonButtons, IonHeader, IonToolbar, IonIcon, IonCardHeader, IonTitle, useIonToast, IonList, IonSelect, IonSelectOption, IonRadio, IonRadioGroup, IonInput } from '@ionic/react';
-import React, { useContext, useRef, useState } from 'react';
+import { useIonAlert,useIonLoading,IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, IonRefresher, IonRefresherContent, IonText, IonButton, IonIcon, IonCardHeader, IonTitle, useIonToast, IonList, IonRadio, IonRadioGroup, IonInput } from '@ionic/react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../components/ToolBar/ToolBar';
 import {failMessage, jsonCheck, url } from '../../utils/utils';
 import './Tasks.css'
@@ -9,8 +9,7 @@ import { UserContext } from '../../context/AuthContext';
 import ErrorFallBack from '../../components/error/ErrorFallBack/ErrorFallBack';
 import { OverlayEventDetail } from '@ionic/core';
 import ViewFileModal from './ViewFileModal';
-import { useParams } from 'react-router';
-import { analyticsOutline, checkmarkCircle, checkmarkCircleOutline, checkmarkDone, chevronDown, chevronDownCircleSharp, chevronDownSharp, chevronUpCircleSharp, chevronUpSharp, closeCircle, filmSharp, helpOutline, informationCircleOutline, paperPlaneSharp } from 'ionicons/icons';
+import { analyticsOutline, checkmarkCircle, checkmarkCircleOutline, checkmarkDone, chevronDownCircleSharp, chevronDownSharp, chevronUpCircleSharp, chevronUpSharp, closeCircle, helpOutline, informationCircleOutline, paperPlaneSharp } from 'ionicons/icons';
 import { Toast } from '../../utils/CustomToast';
 import InputModal from './InputModal';
 import { errorResponse } from '../../utils/errorResponse';
@@ -37,7 +36,7 @@ const ViewTask: React.FC = () => {
   const select = useRef<null | HTMLIonRadioGroupElement>(null);
   const [present, dismiss] = useIonLoading();
   const controller: AbortController = new AbortController();
-  const {user} = useContext(UserContext); 
+  const {user,route} = useContext(UserContext); 
   const comment = useRef<HTMLIonInputElement>(null);
   const du = useRef<HTMLParagraphElement>(null);
   const ti = useRef<HTMLParagraphElement>(null);
@@ -48,18 +47,20 @@ const ViewTask: React.FC = () => {
   const input = useRef<HTMLIonInputElement>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [insertOpenModal, setOpenInsertModal] = useState<boolean>(false);
-  const {id}: any = useParams();
+  const {id}: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
   const [presentAlert] = useIonAlert();
-  useIonViewWillEnter(async () => {
-    const taskRes = await getTasks();
-    if(taskRes){
-      setTask(taskRes);
-      setTaskTitle(taskRes.task_title)
-      setLoading(false);
-    }
-    processTaskTime();
-  });
+  useEffect(()=>{
+    (async () => {
+      const taskRes = await getTasks();
+      if(taskRes){
+        setTask(taskRes);
+        setTaskTitle(taskRes.task_title)
+        setLoading(false);
+      }
+      processTaskTime();
+    })()
+  },[])
   function processTaskTime(){
     let durationPara =  du.current?.innerText; 
     let TimePara =  ti.current?.innerText; 
@@ -422,14 +423,14 @@ const ViewTask: React.FC = () => {
   if (error) {
     return (
       <IonPage>
-        <ToolBarDetails title={taskTitle} defaultValue='/'/>
+       <ToolBarDetails defaultValue={{path:"Task",id:null,info:null}} title={taskTitle}/>
         <ErrorFallBack error={error} reload={reload} />
       </IonPage>
     );
   } else {
   return (
     <IonPage>
-       <ToolBarDetails title={taskTitle} defaultValue='/'/>
+       <ToolBarDetails defaultValue={{path:"Task",id:null,info:null}} title={taskTitle}/>
        <IonCard className='ion-no-padding ion-no-margin'>
          <IonCardHeader className='ion-text-center tps-progress-bar-header'>
           <IonTitle>Task Progress</IonTitle>
@@ -724,6 +725,7 @@ const ViewTask: React.FC = () => {
        <ViewFileModal setTaskStatus={setTaskStatus} taskStatus={taskStatus} confirm={confirm} modal={modal} openModal={openModal} setOpenModal={setOpenModal} onWillDismiss={onWillDismiss}/>
        <InputModal setTaskStatus={setTaskStatus} taskStatus={taskStatus} confirm={confirm_1} modal={modal1} openModal={insertOpenModal} setOpenModal={setOpenInsertModal} onWillDismiss={onWillDismiss}/>
       </IonContent>
+      <div className="spacer_drawer"></div>
     </IonPage>
   );
 }

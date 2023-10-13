@@ -1,5 +1,5 @@
-import { useIonLoading,IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, useIonViewWillEnter, IonRefresher, IonRefresherContent, IonText } from '@ionic/react';
-import React, { useContext, useState } from 'react';
+import { useIonLoading,IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, IonRefresher, IonRefresherContent, IonText } from '@ionic/react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ToolBarMain } from '../../components/ToolBar/ToolBar';
 import {failMessage, url } from '../../utils/utils';
 import TasksList from './TasksList';
@@ -14,18 +14,20 @@ const Tasks: React.FC = () => {
   const [error, setError] = useState<any>(null);
   const [present, dismiss] = useIonLoading();
   const controller: AbortController = new AbortController();
-  const {user,wait,refresh} = useContext(UserContext); 
+  const {isAuthed,user,wait,refresh,navigate} = useContext(UserContext); 
   const [screenLoading,setScreenLoading] = useState<boolean>(wait!);
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     refresh!();
+    !isAuthed && navigate!("Login",null,null);
     setScreenLoading(wait!);
-  });
-  useIonViewWillEnter(async () => {
+  },[]);
+  useEffect(() => {
+   (async()=>{
     const tasks = await getTasks();
     setTasks(tasks);
     setLoading(false);
-  });
-
+   })() 
+  },[]);
   const getTasks = async () => {   
     try {
       const data = await axios(`${url}/api/tasks/client/clientIndex/${user.client_id}`, {
@@ -121,8 +123,9 @@ const Tasks: React.FC = () => {
               </section> 
               </IonCardContent>
             </IonCard>
-       <TasksList tasks={tasks} />
+       <TasksList tasks={tasks} navigate={navigate} />
       </IonContent>
+      <div className="spacer_drawer"></div>
     </IonPage>
   );
 }

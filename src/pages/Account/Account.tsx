@@ -1,7 +1,6 @@
 import {
   IonContent,
   IonPage,
-  useIonRouter,
   IonList,
   IonLabel,
   IonCard,
@@ -11,12 +10,11 @@ import {
   IonText,
   IonIcon,
   useIonAlert,
-  useIonViewWillEnter,
   useIonToast,
 } from "@ionic/react";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
 import "./Account.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Loader from "../../components/UI/Loader/Loader";
 import {
   briefcaseOutline,
@@ -38,19 +36,15 @@ import { logout } from "../../utils/logout";
 import Feedback from "./Feedback/Feedback";
 
 const Account: any = () => {
-  const { user, wait, refresh } = useContext(UserContext);
-  // useIonViewWillEnter(() => {
-  //   refresh!();
-  // });
-  const router = useIonRouter();
+  const {isAuthed, user, wait, refresh,navigate } = useContext(UserContext);
   const [presentAlert] = useIonAlert();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModal_2, setOpenModal_2] = useState<boolean>(false);
   const [presentIonToast] = useIonToast();
   const handleDeleteAccount = () => {
     presentAlert({
-      header: "Sign out!",
-      message: "Are you sure you want to sign out?",
+      header: "Delete Account",
+      message: "Are you sure you want to delete your account?",
       backdropDismiss: false,
       keyboardClose: true,
       animated: true,
@@ -78,7 +72,7 @@ const Account: any = () => {
               ) {
                 await logout();
                 refresh!();
-                router.push("/", "root", "replace");
+                navigate!("Home",null,null);
                 Toast(
                   presentIonToast,
                   deleteAccount.data.message,
@@ -104,12 +98,11 @@ const Account: any = () => {
   const handleModal_2 = () => {
     setOpenModal_2(true);
   };
-  useIonViewWillEnter(()=>{
-    console.log("account page");
-    
-  }) 
+  useEffect(()=>{
+    !isAuthed && navigate!("Login",null,null);
+  },[])
   if (wait) {
-    return <Loader />;
+    return  <IonPage>  <ToolBarMain title="My Account"/><Loader /></IonPage> ;
   } else {
     return (
       <IonPage>
@@ -221,6 +214,7 @@ const Account: any = () => {
           setOpenModal={setOpenModal}
         />
         <Feedback openModal_2={openModal_2} setOpenModal_2={setOpenModal_2} />
+        <div className="spacer_drawer"></div>
       </IonPage>
     );
   }

@@ -18,22 +18,19 @@ interface Props {
   refresh: () => void;
   updateSavedData: (userData: any) => void;
   wait: boolean;
-  backHref:string;
   route:routeType;
   shopColor:string;
   setShopColor:React.Dispatch<React.SetStateAction<string>>;
-  setBackHref:React.Dispatch<React.SetStateAction<string>>;
   navigate:(value:any,id:any,info:any)=>void;
-  backBtn:boolean;
-  setBackBtn:React.Dispatch<React.SetStateAction<boolean>>
   shopPayment:any;
-  setShopPayment:React.Dispatch<any>
+  setShopPayment:React.Dispatch<any>;
+  screenStack:routeType[];
+  pushStack:(routeHistory:routeType)=>void;
+  pullStack:(index:number)=>void;
 }
 export const UserContext = createContext<Partial<Props>>({});
 
 export default function UserProvider({ children }: { children: ReactNode }) {
-  const [backHref,setBackHref]= useState<string>("/");
-  const [backBtn,setBackBtn]= useState<boolean>(false);
   const [shopPayment,setShopPayment]= useState<any>(null);
   const [shopColor,setShopColor]= useState<string>("");
   const [user, setUser] = useState<any>(null);
@@ -45,6 +42,11 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     id:null,
     info:null
   });
+  const [screenStack,setScreenStack] = useState<routeType[]>([{
+    path:"Home",
+    id:null,
+    info:null
+  }])
   let resetState = false;
   const removeUser = async () => {
     await Preferences.remove({ key: login_key });
@@ -84,6 +86,16 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     }
   })
   }
+  const pushStack = (routeHistory:routeType)=>{
+    let newHistory:any = [...screenStack].push(routeHistory);
+    setScreenStack(newHistory)
+  }
+  const pullStack = (index:number)=>{
+    let newHistory:any = screenStack.filter((item,i)=>{
+      return index !== i;        
+    })
+    setScreenStack(newHistory)
+  }
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -119,7 +131,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   }, [update]);
   return (
     <UserContext.Provider
-      value={{ user, isAuthed,wait, refresh, updateSavedData,backHref,setBackHref,backBtn,setBackBtn,shopPayment,setShopPayment,shopColor,setShopColor,route, navigate }}
+      value={{ user, isAuthed,wait, refresh, updateSavedData,shopPayment,setShopPayment,shopColor,setShopColor,route, navigate,screenStack,pushStack,pullStack}}
     >
       {children}
     </UserContext.Provider>

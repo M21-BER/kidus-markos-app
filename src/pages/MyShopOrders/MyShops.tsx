@@ -8,17 +8,12 @@ import {
     IonLabel,
     IonPage,
     IonSkeletonText,
-    useIonAlert,
-    useIonToast,
-    useIonViewWillEnter,
   } from "@ionic/react";
-  import React, { useContext, useState } from "react";
+  import React, { useContext, useEffect, useState } from "react";
   import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-  import { Preferences } from "@capacitor/preferences";
   import MyShopsList from "./MyShopsList";
   import "./MyShopsList";
   import { UserContext } from "../../context/AuthContext";
-  import { Toast } from "../../utils/CustomToast";
 import { failMessage, url } from "../../utils/utils";
 import axios from "axios";
 import { errorResponse } from "../../utils/errorResponse";
@@ -26,21 +21,19 @@ import { errorResponse } from "../../utils/errorResponse";
     const [loading, setLoading] = useState<boolean>(true);
     const [shops, setShops] = useState<any>({data1:[],data2:[]});
     const [error, setError] = useState<any>(null);
-    const { refresh } = useContext(UserContext);
     const controller: AbortController = new AbortController();
-    const [presentAlert] = useIonAlert();
-    const [presentIonToast] = useIonToast();
-    const {user} = useContext(UserContext);
-    useIonViewWillEnter(async () => {
-      const shop:any = await getShops();
-      setShops(shop);
-      setLoading(false);
-    });
-  
-    useIonViewWillEnter(async () => {
+    const {isAuthed,user,navigate,refresh} = useContext(UserContext);
+    useEffect(()=>{
+      (async () => {
+        const shop:any = await getShops();
+        setShops(shop);
+        setLoading(false);
+      })()
+    },[]);
+    useEffect(()=>{ 
       refresh!();
-    });
-  
+      !isAuthed && navigate!("Login",null,null);
+    },[]);
     const getShops = async () => {
       try {
         const data1 = await axios.get(`${url}/api/payment/client/:${user.client_id}`, {
@@ -94,8 +87,9 @@ import { errorResponse } from "../../utils/errorResponse";
               </IonCard>
             ))}
   
-          <MyShopsList shops={shops} />
+          <MyShopsList shops={shops} navigate={navigate}/>
         </IonContent>
+        <div className="spacer_drawer"></div>
       </IonPage>
     );
   };
