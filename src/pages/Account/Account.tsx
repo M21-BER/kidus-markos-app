@@ -36,7 +36,7 @@ import { logout } from "../../utils/logout";
 import Feedback from "./Feedback/Feedback";
 
 const Account: any = () => {
-  const {isAuthed, user, wait, refresh,navigate } = useContext(UserContext);
+  const {isAuthed, user, wait, refresh,navigate,pushStack,route } = useContext(UserContext);
   const [presentAlert] = useIonAlert();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openModal_2, setOpenModal_2] = useState<boolean>(false);
@@ -98,6 +98,9 @@ const Account: any = () => {
   const handleModal_2 = () => {
     setOpenModal_2(true);
   };
+  useEffect(()=>{
+    pushStack!({path:'Account',id:route?.id,info:route?.info});
+  },[]);
   useEffect(()=>{
     !isAuthed && navigate!("Login",null,null);
   },[])

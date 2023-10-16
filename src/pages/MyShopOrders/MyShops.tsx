@@ -22,7 +22,10 @@ import { errorResponse } from "../../utils/errorResponse";
     const [shops, setShops] = useState<any>({data1:[],data2:[]});
     const [error, setError] = useState<any>(null);
     const controller: AbortController = new AbortController();
-    const {isAuthed,user,navigate,refresh} = useContext(UserContext);
+    const {isAuthed,user,navigate,refresh,pushStack,route} = useContext(UserContext);
+    useEffect(()=>{
+      pushStack!({path:'MyShop',id:route?.id,info:route?.info});
+    },[]);
     useEffect(()=>{
       (async () => {
         const shop:any = await getShops();

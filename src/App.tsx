@@ -111,22 +111,22 @@ const App: React.FC = () => {
     };
     checkStorage();
   }, []);
-  useEffect(() => {
-    PushNotifications.checkPermissions().then((res) => {
-      if (res.receive !== "granted") {
-        PushNotifications.requestPermissions().then((res) => {
-          if (res.receive === "denied") {
-            // showToast('Push Notification permission denied');
-          } else {
-            // showToast('Push Notification permission granted');
-            register();
-          }
-        });
-      } else {
-        register();
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   PushNotifications.checkPermissions().then((res) => {
+  //     if (res.receive !== "granted") {
+  //       PushNotifications.requestPermissions().then((res) => {
+  //         if (res.receive === "denied") {
+  //           // showToast('Push Notification permission denied');
+  //         } else {
+  //           // showToast('Push Notification permission granted');
+  //           register();
+  //         }
+  //       });
+  //     } else {
+  //       register();
+  //     }
+  //   });
+  // }, []);
   const finishIntro = async () => {
     setIntroSeen(true);
     Preferences.set({ key: INTRO_KEY, value: "true" });
@@ -137,7 +137,7 @@ const App: React.FC = () => {
   const activities = () => {
     switch (route?.path) {
       case "Home":
-        return (
+           return (
           <IonReactRouter>
             <IonRouterOutlet>
               <Route path="/" component={Home} />
@@ -147,17 +147,17 @@ const App: React.FC = () => {
       case "shopDetails":
         return <ShopDetails />;
       case "payment":
-        return <Payment />;
+        return isAuthed ? <Payment /> : <Login />;
       case "orderDetails":
         return <OrderDetails />;
       case "addOrder":
-        return <AddOrder />;
+        return isAuthed ? <AddOrder /> : <Login />;
       case "MyShop":
         return isAuthed ? <MyShops /> : <Login />;
       case "Task":
         return isAuthed ? <Tasks /> : <Login />;
       case "task_view":
-        return <ViewTask />;
+        return isAuthed ? <ViewTask /> : <Login />;
       case "Account":
         return isAuthed ? <Account /> : <Login />;
       case "Carts":
@@ -206,7 +206,7 @@ const App: React.FC = () => {
           pullStack!(screenStack!.length - 1);
           navigate!(tempo?.path, tempo?.id, tempo?.info);
         }
-      }
+      };
     });
   });
   return (

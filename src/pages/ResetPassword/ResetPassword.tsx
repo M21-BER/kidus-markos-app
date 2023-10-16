@@ -15,16 +15,18 @@ const ResetPassword: React.FC = () => {
   const newPassword = useRef<null | HTMLIonInputElement>(null);
   const repeatPassword = useRef<null | HTMLIonInputElement>(null);
   const [present, dismiss] = useIonLoading();
-  const {wait, isAuthed,navigate,route } = useContext(UserContext);
+  const {wait, isAuthed,navigate,route,pushStack } = useContext(UserContext);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
   useEffect(()=>{
     if (isAuthed) { 
-      navigate!(route?.path,route?.id,null);
+      navigate!('Home',null,null);
     }
   },[])
-
+  useEffect(()=>{
+    pushStack!({path:'ResetPassword',id:route?.id,info:route?.info});
+  },[]);
   if(!wait){
     return (
       <IonPage>

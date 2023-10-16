@@ -36,7 +36,7 @@ const Register: React.FC  = () => {
   const [presentIonToast] = useIonToast();
   const [verifyStatus, setVerifyStatus] = useState<boolean>(false);
   const [VRes, setVRes] = useState<any>(null);
-  const {isAuthed,wait,refresh,navigate,route } = useContext(UserContext);
+  const {isAuthed,wait,navigate,route,pushStack} = useContext(UserContext);
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | null>) => {
     field.current ? (field.current.value = "") : "";
   };
@@ -47,13 +47,12 @@ const Register: React.FC  = () => {
     });
   };
   useEffect(()=>{
-    if (isAuthed) { 
-      navigate!(route?.path,route?.id,null);
+    if (isAuthed) {
+      navigate!('Home',null,null);
     }else{
       getSignStatus();
     }
-  },[wait,isAuthed])
-
+  },[wait,isAuthed]);
   const getSignStatus = async () => {
     try {
       const SData = await Preferences.get({ key: SIGNUP_KEY });
@@ -209,7 +208,9 @@ const Register: React.FC  = () => {
     }
   };
   const sendOTPAgain = () => {};
-
+  useEffect(()=>{
+    pushStack!({path:'Register',id:route?.id,info:route?.info});
+  },[]);
   if(!wait){
     return (
       <IonPage>

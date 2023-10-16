@@ -5,7 +5,6 @@ import {
   useIonToast,
   IonContent,
   useIonRouter,
-  useIonViewWillEnter,
 } from "@ionic/react";
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import { useAxios } from "../../../hooks/useAxios";
@@ -40,7 +39,7 @@ const settings = {
   interval: 4000,
 };
 const ShopDetails: React.FC = () => {
-  const { user, isAuthed,setShopPayment,setShopColor,route,navigate } = useContext(UserContext);
+  const { user, isAuthed,setShopPayment,setShopColor,route,navigate,pushStack } = useContext(UserContext);
   const id: any = {id:route?.id};
   const [detail, isPending, error, setUpdate] = useAxios(
     `${url}/api/shops/index/${id.id}`
@@ -61,7 +60,7 @@ const ShopDetails: React.FC = () => {
       : [];
 
   }
-  useIonViewWillEnter(()=>{
+  useEffect(()=>{
     const checkCart = async () => {
      try {
       const cartE = await Preferences.get({ key: CART_KEY });
@@ -86,7 +85,7 @@ const ShopDetails: React.FC = () => {
     };
      
     checkCart();
-  })
+  },[])
 
   const updateColor = (colorIndex: number,color:string) => {
     setSelectedColor(colorIndex);
@@ -188,14 +187,15 @@ const ShopDetails: React.FC = () => {
         s_product_id:id.id,
         selected_color:colors?colors[0]:"#361705",
         client_id:user.client_id}  
-        const addShop = await axios.post(`${url}/api/payment`,field,{
+        const addShop:any = await axios.post(`${url}/api/payment`,field,{
           headers:{
             Authorization:user.token
           }
         })
         if(addShop.status === 201 && addShop.data.status === true){
           setShopPayment!(detail?detail.product:null);
-          navigate!("payment",id.id,null);
+          navigate!("payment",id.id,{paymentId:addShop.data.newItem.op_id,paid:addShop.data.newItem.transaction_code === "waiting..."?false:true,path:"shopDetails"});
+         
         }else{
           throw Error(failMessage);
         }
@@ -215,10 +215,12 @@ const ShopDetails: React.FC = () => {
     Toast(presentIonToast,"please login first",informationCircleOutline)
   }
   };
-
   const reload = async () => {
     setUpdate(true);
-};
+  };
+  useEffect(()=>{
+    pushStack!({path:'shopDetails',id:route?.id,info:route?.info});
+  },[]);
 
 if(!isPending){
   if (error) {

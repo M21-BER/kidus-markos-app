@@ -14,8 +14,11 @@ const Tasks: React.FC = () => {
   const [error, setError] = useState<any>(null);
   const [present, dismiss] = useIonLoading();
   const controller: AbortController = new AbortController();
-  const {isAuthed,user,wait,refresh,navigate} = useContext(UserContext); 
+  const {isAuthed,user,wait,refresh,navigate,pushStack,route} = useContext(UserContext); 
   const [screenLoading,setScreenLoading] = useState<boolean>(wait!);
+  useEffect(()=>{
+    pushStack!({path:'Task',id:route?.id,info:route?.info});
+  },[]);
   useEffect(() => {
     refresh!();
     !isAuthed && navigate!("Login",null,null);

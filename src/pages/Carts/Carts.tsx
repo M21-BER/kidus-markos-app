@@ -25,9 +25,12 @@ import { Toast } from "../../utils/CustomToast";
 const Carts: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [carts, setCarts] = useState<any[]>([]);
-  const {isAuthed, refresh ,navigate} = useContext(UserContext);
+  const {isAuthed, refresh ,navigate,pushStack,route} = useContext(UserContext);
   const [presentAlert] = useIonAlert();
   const [presentIonToast] = useIonToast();
+  useEffect(()=>{
+    pushStack!({path:'Carts',id:route?.id,info:route?.info});
+  },[]);
   useEffect(()=>{ 
     refresh!();
     !isAuthed && navigate!("Login",null,null);

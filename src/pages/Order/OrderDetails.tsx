@@ -18,7 +18,7 @@ const settings = {
   interval: 4000,
 };
 const OrderDetails: React.FC = () => {
-    const {route,navigate} =useContext(UserContext);
+    const {route,navigate,pushStack} =useContext(UserContext);
     const id:any =  {id:route?.id}
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
     const orderProduct = ()=>{
@@ -26,7 +26,10 @@ const OrderDetails: React.FC = () => {
     }
     const reload = async () => {
       setUpdate(true);
-  };
+    };
+    useEffect(()=>{
+      pushStack!({path:'orderDetails',id:route?.id,info:route?.info});
+    },[]);
   if(!isPending){
     if (error) {
       return (

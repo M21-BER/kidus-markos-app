@@ -1,4 +1,4 @@
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, useIonToast } from '@ionic/react';
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, useIonLoading, useIonToast } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../../components/ToolBar/ToolBar';
 import { useAxios } from '../../../hooks/useAxios';
@@ -8,7 +8,7 @@ import image2 from '../../../assets/banks/02.png'
 import image3 from '../../../assets/banks/03.png'
 import image4 from '../../../assets/banks/04.png'
 import './Payment.css'
-import {checkmarkCircleOutline, informationCircleSharp } from 'ionicons/icons';
+import {checkmarkCircleOutline, informationCircleSharp, navigate } from 'ionicons/icons';
 import ErrorFallBack from '../../../components/error/ErrorFallBack/ErrorFallBack';
 import { OverlayEventDetail } from '@ionic/core';
 import { Toast } from '../../../utils/CustomToast';
@@ -19,8 +19,11 @@ import ImageComponent from '../../../components/UI/Image';
 import sample_payment from '../../../assets/sample_payment.jpg'
 import LoaderUI from '../../../components/UI/Loader/LoaderUI';
 const Payment: React.FC = () => {
-    const {user,shopPayment,shopColor,route} = useContext(UserContext);
+    const {user,shopPayment,shopColor,route,navigate,pushStack} = useContext(UserContext);
     const id: any = {id:route?.id};
+    const paymentId: any = route?.info.paymentId;
+    const backPath: any = route?.info.path;
+    const paid: any = route?.info.paid;
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/settings`);
     let bankData:[] = [];
     let banks = [image1,image2,image3,image4];
@@ -29,6 +32,7 @@ const Payment: React.FC = () => {
     const transaction = useRef<HTMLIonInputElement>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [openModal1, setOpenModal1] = useState<boolean>(false);
+    const [present, dismiss] = useIonLoading();
      if(!isPending){
       bankData = jsonCheck(detail[0].data).bank_option
      }
@@ -50,29 +54,24 @@ const Payment: React.FC = () => {
       e.preventDefault();
       const transaction_code = transaction.current?.value;
       if(transaction_code){
+        await present("validating wait...");
         try {
-        const paymentRes = await axios.get(`${url}/api/payment/client/${user.client_id}`,{
+        const paymentRes = await axios.patch(`${url}/api/payment/client/${paymentId}`,{transaction_code},{
             headers:{
               Authorization:user.token
             }
            });
+         dismiss();
          if(paymentRes.data.status){
-           if(typeof paymentRes.data.items === 'object' &&  paymentRes.data.items.length > 0){
-             let op = paymentRes.data.items.filter((f:any)=>{
-              return  f.transaction_code === transaction_code && f.delivered === false
-           })
-             if(op.length !== 0){
-              Toast(presentIonToast,"validated successfully product will be delivered with 3 days",checkmarkCircleOutline);
-             }else{
-              Toast(presentIonToast,"Invalid Transaction Code",checkmarkCircleOutline)
-             }
-           }else{
-            Toast(presentIonToast,"wait a bit longer please",checkmarkCircleOutline)
-           }
-           }else{
+          navigate!("MyShop",null,null);
+          Toast(presentIonToast,"Thank you for your service, we are validating your purchase, we will notify you soon.",checkmarkCircleOutline,5000)
+          }else{
             throw new Error(failMessage)
-           }
+         }
         } catch (error) {
+          dismiss();
+          console.log(error);
+          
           const {message,status} = errorResponse(error);
            if(message && status){
             Toast(presentIonToast,message,informationCircleSharp)
@@ -92,19 +91,21 @@ const Payment: React.FC = () => {
         Toast(presentIonToast,"transaction code must be exactly 12 character",informationCircleSharp);
       }
     };
-
+    useEffect(()=>{
+      pushStack!({path:'payment',id:route?.id,info:route?.info});
+    },[]);
     if(!isPending){
      if(error){
       return (
         <IonPage>
-           <ToolBarDetails defaultValue={{path:"shopDetails",id:id.id,info:null}} title="Proceed to Payment"/>
+           <ToolBarDetails defaultValue={{path:backPath,id:id.id,info:null}} title="Proceed to Payment"/>
           <ErrorFallBack className='m_error_top' error={error} reload={reload} />
         </IonPage>
       );
      }else{
     return (
         <IonPage>
-            <ToolBarDetails defaultValue={{path:"shopDetails",id:id.id,info:null}} title="Proceed to Payment"/>
+            <ToolBarDetails defaultValue={{path:backPath,id:id.id,info:null}} title="Proceed to Payment"/>
             <IonContent className="ion-padding">
               {
                 !isPending && <div className='payment-details'>
@@ -135,7 +136,7 @@ const Payment: React.FC = () => {
                       </tr>
                       <tr>
                       <th>Delivery</th>
-                      <td>within 1 day</td>
+                      <td>within 3 to 5 days</td>
                       </tr>
                       </tbody>
                      </table>
@@ -162,7 +163,7 @@ const Payment: React.FC = () => {
                   </div>  
                   <div  className='ctpm'>
    <IonButton fill='outline' id="open-modal-sample-payment" onClick={handleModal1} expand='block' className='ion-margin-bottom'>Get tips on How</IonButton>
-   <IonButton expand='block' id="open-modal-payment" onClick={handleModal}>Continue to payment method</IonButton>
+   <IonButton expand='block' id="open-modal-payment" onClick={handleModal} disabled={paid}>{paid?"Payment Submitted":"Continue to payment method"}</IonButton>
       <IonModal 
         ref={modal}
         className='modal-task'  
@@ -230,7 +231,7 @@ const Payment: React.FC = () => {
 }else{
   return (
     <IonPage>
-    <ToolBarDetails defaultValue={{path:"shopDetails",id:id.id,info:null}} title="Proceed to Payment"/>
+    <ToolBarDetails defaultValue={{path:backPath,id:id.id,info:null}} title="Proceed to Payment"/>
       <IonContent>
        <LoaderUI/>
       </IonContent>

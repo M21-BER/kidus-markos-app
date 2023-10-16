@@ -36,7 +36,7 @@ const ViewTask: React.FC = () => {
   const select = useRef<null | HTMLIonRadioGroupElement>(null);
   const [present, dismiss] = useIonLoading();
   const controller: AbortController = new AbortController();
-  const {user,route} = useContext(UserContext); 
+  const {user,route,pushStack} = useContext(UserContext); 
   const comment = useRef<HTMLIonInputElement>(null);
   const du = useRef<HTMLParagraphElement>(null);
   const ti = useRef<HTMLParagraphElement>(null);
@@ -420,6 +420,9 @@ const ViewTask: React.FC = () => {
    }
    return res;
   }
+  useEffect(()=>{
+    pushStack!({path:'task_view',id:route?.id,info:route?.info});
+  },[]);
   if (error) {
     return (
       <IonPage>

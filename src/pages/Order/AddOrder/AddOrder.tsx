@@ -39,7 +39,7 @@ const AddOrder: React.FC = () => {
   const quantity = useRef<null | HTMLIonInputElement>(null);
   const [floorPlan, setFloorPlan] = useState<any[]>([]);
   const [flag, setFlag] = useState<string>("");
-  const {route}= useContext(UserContext);
+  const {route,pushStack}= useContext(UserContext);
   const id: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
   const [detail, isPending, error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
@@ -181,6 +181,9 @@ const AddOrder: React.FC = () => {
   const reload = ()=>{
     setUpdate(true);
   }
+  useEffect(()=>{
+    pushStack!({path:'addOrder',id:route?.id,info:route?.info});
+  },[]);
   if(!isPending){
   if(error){
    return(

@@ -4,7 +4,7 @@ import { login_key, jsonCheck } from "../utils/utils";
 import jwt_decode from "jwt-decode";
 export type routeType = {
   path: string;
-  id: number | null;
+  id: any | null;
   info: any | null;
 };
 export type routesFuncType = {
@@ -89,12 +89,14 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     });
   };
   const pushStack = (routeHistory: routeType) => {
+     if(screenStack[screenStack.length -1].path !== routeHistory.path){      
     setScreenStack((pre) => {
-      return {
+      return [
         ...pre,
         routeHistory,
-      };
+      ]
     });
+  }
   };
   const pullStack = (index: number) => {
     let newHistory: any = screenStack.filter((item, i) => {

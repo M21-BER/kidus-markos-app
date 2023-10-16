@@ -9,7 +9,7 @@ import {
 import { Preferences } from "@capacitor/preferences";
 import LoginContent from "./LoginContent";
 import { ToolBarMain } from "../../components/ToolBar/ToolBar";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { login_key, url, failMessage, SIGNUP_KEY } from "../../utils/utils";
 import { errorResponse } from "../../utils/errorResponse";
@@ -27,18 +27,17 @@ const Login: React.FC = () => {
   const password = useRef<null | HTMLIonInputElement>(null);
   const [present, dismiss] = useIonLoading();
   const [presentIonToast] = useIonToast();
-  const { isAuthed, refresh, wait,route,navigate} = useContext(UserContext);
+  const { isAuthed, refresh, wait,route,navigate,pushStack} = useContext(UserContext);
   const [stat, setStat] = useState<boolean>(false);
 
-  useIonViewWillEnter(()=>{
+  useEffect(()=>{
     if (isAuthed) {
-      navigate!(route?.path,route?.id,null);
+      navigate!('Home',null,null);
     }else{
-      if (!isAuthed) {
-        getSignStatus();
-      }  
+      getSignStatus();
+      
     }
- })
+ },[]);
   const getSignStatus = async () => {
     try {
       const SData = await Preferences.get({ key: SIGNUP_KEY });
@@ -123,6 +122,9 @@ const Login: React.FC = () => {
       );
     }
   };
+  useEffect(()=>{
+    pushStack!({path:'Login',id:route?.id,info:route?.info});
+  },[]);
   if(wait){
   return(
     <IonPage>
