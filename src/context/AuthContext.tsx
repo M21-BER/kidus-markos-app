@@ -3,14 +3,14 @@ import { Preferences } from "@capacitor/preferences";
 import { login_key, jsonCheck } from "../utils/utils";
 import jwt_decode from "jwt-decode";
 export type routeType = {
-  path:string,
-  id:number | null,
-  info:any | null
-  }
+  path: string;
+  id: number | null;
+  info: any | null;
+};
 export type routesFuncType = {
-  key:string,
-  value:any
-  }
+  key: string;
+  value: any;
+};
 
 interface Props {
   user: any;
@@ -18,35 +18,37 @@ interface Props {
   refresh: () => void;
   updateSavedData: (userData: any) => void;
   wait: boolean;
-  route:routeType;
-  shopColor:string;
-  setShopColor:React.Dispatch<React.SetStateAction<string>>;
-  navigate:(value:any,id:any,info:any)=>void;
-  shopPayment:any;
-  setShopPayment:React.Dispatch<any>;
-  screenStack:routeType[];
-  pushStack:(routeHistory:routeType)=>void;
-  pullStack:(index:number)=>void;
+  route: routeType;
+  shopColor: string;
+  setShopColor: React.Dispatch<React.SetStateAction<string>>;
+  navigate: (value: any, id: any, info: any) => void;
+  shopPayment: any;
+  setShopPayment: React.Dispatch<any>;
+  screenStack: routeType[];
+  pushStack: (routeHistory: routeType) => void;
+  pullStack: (index: number) => void;
 }
 export const UserContext = createContext<Partial<Props>>({});
 
 export default function UserProvider({ children }: { children: ReactNode }) {
-  const [shopPayment,setShopPayment]= useState<any>(null);
-  const [shopColor,setShopColor]= useState<string>("");
+  const [shopPayment, setShopPayment] = useState<any>(null);
+  const [shopColor, setShopColor] = useState<string>("");
   const [user, setUser] = useState<any>(null);
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
   const [wait, setWait] = useState<boolean>(true);
   const [update, setUpdate] = useState<boolean>(false);
   const [route, setRoute] = useState<routeType>({
-    path:"Home",
-    id:null,
-    info:null
+    path: "Home",
+    id: null,
+    info: null,
   });
-  const [screenStack,setScreenStack] = useState<routeType[]>([{
-    path:"Home",
-    id:null,
-    info:null
-  }])
+  const [screenStack, setScreenStack] = useState<routeType[]>([
+    {
+      path: "Home",
+      id: null,
+      info: null,
+    },
+  ]);
   let resetState = false;
   const removeUser = async () => {
     await Preferences.remove({ key: login_key });
@@ -58,7 +60,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     setUpdate(!update);
   };
   const updateSavedData = (Data: any) => {
-    (async () => {
+    async () => {
       try {
         const userData = await Preferences.get({ key: login_key });
         if (userData && userData.value) {
@@ -72,30 +74,34 @@ export default function UserProvider({ children }: { children: ReactNode }) {
           setUpdate(!update);
         }
       } catch (error) {
-         removeUser();
+        removeUser();
       }
+    };
+  };
+  const navigate = (value: any, id: any = null, info: any = null) => {
+    setRoute((pre) => {
+      return {
+        ...pre,
+        path: value,
+        id: id ? id : pre.id,
+        info: info ? info : pre.info,
+      };
     });
   };
-  const navigate = (value:any,id:any = null,info:any = null)=>{
-  setRoute((pre)=>{
-    return {
-      ...pre,
-       path:value,
-       id:id?id:pre.id,
-       info:info?info:pre.info,
-    }
-  })
-  }
-  const pushStack = (routeHistory:routeType)=>{
-    let newHistory:any = [...screenStack].push(routeHistory);
-    setScreenStack(newHistory)
-  }
-  const pullStack = (index:number)=>{
-    let newHistory:any = screenStack.filter((item,i)=>{
-      return index !== i;        
-    })
-    setScreenStack(newHistory)
-  }
+  const pushStack = (routeHistory: routeType) => {
+    setScreenStack((pre) => {
+      return {
+        ...pre,
+        routeHistory,
+      };
+    });
+  };
+  const pullStack = (index: number) => {
+    let newHistory: any = screenStack.filter((item, i) => {
+      return index !== i;
+    });
+    setScreenStack(newHistory);
+  };
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -105,10 +111,10 @@ export default function UserProvider({ children }: { children: ReactNode }) {
           const parsedUserData = jsonCheck(userData.value);
           if (parsedUserData.token && jwt_decode(parsedUserData.token)) {
             console.log("Rendered successfully");
-              setWait(false);
-              setUser(parsedUserData);
-              setIsAuthed(true);
-          } else {   
+            setWait(false);
+            setUser(parsedUserData);
+            setIsAuthed(true);
+          } else {
             await removeUser();
           }
         } else {
@@ -116,11 +122,11 @@ export default function UserProvider({ children }: { children: ReactNode }) {
           setUser(null);
           setIsAuthed(false);
         }
-      } catch (error) {     
-        if(resetState){
-          removeUser();    
-          resetState = false;          
-        }else{
+      } catch (error) {
+        if (resetState) {
+          removeUser();
+          resetState = false;
+        } else {
           setWait(false);
           setUser(null);
           setIsAuthed(false);
@@ -131,7 +137,22 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   }, [update]);
   return (
     <UserContext.Provider
-      value={{ user, isAuthed,wait, refresh, updateSavedData,shopPayment,setShopPayment,shopColor,setShopColor,route, navigate,screenStack,pushStack,pullStack}}
+      value={{
+        user,
+        isAuthed,
+        wait,
+        refresh,
+        updateSavedData,
+        shopPayment,
+        setShopPayment,
+        shopColor,
+        setShopColor,
+        route,
+        navigate,
+        screenStack,
+        pushStack,
+        pullStack,
+      }}
     >
       {children}
     </UserContext.Provider>
