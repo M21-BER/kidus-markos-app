@@ -5,8 +5,10 @@ import {
   IonRefresherContent,
   useIonViewWillEnter,
   useIonLoading,
+  IonItem,
+  IonSearchbar,
 } from "@ionic/react";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import "../../Home/Home.css";
@@ -22,7 +24,8 @@ const Shop: React.FC = () => {
   const [shops, setShops] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const controller: AbortController = new AbortController();
-  const {navigate} = useContext(UserContext)
+  const {navigate} = useContext(UserContext);
+  const searchValue = useRef<null | HTMLIonSearchbarElement>(null);
   const getShops = async () => {
     try {
       const data = await axios(`${url}/api/shops`, {
@@ -67,6 +70,13 @@ const Shop: React.FC = () => {
     setShops(data);
     setLoading(false);
   };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+  const searchInput = searchValue.current?.value;
+  console.log(searchInput);
+  
+  };
   if (error) {
     return (
       <IonPage>
@@ -76,6 +86,11 @@ const Shop: React.FC = () => {
   } else {
     return (
       <IonPage>
+        <div  className="search-bar">
+          <form onSubmit={handleSearch}>
+            <IonSearchbar onInput={handleSearch} ref={searchValue} />
+          </form>
+        </div>
         <IonContent className="_under_drawer">
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}

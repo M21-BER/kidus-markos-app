@@ -33,17 +33,17 @@ const ShopList: React.FC<Props> = ({ shops,navigate }) => {
             }}
           >
             <IonCardContent className="ion-no-padding">
-              <IonItem lines="none" color="warning">
+              <div className="ion-image-item">
                 <IonImg
                   src={`${url}${jsonCheck(shop.s_product_images)[0].url}`}
-                  className="ion-image ion-margin-top"
+                  className="ion-image ion-no-margin"
                   alt={jsonCheck(shop.s_product_images)[0].url}
                 />
-              </IonItem>
+              </div>
               <IonItem
                 color="warning"
                 lines="none"
-                className="ion-margin-top ion-margin-bottom">      
+                className="home-card-padding">
                  <IonLabel>
                  <IonLabel className="card-title">
                     {shop.s_product_name}

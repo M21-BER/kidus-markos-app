@@ -149,7 +149,7 @@ const Payment: React.FC = () => {
                     <IonCardHeader  className='ion-no-padding payment-card-header' color='primary'><IonCardTitle>{item.name}</IonCardTitle></IonCardHeader>
                       <IonCardContent className='ion-no-padding gop'>
                       <div className='card-con'>
-                      <img src={banks[index]} alt={item.name}/>
+                      <div> <img src={banks[index]} alt={item.name}/></div>
                         <div>
                         <p> {item.acc}</p>
                         <p>{item.holder}</p>

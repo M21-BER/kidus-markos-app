@@ -14,6 +14,9 @@ ion-item::part(detail-icon) {
 .home-card {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
+div.ion-image-item {
+  width: 100%;
+}
 .ion-image {
   width: 100%;
   object-fit: cover;
@@ -21,4 +24,22 @@ ion-item::part(detail-icon) {
 }
 .card-title {
   margin-bottom: 5px;
+}
+.home-card-padding {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 8px;
+}
+.search-bar {
+  background: #f2f2f2;
+}
+.search-bar ion-searchbar {
+  width: 85%;
+  margin: 0 auto;
+  padding: 5px;
+  --box-shadow: none;
+  border-radius: 10%;
+}
+.searchbar-input-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }

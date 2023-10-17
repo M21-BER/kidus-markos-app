@@ -14,7 +14,7 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <ToolBarMain title="Home" />
-       <SpecialEvent/>
+       {/* <SpecialEvent/> */}
       <HomeTab />
     </IonPage>
   );
