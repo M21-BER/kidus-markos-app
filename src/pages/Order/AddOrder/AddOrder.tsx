@@ -323,6 +323,7 @@ const AddOrder: React.FC = () => {
       </div>
       </div>
       </IonContent>
+      <div className="spacer_drawer"></div>
     </IonPage>
   );
 }

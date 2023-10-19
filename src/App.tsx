@@ -6,6 +6,7 @@ import {
   IonPage,
   IonRouterOutlet,
   setupIonicReact,
+  useIonToast,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Drawer from "./components/UI/Drawer/Drawer";
@@ -50,6 +51,8 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import "./theme/shared.css";
+import { Toast } from "./utils/CustomToast";
+import { checkmarkCircleOutline, informationCircleOutline } from "ionicons/icons";
 /* Pages, Screens & Components */
 setupIonicReact();
 
@@ -60,11 +63,10 @@ const App: React.FC = () => {
   const [showBackAlert, setShowBackAlert] = useState<boolean>(false);
   const nullEntry: any[] = [];
   const [notifications, setnotifications] = useState(nullEntry);
+  const [presentIonToast] = useIonToast();
   const register = () => {
     console.log("Initializing HomePage");
-    // Register with Apple / Google to receive push via APNS/FCM
     PushNotifications.register();
-    // On success, we should be able to receive notifications
     PushNotifications.addListener("registration", (token: Token) => {
       // showToast('Push registration success');
     });
@@ -111,22 +113,22 @@ const App: React.FC = () => {
     };
     checkStorage();
   }, []);
-  // useEffect(() => {
-  //   PushNotifications.checkPermissions().then((res) => {
-  //     if (res.receive !== "granted") {
-  //       PushNotifications.requestPermissions().then((res) => {
-  //         if (res.receive === "denied") {
-  //           // showToast('Push Notification permission denied');
-  //         } else {
-  //           // showToast('Push Notification permission granted');
-  //           register();
-  //         }
-  //       });
-  //     } else {
-  //       register();
-  //     }
-  //   });
-  // }, []);
+  useEffect(() => {
+    PushNotifications.checkPermissions().then((res) => {
+      if (res.receive !== "granted") {
+        PushNotifications.requestPermissions().then((res) => {
+          if (res.receive === "denied") {
+            Toast(presentIonToast,informationCircleOutline,"Push Notification permission denied")
+          } else {
+            Toast(presentIonToast,checkmarkCircleOutline,"Push Notification permission granted")
+            register();
+          }
+        });
+      } else {
+        register();
+      }
+    });
+  }, []);
   const finishIntro = async () => {
     setIntroSeen(true);
     Preferences.set({ key: INTRO_KEY, value: "true" });
