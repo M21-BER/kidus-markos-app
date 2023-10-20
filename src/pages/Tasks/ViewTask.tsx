@@ -1,5 +1,5 @@
 import { formatDuration, intervalToDuration } from 'date-fns'
-import { useIonAlert,useIonLoading,IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, IonRefresher, IonRefresherContent, IonText, IonButton, IonIcon, IonCardHeader, IonTitle, useIonToast, IonList, IonRadio, IonRadioGroup, IonInput } from '@ionic/react';
+import { useIonAlert,useIonLoading,IonAvatar, IonCard, IonCardContent, IonChip, IonContent, IonItem, IonLabel, IonPage, IonSkeletonText, IonRefresher, IonRefresherContent, IonText, IonButton, IonIcon, IonCardHeader, IonTitle, useIonToast, IonList, IonRadio, IonRadioGroup, IonInput, IonTextarea } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../components/ToolBar/ToolBar';
 import {failMessage, jsonCheck, url } from '../../utils/utils';
@@ -37,7 +37,7 @@ const ViewTask: React.FC = () => {
   const [present, dismiss] = useIonLoading();
   const controller: AbortController = new AbortController();
   const {user,route,pushStack} = useContext(UserContext); 
-  const comment = useRef<HTMLIonInputElement>(null);
+  const comment = useRef<HTMLIonTextareaElement>(null);
   const du = useRef<HTMLParagraphElement>(null);
   const ti = useRef<HTMLParagraphElement>(null);
   const du_strong = useRef<HTMLElement>(null);
@@ -47,6 +47,7 @@ const ViewTask: React.FC = () => {
   const input = useRef<HTMLIonInputElement>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [insertOpenModal, setOpenInsertModal] = useState<boolean>(false);
+  const [taskUpdate, setTaskUpdate] = useState<boolean>(false);
   const {id}: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
   const [presentAlert] = useIonAlert();
@@ -57,10 +58,13 @@ const ViewTask: React.FC = () => {
         setTask(taskRes);
         setTaskTitle(taskRes.task_title)
         setLoading(false);
+        stepCheckerPercentage(taskRes);
       }
       processTaskTime();
     })()
-  },[])
+  },[taskUpdate])
+
+
   function processTaskTime(){
     let durationPara =  du.current?.innerText; 
     let TimePara =  ti.current?.innerText; 
@@ -143,8 +147,8 @@ const ViewTask: React.FC = () => {
   }
   function confirm_1() {
     modal1.current?.dismiss(input.current?.value, "confirm");
+    setTaskUpdate(!taskUpdate);
   }
-  
   function handleDropDown(type:string) {
    setDropDown((pre:any)=>{
       return {
@@ -175,6 +179,94 @@ const ViewTask: React.FC = () => {
       return task?task:[];  
      }
    }
+   if(type === 'num'){
+    if(child){
+      return task?task[child]:0; 
+     }else{
+      return task?task:0;  
+     }
+   }
+  }
+  function stepCheckerPercentage(taskU:any){
+    let defaultReturn = {
+      step1:0,
+      step2:0,
+      step3:0,
+      step4:0,
+      step5:0,
+      step6:0,
+      step7:0,
+      step8:0,
+      step9:0,
+      step10:0,
+      step11:0,
+      step12:0,
+      step13:0,
+      step14:0,
+      step15:0,
+      step16:0,
+      step17:0,
+      step18:0,
+    }
+    if(!validator(task,'completed','bool')){
+    if(validator(taskU,'work_order') !== "Empty"){
+      if(validator(taskU,'work_order_state') === "Agree"){
+        setPercentage(1);
+        if(validator(taskU,'second_measurement',"bool")){
+          setPercentage(2)
+        if(validator(taskU,'design_agreement') !== "Empty"){
+          if(validator(taskU,'design_agreement_state') === "Agree"){
+            setPercentage(3)
+          if(validator(taskU,'color_agreement') !== "Empty"){
+            if(validator(taskU,'color_agreement_state') === "Agree"){
+              setPercentage(4)
+            if(validator(taskU,'key_handed',"bool")){
+                setPercentage(5)
+              if(validator(taskU,'accessories',"arr") && validator(taskU,'accessories',"arr").length > 0){
+                setPercentage(6)
+                  if(validator(taskU,'showroom_detail_design',"bool")){
+                    setPercentage(7);
+                    if(validator(taskU,'workshop_production_team',"bool")){
+                      setPercentage(8);
+                      if(validator(taskU,'final_measure',"bool")){
+                        setPercentage(10);
+                        if(validator(taskU,'machine',"bool")){
+                          setPercentage(40)
+                          if(validator(taskU,'carpentry',"bool")){
+                            setPercentage(55)
+                            if(validator(taskU,'sanding',"bool")){
+                              setPercentage(70)
+                              if(validator(taskU,'final_payment_request',"bool")){
+                                setPercentage(75);
+                                if(validator(taskU,'painting',"bool")){
+                                  setPercentage(87)
+                                  if(validator(taskU,'assembly',"bool")){
+                                    setPercentage(97)
+                                    if(validator(taskU,'delivered',"bool")){
+                                      setPercentage(100);
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          }
+        }
+        }
+      }
+    }
+    }else{
+      setPercentage(100);
+    }
+    return defaultReturn;
   }
   function stepChecker(){
     let defaultReturn = {
@@ -197,75 +289,79 @@ const ViewTask: React.FC = () => {
       step17:0,
       step18:0,
     }
-
+    let defaultReturnDone = {
+      step1:2,
+      step2:2,
+      step3:2,
+      step4:2,
+      step5:2,
+      step6:2,
+      step7:2,
+      step8:2,
+      step9:2,
+      step10:2,
+      step11:2,
+      step12:2,
+      step13:2,
+      step14:2,
+      step15:2,
+      step16:2,
+      step17:2,
+      step18:2,
+    }
+    if(!validator(task,'completed','bool')){
     if(validator(task,'work_order') !== "Empty"){
       defaultReturn.step1 = 1;
-      if(validator(task,'work_order_state') === "Accept"){
+      if(validator(task,'work_order_state') === "Agree"){
         defaultReturn.step1 = 2;
         defaultReturn.step2 = 1;
-        setPercentage(1);
         if(validator(task,'second_measurement',"bool")){
           defaultReturn.step2 = 2;
-          setPercentage(2)
         if(validator(task,'design_agreement') !== "Empty"){
           defaultReturn.step3 = 1;
-          if(validator(task,'design_agreement_state') === "Accept"){
-            setPercentage(3)
+          if(validator(task,'design_agreement_state') === "Agree"){
             defaultReturn.step3 = 2;
           if(validator(task,'color_agreement') !== "Empty"){
             defaultReturn.step4 = 1;
-            if(validator(task,'color_agreement_state') === "Accept"){
+            if(validator(task,'color_agreement_state') === "Agree"){
               defaultReturn.step4 = 2;
               defaultReturn.step5 = 1;
-              setPercentage(4)
             if(validator(task,'key_handed',"bool")){
                 defaultReturn.step5 = 2;
                 defaultReturn.step6 = 1;
-                setPercentage(5)
               if(validator(task,'accessories',"arr") && validator(task,'accessories',"arr").length > 0){
                 defaultReturn.step6 = 2;
                 defaultReturn.step7 = 1;
-                setPercentage(6)
                   if(validator(task,'showroom_detail_design',"bool")){
                     defaultReturn.step7 = 2;
                     defaultReturn.step8 = 1;
-                    setPercentage(7);
                     if(validator(task,'workshop_production_team',"bool")){
                       defaultReturn.step8 = 2;
                       defaultReturn.step9 = 1;
-                      setPercentage(8);
                       if(validator(task,'final_measure',"bool")){
                         defaultReturn.step9 = 2;
                         defaultReturn.step10 = 1;
-                        setPercentage(10);
                         if(validator(task,'machine',"bool")){
                           defaultReturn.step10 = 2;
                           defaultReturn.step11 = 1;
-                          setPercentage(40)
                           if(validator(task,'carpentry',"bool")){
                             defaultReturn.step11 = 2;
                             defaultReturn.step12 = 1;
-                            setPercentage(55)
                             if(validator(task,'sanding',"bool")){
                               defaultReturn.step12 = 2;
                               defaultReturn.step13 = 1;
-                              setPercentage(70)
                               if(validator(task,'final_payment_request',"bool")){
                                 defaultReturn.step13 = 2;
                                 defaultReturn.step14 = 1;
-                                setPercentage(75);
                                 if(validator(task,'painting',"bool")){
                                   defaultReturn.step14 = 2;
                                   defaultReturn.step15 = 1;
-                                  setPercentage(87)
                                   if(validator(task,'assembly',"bool")){
                                     defaultReturn.step15 = 2;
                                     defaultReturn.step16 = 1;
-                                    setPercentage(97)
                                     if(validator(task,'delivered',"bool")){
                                       defaultReturn.step16 = 2;
                                       defaultReturn.step17 = 1;
-                                      setPercentage(100);
                                       if(validator(task,'customer_satisfaction') !== "Pending"){
                                         defaultReturn.step17 = 2;
                                         defaultReturn.step18 = 1;
@@ -292,6 +388,9 @@ const ViewTask: React.FC = () => {
         }
         }
       }
+    }
+    }else{
+     defaultReturn = defaultReturnDone;
     }
     return defaultReturn;
   }
@@ -352,13 +451,16 @@ const ViewTask: React.FC = () => {
     role: 'confirm',
     handler: async() => {
       try {
-      await axios.patch(`${url}/api/tasks/client/${taskStatus.task_id}`,{delivered:true},{
+      await axios.patch(`${url}/api/tasks/client/${validator(task,'task_id','num')}`,{delivered:true},{
         headers:{
           Authorization:user.token
         }
       })
+      setTaskUpdate(!taskUpdate);
       Toast(presentIonToast,"Task Completed Successfully",checkmarkCircleOutline);
     } catch (error) {
+      console.log(error);
+      
       const {message,status} = errorResponse(error);
       if(message && status){
         Toast(presentIonToast,message,informationCircleOutline)
@@ -382,9 +484,32 @@ const ViewTask: React.FC = () => {
     e.preventDefault();
   const InputComment = comment.current?.value; 
   const InputSelect = select.current?.value; 
-  console.log(InputComment);
-  console.log(InputSelect);
-  
+  const add_customer_satisfaction = async()=>{
+    try {
+      await axios.patch(`${url}/api/tasks/client/${id}`,{
+        customer_satisfaction:InputSelect,
+        comment:InputComment?InputComment:"Empty"
+      },{
+        headers:{
+          Authorization:user.token
+        }
+      }) 
+      setTaskUpdate(!taskUpdate);
+    Toast(presentIonToast,"task completed",informationCircleOutline);
+    } catch (error) {
+      const {message,status} = errorResponse(error);
+         if(message && status){
+          Toast(presentIonToast,message,informationCircleOutline);
+         }else{
+          Toast(presentIonToast,failMessage,informationCircleOutline);
+         }
+    }
+  }
+   if(InputSelect){
+    add_customer_satisfaction();
+   }else{
+    Toast(presentIonToast,"select customer satisfaction",informationCircleOutline);
+   }
   }
   const handleCommentSub = (e: any) => {
     if (e.detail.value.length >= 80) {
@@ -419,6 +544,47 @@ const ViewTask: React.FC = () => {
     }
    }
    return res;
+  }
+  const handleClientClick = (drop:string,tk:string,status:boolean)=>{
+   const toastStep = ()=>{
+    switch(drop){
+     case 'work_order':
+      return "Work order"
+     case 'design_agreement':
+      return "Design"
+     case 'color_agreement':
+      return "Color"
+    }
+   }
+   (async()=>{
+    try {
+     await axios.patch(`${url}/api/tasks/client/${id}`,{
+        [tk]:status?"Agree":"Disagree"
+      },
+     {
+            headers: {
+              Authorization: user.token,
+            },
+          }
+      );
+      setTaskUpdate(!taskUpdate);
+      if(status){
+        Toast(presentIonToast,`${toastStep()} step completed`,checkmarkCircleOutline);
+      }else{
+        setDropDown((pre)=>{
+          return{
+             ...pre,
+             [drop]:false
+          }
+        })
+        Toast(presentIonToast,"we will contact you soon",checkmarkCircleOutline);
+      }
+    } catch (error) {
+      console.log(error);
+      Toast(presentIonToast,"Task on load please wait..",informationCircleOutline);
+    }
+   })()
+  
   }
   useEffect(()=>{
     pushStack!({path:'task_view',id:route?.id,info:route?.info});
@@ -458,8 +624,8 @@ const ViewTask: React.FC = () => {
                 </svg>
               </div>
                <div className='tps-progress-bar-day'>
-                <p ref={du}><strong ref={du_strong}>Task Duration : </strong> {finalPaymentCheck() && stepChecker().step7 !== 0  &&  validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2?validator(task,'task_due_date').split(":")[1]:"Not Available"}</p>
-                <p ref={ti}><strong ref={ti_strong}>Time Left : </strong> {finalPaymentCheck() && stepChecker().step7 !== 0  && validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2 ?timeLeft(new Date(),new Date(validator(task,'task_due_date').split(":")[0])):"Not Available"}</p>
+                <p ref={du}><strong ref={du_strong}>Task Duration : </strong>{!validator(task,'completed','bool')?(finalPaymentCheck() && stepChecker().step7 !== 0  &&  validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2?validator(task,'task_due_date').split(":")[1]:"Not Available"):<span style={{color:'#76B440'}}>Completed</span>}</p>
+                <p ref={ti}><strong ref={ti_strong}>Time Left : </strong> {!validator(task,'completed','bool')?(finalPaymentCheck() && stepChecker().step7 !== 0  && validator(task,'task_due_date') && validator(task,'task_due_date').split(":").length === 2 ?timeLeft(new Date(),new Date(validator(task,'task_due_date').split(":")[0])):"Not Available"):<span style={{color:'#76B440'}}>Completed</span>}</p>
                </div>
             </section>
             
@@ -519,7 +685,7 @@ const ViewTask: React.FC = () => {
                   </IonItem>
                 </IonRadioGroup>
               </IonList>
-              <IonInput className="ionInput" onIonInput={handleCommentSub} ref={comment} fill='outline'  placeholder='Write your comment here' type='text' required={false}></IonInput>
+              <IonTextarea className="ionInput comment_section" onIonInput={handleCommentSub} ref={comment} fill='outline'  placeholder='Write your comment here'  required={false}></IonTextarea>
               <IonButton className='ion-margin-top' type='submit' expand='block'>Comment <IonIcon icon={paperPlaneSharp} size="small" slot='start'/> </IonButton>
               </form>
             </div>    
@@ -538,8 +704,8 @@ const ViewTask: React.FC = () => {
               </span>}
             </div>
             <div className={stepChecker().step1 === 1 && dropDown.work_order?'on':'off'}>
-                <IonButton color="primary"><IonIcon slot='end' color='success' icon={checkmarkCircle}/> Yes</IonButton>
-                <IonButton color="primary"><IonIcon slot="end" color='danger' icon={closeCircle}/>  No</IonButton>
+                <IonButton onClick={()=>{handleClientClick('work_order','work_order_state',true)}} color="primary"><IonIcon slot='end' color='success' icon={checkmarkCircle}/> Yes</IonButton>
+                <IonButton onClick={()=>{handleClientClick('work_order','work_order_state',false)}} color="primary"><IonIcon slot="end" color='danger' icon={closeCircle}/>  No</IonButton>
             </div>
               {stepChecker().step1 === 0 &&  <div className={`view_task_backdrop red` }></div>} 
               {stepChecker().step1 === 1 &&  <div className={`view_task_backdrop backdrop_hide` }></div>} 
@@ -567,8 +733,8 @@ const ViewTask: React.FC = () => {
              }} className='choice_dropdown'><IonIcon size='large'  icon={dropDown.design_agreement?chevronUpSharp:chevronDownSharp}/> </span>}
             </div>
             <div className={stepChecker().step3 === 1 && dropDown.design_agreement?'on':'off'}>
-                <IonButton color="primary"><IonIcon slot='end' color='success' icon={checkmarkCircle}/> Yes</IonButton>
-                <IonButton color="primary"><IonIcon slot="end" color='danger' icon={closeCircle}/>  No</IonButton>
+                <IonButton onClick={()=>{handleClientClick('design_agreement','design_agreement_state',true)}} color="primary"><IonIcon slot='end' color='success' icon={checkmarkCircle}/> Yes</IonButton>
+                <IonButton onClick={()=>{handleClientClick('design_agreement','design_agreement_state',false)}} color="primary"><IonIcon slot="end" color='danger' icon={closeCircle}/>  No</IonButton>
             </div>
             {stepChecker().step3 === 0 &&  <div className={`view_task_backdrop red` }></div>} 
             {stepChecker().step3 === 1 &&  <div className={`view_task_backdrop backdrop_hide` }></div>} 
@@ -585,10 +751,10 @@ const ViewTask: React.FC = () => {
              }} className='choice_dropdown'><IonIcon size='large'  icon={dropDown.color_agreement?chevronUpSharp:chevronDownSharp}/> </span>}
             </div>
             <div className={stepChecker().step4 === 1 && dropDown.color_agreement?'on':'off'}>
-                <IonButton color="primary"><IonIcon slot='end' color='success' icon={checkmarkCircle}/> Yes</IonButton>
-                <IonButton color="primary"><IonIcon slot="end" color='danger' icon={closeCircle}/>  No</IonButton>
+                <IonButton onClick={()=>{handleClientClick('color_agreement','color_agreement_state',true)}} color="primary"><IonIcon slot='end' color='success' icon={checkmarkCircle}/> Yes</IonButton>
+                <IonButton onClick={()=>{handleClientClick('color_agreement','color_agreement_state',false)}} color="primary"><IonIcon slot="end" color='danger' icon={closeCircle}/>  No</IonButton>
             </div>
-            {stepChecker().step4 === 0 &&  <div className={`view_task_backdrop red` }></div>} 
+            {stepChecker().step4 === 0 &&  <div className={`view_task_backdrop red`}></div>} 
             {stepChecker().step4 === 1 &&  <div className={`view_task_backdrop backdrop_hide` }></div>} 
             {stepChecker().step4 === 2 &&  <div className={`view_task_backdrop green` }></div>}  
           </div> 

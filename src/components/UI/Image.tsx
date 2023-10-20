@@ -9,6 +9,7 @@ interface Props {
   hash: string;
   label: string;
   props?: any;
+  className:string;
 }
 const ImageComponent: React.FC<Props> = ({
   src,
@@ -16,13 +17,14 @@ const ImageComponent: React.FC<Props> = ({
   display = "inline",
   hash,
   label,
+  className = "",
   ...props
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   useEffect(() => {
     const image = new Image();
     image.onload = () => {
-      setImageLoaded(true);
+      setImageLoaded(!imageLoaded);
     };
     image.src = !notServer ? `${url}${src}` : src;
 
@@ -40,6 +42,7 @@ const ImageComponent: React.FC<Props> = ({
       </div>
       <>
         <img
+        className={`${className}`}
           src={!notServer ? `${url}${src}` : src}
           alt={label}
           {...props}

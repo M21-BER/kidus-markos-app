@@ -24,11 +24,14 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   const feed_back = useRef<null | HTMLIonTextareaElement>(null);
   const modal = useRef<HTMLIonModalElement>(null);
   const [presentIonToast] = useIonToast();
+  const reset = (field: React.MutableRefObject<HTMLIonInputElement | HTMLIonTextareaElement | null>) => {
+    field.current ? (field.current.value = "") : "";
+  };
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
       full_name: full_name.current?.value,
-      rating: rating.current?.value,
+      rating: parseInt(`${rating.current?.value}`),
       email: email.current?.value,
       feed_back: feed_back.current?.value,
     };
@@ -69,6 +72,10 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
         checkmarkCircleOutline
       );
     }
+    reset(full_name);
+    reset(rating);
+    reset(email);
+    reset(feed_back);
   };
   function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
     setOpenModal_2(false);

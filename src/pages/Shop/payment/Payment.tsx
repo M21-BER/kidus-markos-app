@@ -70,8 +70,6 @@ const Payment: React.FC = () => {
          }
         } catch (error) {
           dismiss();
-          console.log(error);
-          
           const {message,status} = errorResponse(error);
            if(message && status){
             Toast(presentIonToast,message,informationCircleSharp)

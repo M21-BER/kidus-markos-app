@@ -65,7 +65,7 @@ const App: React.FC = () => {
   const [notifications, setnotifications] = useState(nullEntry);
   const [presentIonToast] = useIonToast();
   const register = () => {
-    console.log("Initializing HomePage");
+    // console.log("Initializing HomePage");
     PushNotifications.register();
     PushNotifications.addListener("registration", (token: Token) => {
       // showToast('Push registration success');

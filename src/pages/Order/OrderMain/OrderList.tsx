@@ -9,6 +9,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { url, jsonCheck } from "../../../utils/utils";
+import ImageComponent from "../../../components/UI/Image";
 
 interface Props {
   orders: any[];
@@ -18,7 +19,7 @@ const OrderList: React.FC<Props> = ({ orders,navigate }) => {
   if (orders.length === 0) {
     return (
       <div className="ion-text-center NDA">
-        <IonText color="medium">No Order Product Available</IonText>
+        <IonText color="medium">No Service Product Found</IonText>
       </div>
     );
   } else {
@@ -35,10 +36,11 @@ const OrderList: React.FC<Props> = ({ orders,navigate }) => {
           >
             <IonCardContent className="ion-no-padding">
             <div className="ion-image-item">
-                <IonImg
-                  src={`${url}${jsonCheck(order.product_images)[0].url}`}
-                  className="ion-image ion-no-margin"
-                  alt="hello"
+              <ImageComponent
+                 src={`${jsonCheck(order.product_images)[0].url}`}
+                 hash={jsonCheck(order.product_images)[0].hash}
+                 label={order.product_name}
+                 className="ion-image ion-no-margin"
                 />
               </div>
               <IonItem

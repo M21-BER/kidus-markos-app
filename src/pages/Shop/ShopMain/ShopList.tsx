@@ -8,6 +8,7 @@ import {
   IonText,
 } from "@ionic/react";
 import { url, jsonCheck } from "../../../utils/utils";
+import ImageComponent from "../../../components/UI/Image";
 interface Props {
   shops: any[];
   navigate:any;
@@ -17,7 +18,7 @@ const ShopList: React.FC<Props> = ({ shops,navigate }) => {
   if (shops.length === 0) {
     return (
       <div className="ion-text-center NDA">
-        <IonText color="medium">No Purchase Product Available</IonText>
+        <IonText color="medium">No shop product found</IonText>
       </div>
     );
   } else {
@@ -34,10 +35,11 @@ const ShopList: React.FC<Props> = ({ shops,navigate }) => {
           >
             <IonCardContent className="ion-no-padding">
               <div className="ion-image-item">
-                <IonImg
-                  src={`${url}${jsonCheck(shop.s_product_images)[0].url}`}
-                  className="ion-image ion-no-margin"
-                  alt={jsonCheck(shop.s_product_images)[0].url}
+                 <ImageComponent
+                 src={`${jsonCheck(shop.s_product_images)[0].url}`}
+                 hash={jsonCheck(shop.s_product_images)[0].hash}
+                 label={shop.s_product_name}
+                 className="ion-image ion-no-margin"
                 />
               </div>
               <IonItem

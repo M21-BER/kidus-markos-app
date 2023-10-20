@@ -60,7 +60,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     setUpdate(!update);
   };
   const updateSavedData = (Data: any) => {
-    async () => {
+   const replace_user = async () => {
       try {
         const userData = await Preferences.get({ key: login_key });
         if (userData && userData.value) {
@@ -77,6 +77,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
         removeUser();
       }
     };
+    replace_user();
   };
   const navigate = (value: any, id: any = null, info: any = null) => {
     setRoute((pre) => {
@@ -112,7 +113,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
           resetState = true;
           const parsedUserData = jsonCheck(userData.value);
           if (parsedUserData.token && jwt_decode(parsedUserData.token)) {
-            console.log("Rendered successfully");
+            // console.log("Rendered successfully");
             setWait(false);
             setUser(parsedUserData);
             setIsAuthed(true);

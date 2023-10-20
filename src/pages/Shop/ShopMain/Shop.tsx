@@ -5,7 +5,6 @@ import {
   IonRefresherContent,
   useIonViewWillEnter,
   useIonLoading,
-  IonItem,
   IonSearchbar,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
@@ -18,9 +17,12 @@ import ShopSkeleton from "./ShopSkeleton";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import { UserContext } from "../../../context/AuthContext";
 
+
 const Shop: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [present, dismiss] = useIonLoading();
+  const [shopsRes, setShopsRes] = useState<any[]>([]);
+  const [shopsResBar, setShopsResBar] = useState<boolean>(false);
   const [shops, setShops] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const controller: AbortController = new AbortController();
@@ -71,12 +73,31 @@ const Shop: React.FC = () => {
     setLoading(false);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async(e: React.FormEvent) => {
+  e.preventDefault();
   const searchInput = searchValue.current?.value;
-  console.log(searchInput);
-  
+  if(searchInput){
+   try {
+    const res = await axios.get(`${url}/api/shops/search/${searchInput}`);
+    setShopsResBar(true);
+    if(res.data.items && res.data.items.length > 6){
+      setShopsRes(res.data.items.slice(0,6));
+    }else{
+      setShopsRes(res.data.items);
+    }
+   } catch (error) {
+    setShopsRes([]);
+    
+   }
+  }
   };
+  const closeSearchBar = ()=>{
+    setShopsResBar(false);
+    setShopsRes([]);
+  }
+  const gotoDetailsFromSearchList = (id:any)=>{
+    navigate!("shopDetails",id,null)
+  }
   if (error) {
     return (
       <IonPage>
@@ -86,9 +107,19 @@ const Shop: React.FC = () => {
   } else {
     return (
       <IonPage>
+        {shopsResBar && (<div onClick={closeSearchBar} className="shopsResBar--backdrop"></div>)}
         <div  className="search-bar">
           <form onSubmit={handleSearch}>
-            <IonSearchbar onInput={handleSearch} ref={searchValue} />
+            <IonSearchbar ref={searchValue} />
+            <div className={shopsRes.length > 0?"search-bar-result on":"search-bar-result"}>
+              {
+                shopsRes.length > 0 && shopsRes.map((_,i)=>{
+                  return(
+                    <li onClick={()=>{gotoDetailsFromSearchList(_.s_product_id)}} key={i}>{_.s_product_name}</li>
+                  ) 
+                })
+              } 
+            </div>
           </form>
         </div>
         <IonContent className="_under_drawer">

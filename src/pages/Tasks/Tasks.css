@@ -274,3 +274,6 @@ div.customer_feedback .customer_satisfaction ion-list {
 div.customer_feedback .customer_satisfaction {
   padding: 10px 15px;
 }
+.comment_section {
+  height: 100px;
+}

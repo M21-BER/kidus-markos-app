@@ -11,6 +11,7 @@ import {
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import {
   addCircleSharp,
+  checkmarkCircleOutline,
   closeCircleOutline,
   imagesOutline,
   informationCircleOutline,
@@ -39,7 +40,7 @@ const AddOrder: React.FC = () => {
   const quantity = useRef<null | HTMLIonInputElement>(null);
   const [floorPlan, setFloorPlan] = useState<any[]>([]);
   const [flag, setFlag] = useState<string>("");
-  const {route,pushStack}= useContext(UserContext);
+  const {route,pushStack,navigate}= useContext(UserContext);
   const id: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
   const [detail, isPending, error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
@@ -138,9 +139,12 @@ const AddOrder: React.FC = () => {
           }
         }
         const addOrder = await axios.post(`${url}/api/orders`, formData);
-
-        //    router.push('/app', 'root')
-        console.log(addOrder);
+        if(addOrder.status === 201 && addOrder.data.status){
+          navigate!("Home",id.id,null)
+          Toast(presentIonToast, "Product Ordered Successfully", checkmarkCircleOutline);
+        }else{
+         throw new Error(failMessage);
+        }
         reset();
       } catch (error) {
         const { message, status } = errorResponse(error);
@@ -181,9 +185,9 @@ const AddOrder: React.FC = () => {
   const reload = ()=>{
     setUpdate(true);
   }
-  useEffect(()=>{
-    pushStack!({path:'addOrder',id:route?.id,info:route?.info});
-  },[]);
+  // useEffect(()=>{
+  //   pushStack!({path:'addOrder',id:route?.id,info:route?.info});
+  // },[]);
   if(!isPending){
   if(error){
    return(

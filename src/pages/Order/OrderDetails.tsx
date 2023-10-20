@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonContent, IonIcon, IonPage, IonText} from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonChip, IonContent, IonIcon, IonItem, IonLabel, IonPage, IonText} from '@ionic/react';
 import {ToolBarDetails} from '../../components/ToolBar/ToolBar';
 import { useAxios } from '../../hooks/useAxios';
 import { jsonCheck, url } from '../../utils/utils';
@@ -21,6 +21,24 @@ const OrderDetails: React.FC = () => {
     const {route,navigate,pushStack} =useContext(UserContext);
     const id:any =  {id:route?.id}
     const [detail,isPending,error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
+    const [detail1,isPending1,error1,] = useAxios(`${url}/api/shops`);
+    let relatedItem:any = [];
+    if(!isPending1){
+     if(detail1.length !== 0){
+      let first = randomInteger(0,detail1.length -1);
+      let second = randomInteger(0,detail1.length -1);
+      relatedItem.push(detail1[first]);   
+      if(second === first){
+         if(second === detail1.length -1){
+          relatedItem.push(detail1[first -1]);   
+         }else{
+          relatedItem.push(detail1[first +1]);
+         } 
+      }else{
+        relatedItem.push(detail1[second]);   
+      }
+     }
+    }
     const orderProduct = ()=>{
       navigate!("addOrder",id.id,null)
     }
@@ -30,6 +48,9 @@ const OrderDetails: React.FC = () => {
     useEffect(()=>{
       pushStack!({path:'orderDetails',id:route?.id,info:route?.info});
     },[]);
+    function randomInteger(min:number, max:number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
   if(!isPending){
     if (error) {
       return (
@@ -81,11 +102,35 @@ const OrderDetails: React.FC = () => {
              </div>
             </IonCardContent>
           </IonCard>
+          <div className='order-details-others'>
+          {
+              !isPending1 && relatedItem.length > 0?
+              relatedItem.map((item:any,i:number)=>{
+                return(
+                 <IonCard onClick={()=>{
+                  navigate!("shopDetails",item.s_product_id,null)
+                 }} key={i}>
+                 <IonCardContent className='ion-no-padding related-con'>
+                   <IonItem lines='none'>
+                    <IonChip>{item.s_product_category}</IonChip>
+                    <IonText>{item.s_product_name}</IonText>
+                   </IonItem>
+                   <div>
+                    <IonText>{item.s_product_desc}</IonText>
+                   </div>
+                 </IonCardContent>
+               </IonCard>
+                )  
+               }):<div className='order-details-others-no-data'><IonText color="medium">No related product item</IonText></div>
+            }
+
+           </div>
            </div>
          </div>
          )
         }
         </IonContent>
+        <div className="spacer_drawer"></div>
         </IonPage>
     );
   }

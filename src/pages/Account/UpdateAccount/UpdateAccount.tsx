@@ -31,6 +31,7 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
   const [presentIonToast] = useIonToast();
   const { updateSavedData } = useContext(UserContext);
   const modal = useRef<HTMLIonModalElement>(null);
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
@@ -51,13 +52,21 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
             },
           }
         );
-        dismiss();
+        dismiss();        
         if (update.data.status === true || update.status === 200) {
           const passedData = {
             ...user,
-            ...update.data.updatedItem,
+            ...data,
           };
           updateSavedData!(passedData);
+          {/*@ts-ignore */}
+          first_name.current.value = data.first_name
+          {/*@ts-ignore */}
+          last_name.current.value = data.last_name
+          {/*@ts-ignore */}
+          email.current.value = data.email
+          {/*@ts-ignore */}
+          phone_number.current.value = data.phone_number
           Toast(presentIonToast, update.data.message, checkmarkCircleOutline);
         }
       } catch (error) {
