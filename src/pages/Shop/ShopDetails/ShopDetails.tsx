@@ -32,6 +32,7 @@ import { UserContext } from "../../../context/AuthContext";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import LoaderUI from "../../../components/UI/Loader/LoaderUI";
+import { watched } from "./ShopDetailView";
 const settings = {
   showThumbs: false,
   infiniteLoop: true,
@@ -83,8 +84,10 @@ const ShopDetails: React.FC = () => {
       setCartExist(false);
      }
     };
-     
     checkCart();
+  },[])
+  useEffect(()=>{
+    watched(id);
   },[])
 
   const updateColor = (colorIndex: number,color:string) => {
@@ -244,6 +247,7 @@ if(!isPending){
                     return (
                       <div key={index}>
                         <ImageComponent
+                        className = ""
                         src={image.url}
                         hash={image.hash}
                         label={detail.product.s_product_name}

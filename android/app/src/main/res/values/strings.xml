@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Kidus Markos WoodWorks</string>
-    <string name="title_activity_main">Kidus Markos WoodWorks</string>
+    <string name="app_name">Kidus Markos Woodworks</string>
+    <string name="title_activity_main">Kidus Markos Woodworks</string>
     <string name="package_name">com.kidusmarkos.kidusmarkoswoodworksapp</string>
     <string name="custom_url_scheme">com.kidusmarkos.kidusmarkoswoodworksapp</string>
 </resources>

@@ -73,6 +73,7 @@ const OrderDetails: React.FC = () => {
                 return (
                   <div key={index}>
                   <ImageComponent 
+                  className = ""
                   src={image.url}
                   hash={image.hash}
                   label={detail.item.product_name}

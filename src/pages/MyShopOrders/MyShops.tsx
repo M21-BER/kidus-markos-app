@@ -7,7 +7,10 @@ import {
     IonItem,
     IonLabel,
     IonPage,
+    IonRefresher,
+    IonRefresherContent,
     IonSkeletonText,
+    useIonLoading,
   } from "@ionic/react";
   import React, { useContext, useEffect, useState } from "react";
   import { ToolBarMain } from "../../components/ToolBar/ToolBar";
@@ -17,10 +20,12 @@ import {
 import { failMessage, url } from "../../utils/utils";
 import axios from "axios";
 import { errorResponse } from "../../utils/errorResponse";
+import ErrorFallBack from "../../components/error/ErrorFallBack/ErrorFallBack";
   const MyShops: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [shops, setShops] = useState<any>({data1:[],data2:[]});
     const [error, setError] = useState<any>(null);
+    const [present, dismiss] = useIonLoading();
     const controller: AbortController = new AbortController();
     const {isAuthed,user,navigate,refresh,pushStack,route} = useContext(UserContext);
     useEffect(()=>{
@@ -51,7 +56,8 @@ import { errorResponse } from "../../utils/errorResponse";
           data1:data1.data.items,
           data2:data2.data
         };
-      } catch (error: any) {        
+      } catch (error: any) {   
+        if(error.code !== "ERR_NETWORK"){     
         if (error.name !== "CanceledError") {
         setShops( {
           data1:[],
@@ -64,13 +70,56 @@ import { errorResponse } from "../../utils/errorResponse";
             setError(failMessage);
           }
         }
+      }else{
+        setError(error.code);
+      }
       }
     };
-    return (
-      <IonPage>
-        <ToolBarMain title="Ordered Products"/>
-        <IonContent>
-          {loading &&
+    const reload = async () => {
+      setLoading(true);
+      await present("Refreshing...");
+      const data = await getShops();
+      dismiss();
+      setShops(data);
+      setLoading(false);
+    };
+    const doRefresh = async (event: any) => {
+      setLoading(true);
+      const data = await getShops();
+      setShops(data);
+      setLoading(false);
+      event.detail.complete();
+    };
+    if(!loading){
+      if(error){
+        return (
+          <IonPage>
+            <ToolBarMain title="Ordered Products"/>
+            <IonContent>
+            <ErrorFallBack error={error} reload={reload} />
+            </IonContent>
+            <div className="spacer_drawer"></div>
+          </IonPage>
+        );
+      }else{
+        return (
+          <IonPage>
+            <ToolBarMain title="Ordered Products"/>
+            <IonContent>
+            <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
+            {!loading && <IonRefresherContent />}
+          </IonRefresher>
+              <MyShopsList shops={shops} navigate={navigate}/>
+            </IonContent>
+            <div className="spacer_drawer"></div>
+          </IonPage>
+        );
+      }
+    }else{
+       return(
+        <IonPage>
+           <ToolBarMain title="Ordered Products"/>
+           {loading &&
             [...Array(10)].map((_, index) => (
               <IonCard key={index}>
                 <IonCardContent className="ion-no-padding">
@@ -89,12 +138,9 @@ import { errorResponse } from "../../utils/errorResponse";
                 </IonCardContent>
               </IonCard>
             ))}
-  
-          <MyShopsList shops={shops} navigate={navigate}/>
-        </IonContent>
-        <div className="spacer_drawer"></div>
-      </IonPage>
-    );
+        </IonPage>
+       )
+    }
   };
   
   export default MyShops;

@@ -2,7 +2,7 @@ import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "com.kidusmarkos.kidusmarkoswoodworksapp",
-  appName: "Kidus Markos WoodWorks",
+  appName: "Kidus Markos Woodwork",
   webDir: "dist",
   server: {
     androidScheme: "https",

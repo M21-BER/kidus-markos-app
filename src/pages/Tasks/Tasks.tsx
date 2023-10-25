@@ -84,6 +84,7 @@ const Tasks: React.FC = () => {
     <Loader/>
    )
  }else{
+  if (!loading) {
   if (error) {
     return (
       <IonPage>
@@ -91,7 +92,7 @@ const Tasks: React.FC = () => {
         <ErrorFallBack error={error} reload={reload} />
       </IonPage>
     );
-  } else {
+  } else {   
   return (
     <IonPage>
        <ToolBarMain defaultValue='/' title='My Tasks'/>
@@ -99,25 +100,6 @@ const Tasks: React.FC = () => {
        <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}
           </IonRefresher>
-        {loading &&
-          [...Array(10)].map((_, index) => (
-            <IonCard key={index}>
-              <IonCardContent className="ion-no-padding">
-                <IonItem lines="none">
-                  <IonAvatar slot="start">
-                    <IonSkeletonText />
-                  </IonAvatar>
-                  <IonLabel>
-                    <IonSkeletonText animated style={{ width: '150px' }} />
-                    <p>
-                      <IonSkeletonText />
-                    </p>
-                  </IonLabel>
-                  <IonChip slot="end" color={'primary'}></IonChip>
-                </IonItem>
-              </IonCardContent>
-            </IonCard>
-          ))}
          <IonCard className="ion-no-margin">
               <IonCardContent >
               <section className='task-status'>
@@ -132,6 +114,35 @@ const Tasks: React.FC = () => {
     </IonPage>
   );
 }
+  }else{
+    return (
+      <IonPage>
+         <ToolBarMain defaultValue='/' title='My Tasks'/>
+         <IonContent>
+          {loading &&
+            [...Array(10)].map((_, index) => (
+              <IonCard key={index}>
+                <IonCardContent className="ion-no-padding">
+                  <IonItem lines="none">
+                    <IonAvatar slot="start">
+                      <IonSkeletonText />
+                    </IonAvatar>
+                    <IonLabel>
+                      <IonSkeletonText animated style={{ width: '150px' }} />
+                      <p>
+                        <IonSkeletonText />
+                      </p>
+                    </IonLabel>
+                    <IonChip slot="end" color={'primary'}></IonChip>
+                  </IonItem>
+                </IonCardContent>
+              </IonCard>
+            ))}
+        </IonContent>
+        <div className="spacer_drawer"></div>
+      </IonPage>
+    );
+  }
  }
 };
 

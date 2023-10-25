@@ -208,6 +208,7 @@ const Payment: React.FC = () => {
             </div>
             <div className='sample-payment-image'>
             <ImageComponent
+              className = ""
               src={sample_payment}
               hash="L3Q0swSO~qe800xJD*bv00,[n5Xm"
               label="sample payment tag"

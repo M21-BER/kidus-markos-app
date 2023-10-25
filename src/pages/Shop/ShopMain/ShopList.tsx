@@ -2,12 +2,11 @@ import {
   IonCard,
   IonCardContent,
   IonChip,
-  IonImg,
   IonItem,
   IonLabel,
   IonText,
 } from "@ionic/react";
-import { url, jsonCheck } from "../../../utils/utils";
+import {jsonCheck } from "../../../utils/utils";
 import ImageComponent from "../../../components/UI/Image";
 interface Props {
   shops: any[];

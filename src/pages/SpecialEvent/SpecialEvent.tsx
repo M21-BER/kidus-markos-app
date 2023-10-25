@@ -40,6 +40,7 @@ const SpecialEvent: React.FC = () => {
                     return (
                       <div key={index}>
                         <ImageComponent
+                         className = ""
                         src={image.url}
                         hash={image.hash}
                         label={detail[0].event_name}

@@ -12,21 +12,22 @@ import {
   }
   const Home_Skeleton: React.FC<Props> = ({ index }) => {
     return (
-      <IonCard key={index}>
-        <IonCardContent className="ion-no-padding">
-          <IonItem lines="none">
-            <IonSkeletonText className="ion-image ion-margin-top" />
-          </IonItem>
+      <IonCard key={index}  className="home-card">
+              <IonCardContent className="ion-no-padding">
+              <div className="ion-image-item">
+                <IonSkeletonText className="ion-no-margin" animated style={{ width: "100%",height: "100%" }} />
+              </div>
+   
           <IonItem lines="none" className="ion-margin-top ion-margin-bottom">
             <IonLabel>
               <IonLabel className="card-title">
-                <IonSkeletonText animated style={{ width: "150px" }} />
+                <IonSkeletonText animated style={{ width: "150px"}} />
               </IonLabel>
               <p>
                 <IonSkeletonText />
               </p>
             </IonLabel>
-            <IonChip slot="end" color={"primary"}></IonChip>
+            <IonChip style={{ width: "60px"}}  slot="end" color={"primary"}></IonChip>
           </IonItem>
         </IonCardContent>
       </IonCard>

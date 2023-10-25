@@ -12,11 +12,11 @@ const Home: React.FC = () => {
     pushStack!({path:'Home',id:route?.id,info:route?.info});
   },[]);
   return (
-    <IonPage>
+    <>
       <ToolBarMain title="Home" />
        {/* <SpecialEvent/> */}
       <HomeTab />
-    </IonPage>
+    </>
   );
 };
 export default Home;

@@ -13,7 +13,7 @@ import Drawer from "./components/UI/Drawer/Drawer";
 import { Preferences } from "@capacitor/preferences";
 import React, { useContext, useEffect, useState } from "react";
 import Intro from "./components/Intro/Intro";
-import { INTRO_KEY } from "./utils/utils";
+import { INTRO_KEY, url } from "./utils/utils";
 import { UserContext } from "./context/AuthContext";
 import Account from "./pages/Account/Account";
 import Login from "./pages/Login/Login";
@@ -53,6 +53,10 @@ import "./theme/variables.css";
 import "./theme/shared.css";
 import { Toast } from "./utils/CustomToast";
 import { checkmarkCircleOutline, informationCircleOutline } from "ionicons/icons";
+import { StatusBar } from '@capacitor/status-bar';
+import axios from "axios";
+import { Device } from "@capacitor/device";
+
 /* Pages, Screens & Components */
 setupIonicReact();
 
@@ -64,16 +68,40 @@ const App: React.FC = () => {
   const nullEntry: any[] = [];
   const [notifications, setnotifications] = useState(nullEntry);
   const [presentIonToast] = useIonToast();
+  const registerToken = async(token:any)=>{
+    if(token){
+      try {
+        const findTokens:any = await axios.get(`${url}/api/firebase-token`);
+        const info: any = await Device.getId();
+        const platform: any = await Device.getInfo();
+        const filterDevice = findTokens.data.map((dev:any)=>{
+         return dev.deviceId;
+        })
+        const filterToken = findTokens.data.map((dev:any)=>{
+         return dev.token;
+        })
+    
+        if(!filterDevice.includes(info.identifier) && !filterToken.includes(token)){
+          await axios.post(`${url}/api/firebase-token`,{
+            token:token,
+            deviceId:info && info.identifier?info.identifier:'Not Provided',
+            platform:platform && platform.operatingSystem?platform.operatingSystem:'UNKNOWN'
+          }); 
+        }
+      } catch (error) {
+      }
+    }
+  } 
   const register = () => {
-    // console.log("Initializing HomePage");
     PushNotifications.register();
     PushNotifications.addListener("registration", (token: Token) => {
-      // showToast('Push registration success');
+      registerToken(token.value);
+      Toast(presentIonToast,token.value,checkmarkCircleOutline)
     });
-    // Some issue with our setup and push will not work
-    PushNotifications.addListener("registrationError", (error: any) => {
-      alert("Error on registration: " + JSON.stringify(error));
-    });
+    // // Some issue with our setup and push will not work
+    // PushNotifications.addListener("registrationError", (error: any) => {
+    //   Toast(presentIonToast,"Error on registration: " + JSON.stringify(error),checkmarkCircleOutline)
+    // });
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener(
       "pushNotificationReceived",
@@ -106,6 +134,8 @@ const App: React.FC = () => {
       }
     );
   };
+  StatusBar.setOverlaysWebView({ overlay: true });
+
   useEffect(() => {
     const checkStorage = async () => {
       const seen = await Preferences.get({ key: INTRO_KEY });
@@ -118,9 +148,9 @@ const App: React.FC = () => {
       if (res.receive !== "granted") {
         PushNotifications.requestPermissions().then((res) => {
           if (res.receive === "denied") {
-            Toast(presentIonToast,informationCircleOutline,"Push Notification permission denied")
+            // Toast(presentIonToast,"Push Notification permission denied",informationCircleOutline)
           } else {
-            Toast(presentIonToast,checkmarkCircleOutline,"Push Notification permission granted")
+            // Toast(presentIonToast,"Push Notification permission granted",checkmarkCircleOutline)
             register();
           }
         });
@@ -181,13 +211,14 @@ const App: React.FC = () => {
         message={"Do you really want to exit our App?"}
         buttons={[
           {
-            text: "Exit",
+            text: "Cancel",
             role: "cancel",
             cssClass: "secondary",
-            handler: () => {},
+            handler: () => {
+            },
           },
           {
-            text: "Cancel",
+            text: "Exit",
             handler: () => {
               Intent.exitApp();
             },

@@ -22,6 +22,7 @@ const useAxios = (url: string) => {
         setData(res.data);
         setError(null);
       } catch (error: any) {
+        if(error.code !== "ERR_NETWORK"){
         if (error.name !== "CanceledError") {
           setIsPending(false);
           setUpdate(false);
@@ -36,6 +37,9 @@ const useAxios = (url: string) => {
           } else {
             setError(failMessage);
           }
+        }
+       }else{
+          setError(error.code);
         }
       }
     }

@@ -6,6 +6,7 @@ import {
   useIonViewWillEnter,
   useIonLoading,
   IonSearchbar,
+  IonSkeletonText,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
 import axios from "axios";
@@ -36,6 +37,7 @@ const Shop: React.FC = () => {
       setError(null);
       return data.data;
     } catch (error: any) {
+     if(error.code !== "ERR_NETWORK"){
       if (error.name !== "CanceledError") {
         setShops([]);
         if (
@@ -49,7 +51,10 @@ const Shop: React.FC = () => {
           setError(failMessage);
         }
       }
+    }else{
+      setError(error.code);
     }
+  }
   };
   useIonViewWillEnter(async () => {
     const shops = await getShops();
@@ -98,6 +103,7 @@ const Shop: React.FC = () => {
   const gotoDetailsFromSearchList = (id:any)=>{
     navigate!("shopDetails",id,null)
   }
+  if(!loading){
   if (error) {
     return (
       <IonPage>
@@ -126,13 +132,27 @@ const Shop: React.FC = () => {
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}
           </IonRefresher>
-          <ShopSkeleton loading={loading} />
           <ShopList shops={shops} navigate={navigate}/>
         </IonContent>
         <div className="spacer_drawer"></div>
       </IonPage>
     );
   }
+}else{
+  return (
+    <IonPage>
+      <div  className="search-bar">
+        <form>
+        <IonSkeletonText animated style={{ width: "100%",height:'100%'}} />
+        </form>
+      </div>
+      <IonContent className="_under_drawer">
+        <ShopSkeleton loading={loading} />
+      </IonContent>
+      <div className="spacer_drawer"></div>
+    </IonPage>
+  );
+}
 };
 
 export default Shop;

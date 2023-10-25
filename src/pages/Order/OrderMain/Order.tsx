@@ -30,6 +30,7 @@ const Shop: React.FC = () => {
       setError(null)
       return data.data;
     } catch (error: any) {
+      if(error.code !== "ERR_NETWORK"){
       if (error.name !== "CanceledError") {
         setOrders([]);
         if (
@@ -42,6 +43,8 @@ const Shop: React.FC = () => {
         } else {
           setError(failMessage);
         }
+      }}else{
+        setError(error.code);
       }
     }
   };
@@ -65,6 +68,7 @@ const Shop: React.FC = () => {
     setOrders(data);
     setLoading(false);
   };
+  if(!loading){
   if (error) {
     return (
       <IonPage>
@@ -78,13 +82,22 @@ const Shop: React.FC = () => {
           <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}
           </IonRefresher>
-          <OrderSkeleton loading={loading} />
           <OrderList orders={orders} navigate={navigate} />
         </IonContent>
         <div className="spacer_drawer"></div>
       </IonPage>
     );
   }
+}else{
+  return (
+    <IonPage>
+      <IonContent>
+        <OrderSkeleton loading={loading} />
+      </IonContent>
+      <div className="spacer_drawer"></div>
+    </IonPage>
+  );
+}
 };
 
 export default Shop;
