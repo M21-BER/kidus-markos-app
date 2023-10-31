@@ -1,4 +1,4 @@
-import EnterEmail from "./EnterEmail";
+import EnterPhoneNumber from "./EnterPhoneNumber";
 import OTP from "./OTP";
 import ChangePassword from "./ChangePassword";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import { errorResponse } from "../../utils/errorResponse";
 import {useIonToast } from "@ionic/react";
 
 interface Props {
-  email: React.MutableRefObject<HTMLIonInputElement | null>;
+  phone_number: React.MutableRefObject<HTMLIonInputElement | null>;
   otp: React.MutableRefObject<HTMLIonInputElement | null>;
   newPassword: React.MutableRefObject<HTMLIonInputElement | null>;
   repeatPassword: React.MutableRefObject<HTMLIonInputElement | null>;
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const ResetPasswordContent: React.FC<Props> = ({
-  email,
+  phone_number,
   otp,
   newPassword,
   repeatPassword,
@@ -38,6 +38,7 @@ const ResetPasswordContent: React.FC<Props> = ({
   const [resetState, setResetState] = useState<number>(0);
   const [generatedOTP, seGeneratedOTP] = useState<number>(0);
   const [userTempo, setUserTempo] = useState<any>(null);
+  const [userEmail, setUserEmail] = useState<string>("");
   const sendOTP = async (value: any) => {
     const OTP = Math.floor(Math.random() * 9000 + 1000);
     seGeneratedOTP(OTP);
@@ -65,27 +66,25 @@ const ResetPasswordContent: React.FC<Props> = ({
     }
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handlePhoneNumberSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const inputEmail = email.current?.value;
-    const regex = new RegExp(
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    );
-    const checkEmail = async () => {
+    const inputPhoneNumber = phone_number.current?.value;
+    const checkPhoneNumber = async () => {
       try {
         await present("checking...");
-        const changeEmailRes = await axios.get(
-          `${url}/api/clients/search/${inputEmail}`
+        const changePhoneNumberRes = await axios.get(
+          `${url}/api/clients/search/${inputPhoneNumber}`
         );
-        if (changeEmailRes.status === 200) {
-          if (changeEmailRes.data) {
-            if (changeEmailRes.data.length !== 0) {
-              sendOTP(inputEmail);
+        if (changePhoneNumberRes.status === 200) {
+          if (changePhoneNumberRes.data && changePhoneNumberRes.data.items) {
+            if (changePhoneNumberRes.data.items.length !== 0) {
+              setUserEmail(changePhoneNumberRes.data.items[0].email);
+              sendOTP(changePhoneNumberRes.data.items[0].email);
             } else {
               dismiss();
               Toast(
                 presentIonToast,
-                "Client with this email address not found",
+                "client with this phone number not found",
                 informationCircleOutline
               );
             }
@@ -105,20 +104,12 @@ const ResetPasswordContent: React.FC<Props> = ({
         }
       }
     };
-    if (inputEmail) {
-      if (regex.test(inputEmail.toString())) {
-        checkEmail();
-      } else {
-        Toast(
-          presentIonToast,
-          "please enter valid email address",
-          informationCircleOutline
-        );
-      }
+    if (inputPhoneNumber) {
+      checkPhoneNumber();
     } else {
-      Toast(presentIonToast, "please enter email", informationCircleOutline);
+      Toast(presentIonToast, "please enter phone number", informationCircleOutline);
     }
-    reset(email);
+    reset(phone_number);
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
@@ -251,11 +242,13 @@ const ResetPasswordContent: React.FC<Props> = ({
   };
 
   if (resetState === 0) {
-    return <EnterEmail email={email} handleEmailSubmit={handleEmailSubmit} />;
+    return <EnterPhoneNumber phone_number={phone_number} handlePhoneNumberSubmit={handlePhoneNumberSubmit} />;
   } else if (resetState === 1) {
     return (
       <OTP
+        sendOTP = {sendOTP}
         otp={otp}
+        userEmail={userEmail}
         handleOTPChange={handleOTPChange}
         handleOtpSubmit={handleOtpSubmit}
       />

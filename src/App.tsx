@@ -5,8 +5,7 @@ import {
   IonContent,
   IonPage,
   IonRouterOutlet,
-  setupIonicReact,
-  useIonToast,
+  setupIonicReact
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Drawer from "./components/UI/Drawer/Drawer";
@@ -51,12 +50,10 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import "./theme/shared.css";
-import { Toast } from "./utils/CustomToast";
-import { checkmarkCircleOutline, informationCircleOutline } from "ionicons/icons";
 import { StatusBar } from '@capacitor/status-bar';
 import axios from "axios";
 import { Device } from "@capacitor/device";
-
+import { SplashScreen } from '@capacitor/splash-screen';
 /* Pages, Screens & Components */
 setupIonicReact();
 
@@ -67,7 +64,6 @@ const App: React.FC = () => {
   const [showBackAlert, setShowBackAlert] = useState<boolean>(false);
   const nullEntry: any[] = [];
   const [notifications, setnotifications] = useState(nullEntry);
-  const [presentIonToast] = useIonToast();
   const registerToken = async(token:any)=>{
     if(token){
       try {
@@ -96,13 +92,8 @@ const App: React.FC = () => {
     PushNotifications.register();
     PushNotifications.addListener("registration", (token: Token) => {
       registerToken(token.value);
-      Toast(presentIonToast,token.value,checkmarkCircleOutline)
     });
-    // // Some issue with our setup and push will not work
-    // PushNotifications.addListener("registrationError", (error: any) => {
-    //   Toast(presentIonToast,"Error on registration: " + JSON.stringify(error),checkmarkCircleOutline)
-    // });
-    // Show us the notification payload if the app is open on our device
+
     PushNotifications.addListener(
       "pushNotificationReceived",
       (notification: PushNotificationSchema) => {
@@ -117,7 +108,6 @@ const App: React.FC = () => {
         ]);
       }
     );
-
     // Method called when tapping on a notification
     PushNotifications.addListener(
       "pushNotificationActionPerformed",
@@ -135,7 +125,12 @@ const App: React.FC = () => {
     );
   };
   StatusBar.setOverlaysWebView({ overlay: true });
-
+  useEffect(() => {
+  const hideSplash = async()=>{
+  await SplashScreen.hide();
+  }
+  hideSplash();
+}, []); 
   useEffect(() => {
     const checkStorage = async () => {
       const seen = await Preferences.get({ key: INTRO_KEY });

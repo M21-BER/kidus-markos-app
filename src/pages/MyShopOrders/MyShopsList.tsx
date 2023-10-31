@@ -1,5 +1,5 @@
-import { IonAvatar, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonSpinner, IonText, useIonRouter } from '@ionic/react';
-import { analyticsOutline, cartOutline, checkmark, checkmarkCircleOutline, closeCircleOutline, closeOutline, giftOutline, helpCircleOutline } from 'ionicons/icons';
+import { IonAvatar, IonCard, IonCardContent, IonIcon, IonItem, IonLabel, IonSpinner, IonText } from '@ionic/react';
+import { analyticsOutline, cartOutline, checkmarkCircleOutline, giftOutline, helpCircleOutline } from 'ionicons/icons';
 import React, { useContext } from 'react';
 import { UserContext } from '../../context/AuthContext';
 interface Props{
@@ -13,7 +13,6 @@ const MyShopsList: React.FC<Props> = ({shops,navigate}) => {
     }) 
    }
    const { setShopPayment,setShopColor } = useContext(UserContext);
-   const router = useIonRouter();
     if(shops.data1.length === 0 ){
         return (
             <div className="ion-text-center NDA">

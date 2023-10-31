@@ -63,8 +63,8 @@ const LoginContent: React.FC<Props> = ({
                         ref={clientIdentity}
                         fill="outline"
                         labelPlacement="floating"
-                        label="Email"
-                        placeholder="enter email or phone number"
+                        label="User"
+                        placeholder="Enter Email or Phone Number"
                         type="text"
                       ></IonInput>
                       <IonInput
@@ -73,10 +73,10 @@ const LoginContent: React.FC<Props> = ({
                         fill="outline"
                         labelPlacement="floating"
                         label="Password"
-                        placeholder="password"
+                        placeholder="Password"
                         type={showPassword ? "text" : "password"}
                       ></IonInput>
-                      <small id="password-icon-parent">
+                      <p id="password-icon-parent">
                         <IonIcon
                           onClick={() => {
                             setShowPassword(!showPassword);
@@ -85,8 +85,8 @@ const LoginContent: React.FC<Props> = ({
                           color="medium"
                           icon={showPassword ? eye : eyeOff}
                         />
-                        <span>show password</span>
-                      </small>
+                        <span>Show Password</span>
+                      </p>
                       <IonButton
                         className="ion-margin-top"
                         type="submit"

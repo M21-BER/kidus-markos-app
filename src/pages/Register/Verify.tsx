@@ -14,17 +14,38 @@ import {
 } from "@ionic/react";
 import { checkmarkCircleOutline } from "ionicons/icons";
 import "../ResetPassword/Reset.css";
+import CountdownTimer from "../../components/UI/CountdownTimer";
 interface Props {
   handleVerify: (e: React.FormEvent) => void;
-  sendOTPAgain: (e: React.FormEvent) => void;
+  sendOTPAgain: (userEmail:any) => void;
   verify: React.MutableRefObject<HTMLIonInputElement | null>;
+  userEmail:string;
 }
-const Verify: React.FC<Props> = ({ handleVerify, verify, sendOTPAgain }) => {
+const Verify: React.FC<Props> = ({userEmail, handleVerify, verify, sendOTPAgain }) => {
   const handleOTPChange = (e: any) => {
     if (e.detail.value.length >= 4) {
       // @ts-ignore
       verify.current.value = parseInt(e.detail.value.toString().slice(0, 4));
     }
+  };
+  const sliceEmail = (a:any) => {
+    let email = "";
+    let provider = false;
+    Array.from(a).forEach((i, index) => {
+      if (i === "@") {
+        provider = true;
+      }
+      if (!provider) {
+        if (index === 0 || index === 1) {
+          email += i;
+        } else {
+          email += "*";
+        }
+      } else {
+        email += i;
+      }
+    });
+    return email;
   };
   return (
     <IonContent scrollY={true} className="ion-no-padding">
@@ -41,7 +62,7 @@ const Verify: React.FC<Props> = ({ handleVerify, verify, sendOTPAgain }) => {
                   </IonCardHeader>
                   <IonCardContent className="ion-text-center">
                     <IonText color="medium">
-                      we have sent a 4 digit code to your email
+                    We have sent a 4 digit code to your email {sliceEmail(userEmail)}
                     </IonText>
                     <form onSubmit={handleVerify}>
                       <IonInput
@@ -63,7 +84,15 @@ const Verify: React.FC<Props> = ({ handleVerify, verify, sendOTPAgain }) => {
                         <IonIcon icon={checkmarkCircleOutline} slot="end" />
                       </IonButton>
                       <IonText className="ion-margin-top" color="medium">
-                        didn't recieve code?
+                      <CountdownTimer
+                      totalSec={120 * 1000}
+                      task={() => {
+                        if(userEmail){
+                          sendOTPAgain(userEmail);
+                        }
+                      }}
+                      />
+
                       </IonText>
                     </form>
                   </IonCardContent>

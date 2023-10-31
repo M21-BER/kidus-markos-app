@@ -3,7 +3,6 @@ import {
   IonPage,
   IonRefresher,
   IonRefresherContent,
-  useIonViewWillEnter,
   useIonLoading,
 } from "@ionic/react";
 import { useContext, useEffect, useState } from "react";
@@ -15,7 +14,10 @@ import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack
 import OrderList from "./OrderList";
 import OrderSkeleton from "./OrderSkeleton";
 import { UserContext } from "../../../context/AuthContext";
-const Shop: React.FC = () => {
+interface Props{
+  spacer:string 
+ }
+const Order: React.FC<Props> = ({spacer}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
@@ -48,10 +50,12 @@ const Shop: React.FC = () => {
       }
     }
   };
-  useIonViewWillEnter(async () => {
+  useEffect( () => {
+   (async () => {
     const orders = await getOrders();
     setOrders(orders);
     setLoading(false);
+  })()
   });
   const doRefresh = async (event: any) => {
     setLoading(true);
@@ -84,7 +88,7 @@ const Shop: React.FC = () => {
           </IonRefresher>
           <OrderList orders={orders} navigate={navigate} />
         </IonContent>
-        <div className="spacer_drawer"></div>
+        <div className="spacer_drawer" style={{height:`${spacer}`}}></div>
       </IonPage>
     );
   }
@@ -94,10 +98,10 @@ const Shop: React.FC = () => {
       <IonContent>
         <OrderSkeleton loading={loading} />
       </IonContent>
-      <div className="spacer_drawer"></div>
+      <div className="spacer_drawer" style={{height:`${spacer}`}}></div>
     </IonPage>
   );
 }
 };
 
-export default Shop;
+export default Order;

@@ -27,6 +27,7 @@ interface Props {
   screenStack: routeType[];
   pushStack: (routeHistory: routeType) => void;
   pullStack: (index: number) => void;
+  setIsAuthed:React.Dispatch<React.SetStateAction<boolean>>
 }
 export const UserContext = createContext<Partial<Props>>({});
 
@@ -113,7 +114,6 @@ export default function UserProvider({ children }: { children: ReactNode }) {
           resetState = true;
           const parsedUserData = jsonCheck(userData.value);
           if (parsedUserData.token && jwt_decode(parsedUserData.token)) {
-            // console.log("Rendered successfully");
             setWait(false);
             setUser(parsedUserData);
             setIsAuthed(true);
@@ -155,6 +155,7 @@ export default function UserProvider({ children }: { children: ReactNode }) {
         screenStack,
         pushStack,
         pullStack,
+        setIsAuthed
       }}
     >
       {children}

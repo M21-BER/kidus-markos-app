@@ -10,7 +10,7 @@ import "./Reset.css";
 import { UserContext } from "../../context/AuthContext";
 import LoaderUI from "../../components/UI/Loader/LoaderUI";
 const ResetPassword: React.FC = () => {
-  const email = useRef<null | HTMLIonInputElement>(null);
+  const phone_number = useRef<null | HTMLIonInputElement>(null);
   const otp = useRef<null | HTMLIonInputElement>(null);
   const newPassword = useRef<null | HTMLIonInputElement>(null);
   const repeatPassword = useRef<null | HTMLIonInputElement>(null);
@@ -24,16 +24,16 @@ const ResetPassword: React.FC = () => {
       navigate!('Home',null,null);
     }
   },[])
-  useEffect(()=>{
-    pushStack!({path:'ResetPassword',id:route?.id,info:route?.info});
-  },[]);
+  // useEffect(()=>{
+  //   pushStack!({path:'ResetPassword',id:route?.id,info:route?.info});
+  // },[]);
   if(!wait){
     return (
       <IonPage>
         <>
-        <ToolBarMainAddOn title="Reset Account" defaultValue={{path:"Register",id:null,info:null}} />
+        <ToolBarMainAddOn title="Reset Account" defaultValue={{path:"Login",id:null,info:null}} />
           <ResetPasswordContent
-            email={email}
+            phone_number={phone_number}
             newPassword={newPassword}
             repeatPassword={repeatPassword}
             otp={otp}
@@ -49,7 +49,7 @@ const ResetPassword: React.FC = () => {
   }else{
     return(
       <IonPage>
-         <ToolBarMainAddOn title="Reset Account" defaultValue={{path:"Register",id:null,info:null}} />
+         <ToolBarMainAddOn title="Reset Account" defaultValue={{path:"Login",id:null,info:null}} />
         <IonContent>
         <LoaderUI/>
         </IonContent>

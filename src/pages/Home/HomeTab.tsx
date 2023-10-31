@@ -11,8 +11,10 @@ import { cartOutline, bagAddOutline } from "ionicons/icons";
 import { Route, Redirect } from "react-router";
 import Order from "../Order/OrderMain/Order";
 import Shop from "../Shop/ShopMain/Shop";
-
-const ShopTab: React.FC = () => {
+interface Props{
+  spacer:string
+}
+const ShopTab: React.FC<Props> = ({spacer}) => {
   return (
     <IonContent>
       <IonTabs>
@@ -28,8 +30,8 @@ const ShopTab: React.FC = () => {
         </IonTabBar>
 
         <IonRouterOutlet>
-          <Route path="/shop" component={Shop} exact />
-          <Route path="/order" component={Order} exact />
+          <Route path="/shop" render={()=><Shop spacer={spacer}/>} exact />
+          <Route path="/order" render={()=><Order spacer={spacer}/>} exact />
           <Route exact path="/">
             <Redirect to="/shop" />
           </Route>

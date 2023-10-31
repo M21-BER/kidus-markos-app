@@ -1,4 +1,4 @@
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonImg, IonInput, IonItem, IonModal, IonPage, IonText, useIonLoading, useIonToast } from '@ionic/react';
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonIcon, IonInput, IonModal, IonPage, IonText, useIonLoading, useIonToast } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ToolBarDetails } from '../../../components/ToolBar/ToolBar';
 import { useAxios } from '../../../hooks/useAxios';
@@ -8,7 +8,7 @@ import image2 from '../../../assets/banks/02.png'
 import image3 from '../../../assets/banks/03.png'
 import image4 from '../../../assets/banks/04.png'
 import './Payment.css'
-import {checkmarkCircleOutline, informationCircleSharp, navigate } from 'ionicons/icons';
+import {checkmarkCircleOutline, informationCircleSharp } from 'ionicons/icons';
 import ErrorFallBack from '../../../components/error/ErrorFallBack/ErrorFallBack';
 import { OverlayEventDetail } from '@ionic/core';
 import { Toast } from '../../../utils/CustomToast';

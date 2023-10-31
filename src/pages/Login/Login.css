@@ -17,7 +17,7 @@
   background-color: rgba(54, 23, 5, 0.1);
 }
 
-small#password-icon-parent {
+p#password-icon-parent {
   display: flex;
   gap: 5px;
   justify-content: flex-start;
@@ -28,7 +28,7 @@ small#password-icon-parent {
 
 ion-icon#password-icon {
   top: 10px;
-  font-size: 14px;
+  font-size: 20px;
 }
 @media (max-width: 300px) {
   .pass-res {

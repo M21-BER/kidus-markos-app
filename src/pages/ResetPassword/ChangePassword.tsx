@@ -9,7 +9,6 @@ import {
   IonIcon,
   IonInput,
   IonRow,
-  IonText,
   IonTitle,
 } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
@@ -60,7 +59,7 @@ const ChangePassword: React.FC<Props> = ({
                         type={showPassword ? "text" : "password"}
                         required={false}
                       ></IonInput>
-                      <small id="password-icon-parent">
+                      <p id="password-icon-parent">
                         <IonIcon
                           onClick={() => {
                             setShowPassword(!showPassword);
@@ -69,8 +68,8 @@ const ChangePassword: React.FC<Props> = ({
                           color="medium"
                           icon={showPassword ? eye : eyeOff}
                         />
-                        <span>show password</span>
-                      </small>
+                        <span>Show Password</span>
+                      </p>
                       <IonButton
                         className="ion-margin-top"
                         type="submit"

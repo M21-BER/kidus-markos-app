@@ -3,12 +3,11 @@ import {
   IonPage,
   IonRefresher,
   IonRefresherContent,
-  useIonViewWillEnter,
   useIonLoading,
   IonSearchbar,
   IonSkeletonText,
 } from "@ionic/react";
-import React, { useContext, useRef, useState } from "react";
+import React, {useEffect, useContext, useRef, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import "../../Home/Home.css";
@@ -18,8 +17,11 @@ import ShopSkeleton from "./ShopSkeleton";
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import { UserContext } from "../../../context/AuthContext";
 
+interface Props{
+ spacer:string 
+}
 
-const Shop: React.FC = () => {
+const Shop: React.FC<Props>= ({spacer}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [present, dismiss] = useIonLoading();
   const [shopsRes, setShopsRes] = useState<any[]>([]);
@@ -56,11 +58,13 @@ const Shop: React.FC = () => {
     }
   }
   };
-  useIonViewWillEnter(async () => {
+  useEffect(() => {
+   (async () => {
     const shops = await getShops();
     setShops(shops);
     setLoading(false);
-  });
+  })()
+  },[]);
 
   const doRefresh = async (event: any) => {
     setLoading(true);
@@ -134,7 +138,7 @@ const Shop: React.FC = () => {
           </IonRefresher>
           <ShopList shops={shops} navigate={navigate}/>
         </IonContent>
-        <div className="spacer_drawer"></div>
+        <div className="spacer_drawer" style={{height:`${spacer}`}}></div>
       </IonPage>
     );
   }
@@ -149,7 +153,7 @@ const Shop: React.FC = () => {
       <IonContent className="_under_drawer">
         <ShopSkeleton loading={loading} />
       </IonContent>
-      <div className="spacer_drawer"></div>
+      <div className="spacer_drawer" style={{height:`${spacer}`}}></div>
     </IonPage>
   );
 }

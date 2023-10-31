@@ -16,10 +16,9 @@ import {
   imagesOutline,
   informationCircleOutline,
 } from "ionicons/icons";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
-import { useParams } from "react-router";
 import { useAxios } from "../../../hooks/useAxios";
 import { ImageSizePlusEncoder } from "../../../utils/ImageSizePlusEncoder";
 import { b64toFile } from "../../../utils/Base64ToBlob";

@@ -9,10 +9,12 @@ const config: CapacitorConfig = {
   },
   plugins: {
     SplashScreen: {
-      launchAutoHide: false,
+      launchAutoHide: true,
     },
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],
+      smallIcon:"ic_stat_logo",
+      iconColor:'#361705'
     },
   },
 };

@@ -26,7 +26,7 @@ interface Props {
 }
 export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
   const [presentAlert] = useIonAlert();
-  const { isAuthed, refresh,navigate } = useContext(UserContext);
+  const { isAuthed, refresh,navigate,setIsAuthed } = useContext(UserContext);
   const [presentIonToast] = useIonToast();
   const handleUserToolBar = () => {
     if (isAuthed) {
@@ -48,6 +48,7 @@ export const ToolBarMain: React.FC<Props> = ({ title,defaultValue }) => {
               const status: boolean = await logout();
               if (status) {
                 refresh!();
+                setIsAuthed!(false);
                 navigate!("Login",null,null);
                 Toast(
                   presentIonToast,

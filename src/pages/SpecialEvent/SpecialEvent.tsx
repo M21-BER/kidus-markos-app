@@ -4,13 +4,17 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { jsonCheck, url } from '../../utils/utils';
 import ImageComponent from '../../components/UI/Image';
 import { useAxios } from '../../hooks/useAxios';
+import { useEffect } from 'react';
 const settings = {
     showThumbs: false,
     infiniteLoop: true,
     emulateTouch: true,
     interval: 4000,
   };
-const SpecialEvent: React.FC = () => {
+interface Props{
+  spacerFunc:(state:number)=>void
+}  
+const SpecialEvent: React.FC<Props> = ({spacerFunc}) => {
     const [detail, isPending, error] = useAxios(
         `${url}/api/event`
       );
@@ -26,7 +30,15 @@ const SpecialEvent: React.FC = () => {
     }else{
       return false;
     }
-  }      
+  }
+  useEffect(()=>{
+    if(!error && detail && detail.length !== 0 && checkEventDate() ){
+      spacerFunc(1);
+    }else{
+      spacerFunc(0);
+    }
+  },[isPending])
+    
  if(!isPending){
     if(error){
       return null

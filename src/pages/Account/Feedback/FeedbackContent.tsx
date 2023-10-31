@@ -1,5 +1,5 @@
 import { IonInput, IonButton, IonIcon, IonContent, IonTextarea } from "@ionic/react";
-import { addCircleOutline, sendOutline } from "ionicons/icons";
+import { sendOutline } from "ionicons/icons";
 import "../../Register/Radio.css";
 interface Props {
   handleSubmit: (event: React.FormEvent) => void;

@@ -1,6 +1,5 @@
 import {
   IonPage,
-  useIonRouter,
   useIonLoading,
   useIonToast,
   IonContent,
@@ -22,8 +21,8 @@ import { errorResponse } from "../../utils/errorResponse";
 import Verify from "./Verify";
 import { Preferences } from "@capacitor/preferences";
 import LoaderUI from "../../components/UI/Loader/LoaderUI";
+import { Device } from "@capacitor/device";
 const Register: React.FC  = () => {
-  const router = useIonRouter();
   const [present, dismiss] = useIonLoading();
   const first_name = useRef<null | HTMLIonInputElement>(null);
   const last_name = useRef<null | HTMLIonInputElement>(null);
@@ -98,6 +97,7 @@ const Register: React.FC  = () => {
               OTP: sign.data.OTP,
               token: sign.data.token,
               client_id: sign.data.client_id,
+              email: sign.data.newClient.email,
               count: 0,
             };
             setSignStatus(JSON.stringify(VData));
@@ -185,14 +185,16 @@ const Register: React.FC  = () => {
               },
             }
           );
+          const deviceId: any = await Device.getId();
+          await axios.patch( `${url}/api/firebase-token/${deviceId.identifier}`,{userId:VRes.client_id})
           await Preferences.remove({ key: SIGNUP_KEY });
           setVerifyStatus(false);
           Toast(
             presentIonToast,
-            "account verified successfully",
+            "Account verified successfully",
             checkmarkCircleOutline
           );
-          router.push("/app/login", "root", "replace");
+          navigate!('Login',null,null)
         } catch (error) {
           Toast(
             presentIonToast,
@@ -207,16 +209,48 @@ const Register: React.FC  = () => {
       Toast(presentIonToast, "code can not be empty", informationCircleOutline);
     }
   };
-  const sendOTPAgain = () => {};
+  const sendOTPAgain = async(email:string) => {
+      const OTP = Math.floor(Math.random() * 9000 + 1000);
+      try {
+        const mailer = await axios.post(`${url}/api/clients/activate`, {
+          recipient_email: email,
+          OTP: OTP,
+        });
+        if (mailer.status === 200 && mailer.data.status === true) {
+          const VData = {
+            OTP,
+            token: mailer.data.token,
+            client_id: mailer.data.client_id,
+            email: mailer.data.email,
+            count: 0,
+          };
+          setSignStatus(JSON.stringify(VData));
+          setVRes(VData);
+          dismiss();
+          Toast(
+            presentIonToast,
+            "code resent",
+            checkmarkCircleOutline
+          );
+        } else {
+          throw new Error(failMessage);
+        }
+      } catch (error) {
+        dismiss();
+        Toast(presentIonToast, failMessage, closeCircleOutline);
+      }
+  };
   useEffect(()=>{
     pushStack!({path:'Register',id:route?.id,info:route?.info});
   },[]);
+
   if(!wait){
     return (
       <IonPage>
         <ToolBarMainAddOn title="Sign up" defaultValue={{path:"Login",id:null,info:null}} />
         {verifyStatus ? (
           <Verify
+            userEmail={VRes.email}
             verify={verify}
             sendOTPAgain={sendOTPAgain}
             handleVerify={handleVerify}

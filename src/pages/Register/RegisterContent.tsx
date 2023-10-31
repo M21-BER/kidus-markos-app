@@ -124,7 +124,7 @@ const RegisterContent: React.FC<Props> = ({
               className="ion-margin-top"
               required={false}
             ></IonInput>
-            <small id="password-icon-parent">
+            <p id="password-icon-parent">
               <IonIcon
                 onClick={() => {
                   setShowPassword(!showPassword);
@@ -133,8 +133,8 @@ const RegisterContent: React.FC<Props> = ({
                 color="medium"
                 icon={showPassword ? eye : eyeOff}
               />
-              <span>show password</span>
-            </small>
+              <span>Show Password</span>
+            </p>
             <IonButton className="ion-margin-top" type="submit" expand="block">
               Sign up
               <IonIcon icon={addCircleOutline} slot="end" />{" "}

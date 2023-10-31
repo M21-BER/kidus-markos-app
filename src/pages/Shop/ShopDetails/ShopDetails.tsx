@@ -4,7 +4,6 @@ import {
   IonCardContent,
   useIonToast,
   IonContent,
-  useIonRouter,
 } from "@ionic/react";
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
 import { useAxios } from "../../../hooks/useAxios";
@@ -47,7 +46,6 @@ const ShopDetails: React.FC = () => {
   );
   let distance: any = null;
   let colors: any = null;
-  const router = useIonRouter();
   const [cartExist, setCartExist] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
@@ -144,7 +142,7 @@ const ShopDetails: React.FC = () => {
         }
       }else{
         Toast(presentIonToast,"Please login first",informationCircleOutline);
-        return router.push('/app/login')
+        navigate!("Login",null,null);
       }
     }else{
       Toast(presentIonToast,"review must be below 80 character",informationCircleOutline);

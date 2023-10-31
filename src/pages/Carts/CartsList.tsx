@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel, IonText} from '@ionic/react';
 import { cartOutline } from 'ionicons/icons';
 import React from 'react';
 interface Props{

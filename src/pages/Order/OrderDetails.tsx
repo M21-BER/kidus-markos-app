@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonChip, IonContent, IonIcon, IonItem, IonLabel, IonPage, IonText} from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonChip, IonContent, IonIcon, IonItem, IonPage, IonText} from '@ionic/react';
 import {ToolBarDetails} from '../../components/ToolBar/ToolBar';
 import { useAxios } from '../../hooks/useAxios';
 import { jsonCheck, url } from '../../utils/utils';
