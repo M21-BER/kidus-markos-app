@@ -51,21 +51,12 @@ const EnterPhoneNumber: React.FC<Props> = ({ phone_number, handlePhoneNumberSubm
                   <IonCardContent>
                     <form onSubmit={handlePhoneNumberSubmit}>
                       <IonInput
-                        onIonInput={(e:any)=>{
-                          if (!checkPhoneNumber(e.detail.value?.toString())) {
-                                 // @ts-ignore
-                            phone_number.current.value = e.detail.value
-                              .toString()
-                                    // @ts-ignore
-                              .slice(0, e.detail.value.length - 1);
-                          }
-                        }}
                         className="ionInput ion-margin-top ion-margin-bottom"
                         ref={phone_number}
                         fill="outline"
                         aria-label="phone_number"
-                        placeholder="Enter Phone Number"
-                        type="text"
+                        placeholder="Phone Number"
+                        type="number"
                         required={false}
                       ></IonInput>
                       <IonButton

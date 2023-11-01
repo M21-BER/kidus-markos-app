@@ -33,6 +33,13 @@ const RegisterContent: React.FC<Props> = ({
   confirm_password,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const registerInput = (input:string,state:number)=>{
+  switch(input){
+  case 'phone_number':
+    phone_number.current?.scrollIntoView();
+    break;
+  }
+  }
   return (
     <IonContent className="ion-padding">
       <div className="form-app">
@@ -43,6 +50,7 @@ const RegisterContent: React.FC<Props> = ({
           </IonText>
           <form onSubmit={handleSubmit}>
             <IonInput
+              clearInput={true}
               ref={first_name}
               name="first_name"
               fill="outline"
@@ -54,6 +62,7 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+             clearInput={true}
               ref={last_name}
               name="last_name"
               fill="outline"
@@ -81,6 +90,7 @@ const RegisterContent: React.FC<Props> = ({
               </IonRadio>
             </IonRadioGroup>
             <IonInput
+             clearInput={true}
               ref={email}
               name="email"
               fill="outline"
@@ -92,17 +102,21 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+             onIonFocus={()=>{registerInput("phone_number",0)}}
+            //  onIonBlur={()=>{registerInput("phone_number",1)}}
+             clearInput={true}
               ref={phone_number}
               name="phone_number"
               fill="outline"
               labelPlacement="floating"
               label="Phone Number"
-              placeholder="+251---"
-              type="text"
+              placeholder="Phone Number"
+              type="number"
               className="ion-margin-top"
               required={false}
             ></IonInput>
             <IonInput
+             clearInput={true}
               ref={password}
               name="password"
               fill="outline"
@@ -114,6 +128,7 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+             clearInput={true}
               ref={confirm_password}
               name="confirm-password"
               fill="outline"

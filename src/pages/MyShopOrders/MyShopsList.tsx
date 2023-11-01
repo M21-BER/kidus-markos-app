@@ -12,6 +12,13 @@ const MyShopsList: React.FC<Props> = ({shops,navigate}) => {
       return i.s_product_id === id
     }) 
    }
+   const rev  = (arr:[])=>{
+    let arr1:[] = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+      arr1.push(arr[i]);
+    }
+    return arr1;
+  }
    const { setShopPayment,setShopColor } = useContext(UserContext);
     if(shops.data1.length === 0 ){
         return (
@@ -23,7 +30,7 @@ const MyShopsList: React.FC<Props> = ({shops,navigate}) => {
         return (
             <>
              {
-                shops.data1.map((shop:any, index:number) => (
+                rev(shops.data1).map((shop:any, index:number) => (
                   <IonCard disabled={shop.delivered?true:false} key={index} onClick={() => {
                     setShopColor!(shop.selected_color?shop.selected_color:"#361705")
                     setShopPayment!(findProd(shop.s_product_id)[0]?findProd(shop.s_product_id)[0]:null);

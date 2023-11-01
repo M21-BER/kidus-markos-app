@@ -9,6 +9,8 @@ import {
   IonItem,
   IonLabel,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonSkeletonText,
   useIonAlert,
   useIonToast,
@@ -20,19 +22,26 @@ import { CART_KEY, jsonCheck } from "../../utils/utils";
 import CartsList from "./CartsList";
 import "./Carts.css";
 import { UserContext } from "../../context/AuthContext";
-import { bagAddOutline, checkmarkCircleOutline, closeCircleOutline, informationCircleOutline } from "ionicons/icons";
+import {checkmarkCircleOutline, closeCircleOutline, informationCircleOutline } from "ionicons/icons";
 import { Toast } from "../../utils/CustomToast";
 const Carts: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [carts, setCarts] = useState<any[]>([]);
-  const {isAuthed, refresh ,navigate,pushStack,route} = useContext(UserContext);
+  const {isAuthed ,navigate,pushStack,route} = useContext(UserContext);
   const [presentAlert] = useIonAlert();
   const [presentIonToast] = useIonToast();
+  const getCarts = async () => {
+    const cartE = await Preferences.get({ key: CART_KEY });
+    if (cartE.value) {
+      const parse: number[] = jsonCheck(cartE.value);
+      return parse;
+    }
+    return [];
+  };
   useEffect(()=>{
     pushStack!({path:'Carts',id:route?.id,info:route?.info});
   },[]);
   useEffect(()=>{ 
-    refresh!();
     !isAuthed && navigate!("Login",null,null);
   },[]);
   useEffect(()=>{ 
@@ -43,14 +52,6 @@ const Carts: React.FC = () => {
     })()
   },[]);
 
-  const getCarts = async () => {
-    const cartE = await Preferences.get({ key: CART_KEY });
-    if (cartE.value) {
-      const parse: number[] = jsonCheck(cartE.value);
-      return parse;
-    }
-    return [];
-  };
   const clearCarts = async () => {
     presentAlert({
       header: "Clear Cart",
@@ -88,14 +89,22 @@ const Carts: React.FC = () => {
       ],
     });
   };
-
+  const doRefresh = async (event: any) => {
+    setLoading(true);
+    const data = await getCarts();
+    setCarts(data);
+    setLoading(false);
+    event.detail.complete();
+  };
+  const shopNow = (id:any)=>{
+    navigate!("shopDetails",id,"Carts")
+  }
   return (
     <IonPage>
       <ToolBarMain title="My Carts"/>
       <IonCard className="ion-no-margin">
               <IonCardContent>
               <div className='km-btns'>
-               <IonButton disabled={carts.length === 0?true:false} color='primary' className='ion-text-center'><IonIcon slot="start" icon={bagAddOutline}/> Shop</IonButton>
                <IonButton disabled={carts.length === 0?true:false} onClick={clearCarts} color='primary' className='ion-text-center'><IonIcon slot="start" icon={closeCircleOutline}/> Clear</IonButton>
              </div>
               </IonCardContent>
@@ -120,8 +129,10 @@ const Carts: React.FC = () => {
               </IonCardContent>
             </IonCard>
           ))}
-
-        <CartsList carts={carts} />
+          <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
+            {!loading && <IonRefresherContent />}
+          </IonRefresher> 
+        <CartsList shopNow={shopNow} carts={carts} />
       </IonContent>
     </IonPage>
   );

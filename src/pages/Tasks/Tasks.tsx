@@ -20,7 +20,6 @@ const Tasks: React.FC = () => {
     pushStack!({path:'Task',id:route?.id,info:route?.info});
   },[]);
   useEffect(() => {
-    refresh!();
     !isAuthed && navigate!("Login",null,null);
     setScreenLoading(wait!);
   },[]);
@@ -79,6 +78,13 @@ const Tasks: React.FC = () => {
     return tk.filter((t:any)=> (t.completed === false)).length 
    }
   }
+  const rev  = (arr:any[])=>{
+    let arr1:any[] = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+      arr1.push(arr[i]);
+    }
+    return arr1;
+  }
  if(screenLoading){ 
    return (
     <Loader/>
@@ -108,7 +114,7 @@ const Tasks: React.FC = () => {
               </section> 
               </IonCardContent>
             </IonCard>
-       <TasksList tasks={tasks} navigate={navigate} />
+       <TasksList tasks={rev(tasks)} navigate={navigate} />
       </IonContent>
       <div className="spacer_drawer"></div>
     </IonPage>

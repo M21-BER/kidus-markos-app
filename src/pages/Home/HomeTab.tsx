@@ -12,9 +12,10 @@ import { Route, Redirect } from "react-router";
 import Order from "../Order/OrderMain/Order";
 import Shop from "../Shop/ShopMain/Shop";
 interface Props{
-  spacer:string
+  spacer:string;
+  updateEventNow:()=>void;
 }
-const ShopTab: React.FC<Props> = ({spacer}) => {
+const ShopTab: React.FC<Props> = ({spacer,updateEventNow}) => {
   return (
     <IonContent>
       <IonTabs>
@@ -30,8 +31,8 @@ const ShopTab: React.FC<Props> = ({spacer}) => {
         </IonTabBar>
 
         <IonRouterOutlet>
-          <Route path="/shop" render={()=><Shop spacer={spacer}/>} exact />
-          <Route path="/order" render={()=><Order spacer={spacer}/>} exact />
+          <Route path="/shop" render={()=><Shop spacer={spacer} updateEventNow={updateEventNow}/>} exact />
+          <Route path="/order" render={()=><Order spacer={spacer} updateEventNow={updateEventNow}/>} exact />
           <Route exact path="/">
             <Redirect to="/shop" />
           </Route>

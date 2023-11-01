@@ -6,12 +6,16 @@ import { UserContext } from "../../context/AuthContext";
 
 const Home: React.FC = () => {
   const [spacer,setSpacer] = useState<string>("130px");
+  const [updateEvent,setUpdateEvent] = useState(false);
   const spacerFunc = (state:number)=>{
-  if(state = 0){
+  if(state === 0){
     setSpacer('130px'); 
   }else{
     setSpacer('330px')
   }
+  }
+  const updateEventNow = ()=>{
+    setUpdateEvent(!updateEvent);
   }
   const { pushStack,route} =
   useContext(UserContext); 
@@ -21,8 +25,8 @@ const Home: React.FC = () => {
   return (
     <>
       <ToolBarMain title="Home" />
-       <SpecialEvent spacerFunc={spacerFunc}/>
-      <HomeTab spacer={spacer}/>
+       <SpecialEvent spacerFunc={spacerFunc} updateEvent={updateEvent}/>
+      <HomeTab spacer={spacer} updateEventNow={updateEventNow}/>
     </>
   );
 };

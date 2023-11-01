@@ -1,10 +1,10 @@
 import './SpecialEvent.css'
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { jsonCheck, url } from '../../utils/utils';
+import { failMessage, jsonCheck, url } from '../../utils/utils';
 import ImageComponent from '../../components/UI/Image';
-import { useAxios } from '../../hooks/useAxios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 const settings = {
     showThumbs: false,
     infiniteLoop: true,
@@ -12,18 +12,21 @@ const settings = {
     interval: 4000,
   };
 interface Props{
-  spacerFunc:(state:number)=>void
+  spacerFunc:(state:number)=>void;
+  updateEvent:boolean;
 }  
-const SpecialEvent: React.FC<Props> = ({spacerFunc}) => {
-    const [detail, isPending, error] = useAxios(
-        `${url}/api/event`
-      );
+const SpecialEvent: React.FC<Props> = ({spacerFunc,updateEvent}) => {
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<any>(null);
+  const [afterUpdate, setAfterUpdate] = useState<boolean>(false);
+  const controller = new AbortController();
   const checkEventDate = ()=>{
     var y = new Date().getFullYear();
     var m = new Date().getMonth();
     var d = new Date().getDay();  
     var date = `${m}/${d}/${y}`;
-    let Difference_In_Time =   new Date(detail[0].event_due_date).getTime() - new Date(date).getTime();
+    let Difference_In_Time =   new Date(events[0].event_due_date).getTime() - new Date(date).getTime();
     var Difference_In_Days = Math.round((Difference_In_Time / (1000 * 3600 * 24))); 
     if(Difference_In_Days > 0){
       return true;
@@ -31,23 +34,59 @@ const SpecialEvent: React.FC<Props> = ({spacerFunc}) => {
       return false;
     }
   }
+  const getEvents = async () => {
+    try {
+      const data = await axios(`${url}/api/event`, {
+        signal: controller.signal,
+      });
+      setError(null);
+      return data.data;
+    } catch (error: any) {
+     if(error.code !== "ERR_NETWORK"){
+      if (error.name !== "CanceledError") {
+        setEvents([]);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error &&
+          error.response.data.error.message
+        ) {
+          setError(error.response.data.error.message);
+        } else {
+          setError(failMessage);
+        }
+      }
+    }else{
+      setError(error.code);
+    }
+  }
+  };
+  useEffect(() => {
+   (async () => {
+    const shops = await getEvents();
+    setEvents(shops);
+    setLoading(false);
+    setAfterUpdate(!afterUpdate);
+  })()
+  },[updateEvent]);
+
   useEffect(()=>{
-    if(!error && detail && detail.length !== 0 && checkEventDate() ){
+    if(!error && events && events.length !== 0 && checkEventDate() ){
       spacerFunc(1);
     }else{
       spacerFunc(0);
     }
-  },[isPending])
+  },[loading,afterUpdate])
     
- if(!isPending){
+ if(!loading){
     if(error){
       return null
     }else{
-       if(detail && detail.length !== 0 && checkEventDate() ){
+       if(events && events.length !== 0 && checkEventDate() ){
         return (
              <div className="special-event">
             <Carousel {...settings} autoPlay>
-              {jsonCheck(detail[0].event_images).map(
+              {jsonCheck(events[0].event_images).map(
                   (image: any, index: number) => {
                     return (
                       <div key={index}>
@@ -55,9 +94,9 @@ const SpecialEvent: React.FC<Props> = ({spacerFunc}) => {
                          className = ""
                         src={image.url}
                         hash={image.hash}
-                        label={detail[0].event_name}
+                        label={events[0].event_name}
                       />
-                       <p className="legend">{detail[0].event_quota}</p>
+                       <p className="legend">{events[0].event_quota}</p>
                      </div>
                   
                     );

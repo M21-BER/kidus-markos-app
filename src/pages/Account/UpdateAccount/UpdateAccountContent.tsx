@@ -92,8 +92,8 @@ const UpdateAccountContent: React.FC<Props> = ({
               fill="outline"
               labelPlacement="stacked"
               label="Phone Number"
-              placeholder="+251---"
-              type="text"
+              placeholder="Phone Number"
+              type="number"
               className="ion-margin-top"
               required={false}
             ></IonInput>

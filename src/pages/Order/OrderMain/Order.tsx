@@ -15,9 +15,10 @@ import OrderList from "./OrderList";
 import OrderSkeleton from "./OrderSkeleton";
 import { UserContext } from "../../../context/AuthContext";
 interface Props{
-  spacer:string 
+  spacer:string;
+  updateEventNow:()=>void 
  }
-const Order: React.FC<Props> = ({spacer}) => {
+const Order: React.FC<Props> = ({spacer,updateEventNow}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
@@ -59,6 +60,7 @@ const Order: React.FC<Props> = ({spacer}) => {
   });
   const doRefresh = async (event: any) => {
     setLoading(true);
+    updateEventNow();
     const data = await getOrders();
     setOrders(data);
     setLoading(false);
@@ -66,6 +68,7 @@ const Order: React.FC<Props> = ({spacer}) => {
   };
   const reload = async () => {
     setLoading(true);
+    updateEventNow();
     await present("Refreshing...");
     const data = await getOrders();
     dismiss();

@@ -2,9 +2,10 @@ import { IonAvatar, IonCard, IonCardContent, IonChip, IonIcon, IonItem, IonLabel
 import { cartOutline } from 'ionicons/icons';
 import React from 'react';
 interface Props{
-carts:any[]   
+carts:any[];
+shopNow:(id:any)=>void   
 }
-const CartsList: React.FC<Props> = ({carts}) => {
+const CartsList: React.FC<Props> = ({carts,shopNow}) => {
   
     if(carts.length === 0 ){
         return (
@@ -17,7 +18,7 @@ const CartsList: React.FC<Props> = ({carts}) => {
             <>
              {
                 carts.map((cart, index) => (
-                  <IonCard key={index} onClick={() => {}}>
+                  <IonCard key={index} onClick={() => {shopNow(cart.id)}}>
                     <IonCardContent className="ion-no-padding">
                       <IonItem lines="none">
                         <IonAvatar slot="start">

@@ -459,8 +459,6 @@ const ViewTask: React.FC = () => {
       setTaskUpdate(!taskUpdate);
       Toast(presentIonToast,"Task Completed Successfully",checkmarkCircleOutline);
     } catch (error) {
-      console.log(error);
-      
       const {message,status} = errorResponse(error);
       if(message && status){
         Toast(presentIonToast,message,informationCircleOutline)
@@ -580,7 +578,6 @@ const ViewTask: React.FC = () => {
         Toast(presentIonToast,"we will contact you soon",checkmarkCircleOutline);
       }
     } catch (error) {
-      console.log(error);
       Toast(presentIonToast,"Task on load please wait..",informationCircleOutline);
     }
    })()

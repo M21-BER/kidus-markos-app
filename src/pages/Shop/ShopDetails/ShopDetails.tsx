@@ -118,8 +118,6 @@ const ShopDetails: React.FC = () => {
         setUpdate(true);
         Toast(presentIonToast, "Review Added Successfully", checkmarkCircleOutline);
       } catch (error) {
-        console.log(error);
-        
         const { message, status } = errorResponse(error);
         if (status && status == 401) {
           Toast(presentIonToast, message, informationCircleOutline);
@@ -176,9 +174,9 @@ const ShopDetails: React.FC = () => {
         Preferences.set({ key: CART_KEY, value: JSON.stringify(new_ids) });
       }
       setCartExist(true);
-      Toast(presentIonToast,"Item have been Added to Cart 🗸 ",cartSharp);
+      Toast(presentIonToast,"Item have been added to cart 🗸 ",cartSharp);
     } catch (error) {
-      console.log("error on adding cart");
+      Toast(presentIonToast,"Item not added to cart, please try again later",informationCircleOutline);
     }
   };
   const shopping = () => {
@@ -219,6 +217,21 @@ const ShopDetails: React.FC = () => {
   const reload = async () => {
     setUpdate(true);
   };
+  const clearItem =async()=>{
+    try {
+      const cartIDS = await Preferences.get({ key: CART_KEY });
+      if (cartIDS.value) {
+        const ids: any[] = jsonCheck(cartIDS.value).filter((i:any)=>(i.id !==id.id));
+        Preferences.set({ key: CART_KEY, value: JSON.stringify(ids) });
+        setCartExist(false);
+        Toast(presentIonToast,"Item have been removed from Cart 🗸 ",cartSharp);
+      }else{
+        throw new Error("cart filter failed")
+      }
+    } catch (error) {
+      Toast(presentIonToast,"Item not removed from Cart, please try again later",informationCircleOutline);
+    }
+  }
   useEffect(()=>{
     pushStack!({path:'shopDetails',id:route?.id,info:route?.info});
   },[]);
@@ -227,14 +240,14 @@ if(!isPending){
   if (error) {
     return (
       <IonPage>
-        <ToolBarDetails defaultValue={{path:"Home",id:id.id,info:null}} title="Shop Details"/>
+        <ToolBarDetails defaultValue={{path:route?.info === "Carts"?route?.info:"Home",id:id.id,info:null}} title="Shop Details"/>
         <ErrorFallBack className='m_error_top' error={error} reload={reload} />
       </IonPage>
     );
   } else {
     return (
       <IonPage>
-         <ToolBarDetails title={detail && detail.product?detail.product.s_product_name:`Shop Details`} defaultValue={{path:"Home",id:null,info:null}}/>
+         <ToolBarDetails title={detail && detail.product?detail.product.s_product_name:`Shop Details`}  defaultValue={{path:route?.info ==="Carts"?route?.info:"Home",id:id.id,info:null}}/>
     
         <IonContent className="ion-no-padding">
           {!isPending && (
@@ -266,6 +279,7 @@ if(!isPending){
                       price={detail.product.s_product_price}
                     />
                     <ActionControls
+                      clearItem={clearItem}
                       cartExist={cartExist}
                       addToCart={addToCart}
                       shopping={shopping}
@@ -298,7 +312,7 @@ if(!isPending){
 }else{
   return (
     <IonPage>
-      <ToolBarDetails defaultValue={{path:"Home",id:null,info:null}} title="Shop Details"/>
+      <ToolBarDetails  defaultValue={{path:route?.info === "Carts"?route?.info:"Home",id:id.id,info:null}} title="Shop Details"/>
       <IonContent>
         <LoaderUI/>
       </IonContent>

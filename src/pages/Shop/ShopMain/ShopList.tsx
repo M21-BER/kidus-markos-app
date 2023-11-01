@@ -29,7 +29,7 @@ const ShopList: React.FC<Props> = ({ shops,navigate }) => {
             color="warning"
             key={index}
             onClick={() => {
-              navigate("shopDetails",shop.s_product_id,null)
+              navigate("shopDetails",shop.s_product_id,"Home")
             }}
           >
             <IonCardContent className="ion-no-padding">

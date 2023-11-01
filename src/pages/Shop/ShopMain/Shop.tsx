@@ -19,9 +19,10 @@ import { UserContext } from "../../../context/AuthContext";
 
 interface Props{
  spacer:string 
+ updateEventNow:()=>void
 }
 
-const Shop: React.FC<Props>= ({spacer}) => {
+const Shop: React.FC<Props>= ({spacer,updateEventNow}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [present, dismiss] = useIonLoading();
   const [shopsRes, setShopsRes] = useState<any[]>([]);
@@ -68,6 +69,7 @@ const Shop: React.FC<Props>= ({spacer}) => {
 
   const doRefresh = async (event: any) => {
     setLoading(true);
+    updateEventNow();
     const data = await getShops();
     setShops(data);
     setLoading(false);
@@ -75,6 +77,7 @@ const Shop: React.FC<Props>= ({spacer}) => {
   };
   const reload = async () => {
     setLoading(true);
+    updateEventNow();
     await present("Refreshing...");
     const data = await getShops();
     dismiss();
@@ -87,14 +90,17 @@ const Shop: React.FC<Props>= ({spacer}) => {
   const searchInput = searchValue.current?.value;
   if(searchInput){
    try {
+    await present("Searching...");
     const res = await axios.get(`${url}/api/shops/search/${searchInput}`);
     setShopsResBar(true);
+    dismiss();
     if(res.data.items && res.data.items.length > 6){
       setShopsRes(res.data.items.slice(0,6));
     }else{
       setShopsRes(res.data.items);
     }
    } catch (error) {
+    dismiss();
     setShopsRes([]);
     
    }

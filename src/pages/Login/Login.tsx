@@ -30,8 +30,6 @@ const Login: React.FC = () => {
   const [stat, setStat] = useState<boolean>(false);
 
   useEffect(()=>{
-    console.log(isAuthed);
-    
     if (isAuthed) {
       navigate!('Home',null,null);
     }else{

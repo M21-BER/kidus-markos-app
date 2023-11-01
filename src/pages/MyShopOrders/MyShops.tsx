@@ -27,7 +27,7 @@ import ErrorFallBack from "../../components/error/ErrorFallBack/ErrorFallBack";
     const [error, setError] = useState<any>(null);
     const [present, dismiss] = useIonLoading();
     const controller: AbortController = new AbortController();
-    const {isAuthed,user,navigate,refresh,pushStack,route} = useContext(UserContext);
+    const {isAuthed,user,navigate,pushStack,route} = useContext(UserContext);
     useEffect(()=>{
       pushStack!({path:'MyShop',id:route?.id,info:route?.info});
     },[]);
@@ -39,7 +39,6 @@ import ErrorFallBack from "../../components/error/ErrorFallBack/ErrorFallBack";
       })()
     },[]);
     useEffect(()=>{ 
-      refresh!();
       !isAuthed && navigate!("Login",null,null);
     },[]);
     const getShops = async () => {
