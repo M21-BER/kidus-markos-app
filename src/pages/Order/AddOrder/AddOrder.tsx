@@ -29,6 +29,7 @@ import flagImg from '../../../assets/Flag_of_Ethiopia.svg.png'
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import LoaderUI from "../../../components/UI/Loader/LoaderUI";
 import { UserContext } from "../../../context/AuthContext";
+import { Keyboard } from '@capacitor/keyboard';
 const AddOrder: React.FC = () => {
   const full_name = useRef<null | HTMLIonInputElement>(null);
   const phone_number = useRef<null | HTMLIonInputElement>(null);
@@ -42,6 +43,22 @@ const AddOrder: React.FC = () => {
   const {route,pushStack,navigate}= useContext(UserContext);
   const id: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
+  const [formPosition, setFormPosition] = useState<object>({});
+  const form = useRef<HTMLDivElement | null>(null);
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+  const formHeight = (form.current?.offsetTop! + form.current?.offsetHeight!);
+  const registerInputFocus = (elementHeight:any,input:any)=>{
+    if(input && formHeight && input >= (formHeight - keyboardHeight !== 0?keyboardHeight:((formHeight*44)/100) +4)){
+      setFormPosition({top:`-${input - elementHeight - 100}px`})
+     }
+  }
+  Keyboard.addListener('keyboardDidShow', info => {
+    keyboardHeight === 0 && setKeyboardHeight(info.keyboardHeight);
+  });
+  
+  Keyboard.addListener('keyboardDidHide', () => {
+   setFormPosition({top:0})
+  });
   const [detail, isPending, error,setUpdate] = useAxios(`${url}/api/products/index/${id.id}`);
   let product_id: any = null;
   let product_category: any = null;
@@ -200,7 +217,7 @@ const AddOrder: React.FC = () => {
     <IonPage>
  <ToolBarDetails defaultValue={{path:"orderDetails",id:id.id,info:null}} title="Request Quotient"/>
       <IonContent className="ion-padding">
-      <div className="form-app">
+      <div ref={form} className="form-app" style={formPosition}>
         <div className="form-app-core form-app-core-register">
           <h3>Request Quotation</h3>
           <IonText color="medium">
@@ -208,6 +225,8 @@ const AddOrder: React.FC = () => {
           </IonText>
       <form onSubmit={handleSubmit}>
         <IonInput
+         onIonFocus={()=>{registerInputFocus(full_name.current?.offsetHeight!,(full_name.current?.offsetTop! + full_name.current?.offsetHeight!))}}
+         clearInput={true}
           ref={full_name}
           name="full_name"
           fill="outline"
@@ -221,6 +240,8 @@ const AddOrder: React.FC = () => {
         <div className="country-phone">
         <img className={flag} src={flagImg}/>
         <IonInput
+          onIonFocus={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
+          clearInput={true}
           onFocus={()=>{
           setFlag("country-phone_img")
           }}
@@ -240,6 +261,8 @@ const AddOrder: React.FC = () => {
         </div>
    
         <IonInput
+         onIonFocus={()=>{registerInputFocus(length.current?.offsetHeight!,(length.current?.offsetTop! + length.current?.offsetHeight!))}}
+         clearInput={true}
           ref={length}
           name="length"
           fill="outline"
@@ -251,6 +274,8 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+         onIonFocus={()=>{registerInputFocus(height.current?.offsetHeight!,(height.current?.offsetTop! + height.current?.offsetHeight!))}}
+         clearInput={true}
           ref={height}
           name="height"
           fill="outline"
@@ -262,6 +287,8 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+          onIonFocus={()=>{registerInputFocus(width.current?.offsetHeight!,(width.current?.offsetTop! + width.current?.offsetHeight!))}}
+          clearInput={true}
           ref={width}
           name="width"
           fill="outline"
@@ -273,6 +300,8 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+          onIonFocus={()=>{registerInputFocus(thickness.current?.offsetHeight!,(thickness.current?.offsetTop! + thickness.current?.offsetHeight!))}}
+          clearInput={true}
           ref={thickness}
           name="thickness"
           fill="outline"
@@ -284,6 +313,8 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+         onIonFocus={()=>{registerInputFocus(quantity.current?.offsetHeight!,(quantity.current?.offsetTop! + quantity.current?.offsetHeight!))}}
+         clearInput={true}
           ref={quantity}
           name="Quantity"
           fill="outline"

@@ -10,7 +10,8 @@ import {
 } from "@ionic/react";
 import { addCircleOutline, eye, eyeOff } from "ionicons/icons";
 import "./Radio.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Keyboard } from '@capacitor/keyboard';
 interface Props {
   handleSubmit: (event: React.FormEvent) => void;
   first_name: React.MutableRefObject<HTMLIonInputElement | null>;
@@ -32,17 +33,27 @@ const RegisterContent: React.FC<Props> = ({
   password,
   confirm_password,
 }) => {
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const registerInput = (input:string,state:number)=>{
-  switch(input){
-  case 'phone_number':
-    phone_number.current?.scrollIntoView();
-    break;
+  const [formPosition, setFormPosition] = useState<object>({});
+  const form = useRef<HTMLDivElement | null>(null);
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+  const formHeight = (form.current?.offsetTop! + form.current?.offsetHeight!);
+  const registerInputFocus = (elementHeight:any,input:any)=>{
+    if(input && formHeight && input >= (formHeight - keyboardHeight !== 0?keyboardHeight:((formHeight*44)/100) +4)){
+      setFormPosition({top:`-${input - elementHeight - 100}px`})
+     }
   }
-  }
+  Keyboard.addListener('keyboardDidShow', info => {
+    keyboardHeight === 0 && setKeyboardHeight(info.keyboardHeight);
+  });
+  
+  Keyboard.addListener('keyboardDidHide', () => {
+   setFormPosition({top:0})
+  });
   return (
     <IonContent className="ion-padding">
-      <div className="form-app">
+      <div ref={form} className="form-app" style={formPosition}>
         <div className="form-app-core form-app-core-register">
           <h3>Create Account</h3>
           <IonText color="medium">
@@ -50,6 +61,7 @@ const RegisterContent: React.FC<Props> = ({
           </IonText>
           <form onSubmit={handleSubmit}>
             <IonInput
+              onIonFocus={()=>{registerInputFocus(first_name.current?.offsetHeight!,(first_name.current?.offsetTop! + first_name.current?.offsetHeight!))}}
               clearInput={true}
               ref={first_name}
               name="first_name"
@@ -62,6 +74,7 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+          onIonFocus={()=>{registerInputFocus(last_name.current?.offsetHeight!,(last_name.current?.offsetTop! + last_name.current?.offsetHeight!))}}
              clearInput={true}
               ref={last_name}
               name="last_name"
@@ -90,6 +103,7 @@ const RegisterContent: React.FC<Props> = ({
               </IonRadio>
             </IonRadioGroup>
             <IonInput
+              onIonFocus={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
              clearInput={true}
               ref={email}
               name="email"
@@ -102,8 +116,7 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
-             onIonFocus={()=>{registerInput("phone_number",0)}}
-            //  onIonBlur={()=>{registerInput("phone_number",1)}}
+             onIonFocus={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
              clearInput={true}
               ref={phone_number}
               name="phone_number"
@@ -116,6 +129,7 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+             onIonFocus={()=>{registerInputFocus(password.current?.offsetHeight!,(password.current?.offsetTop! + password.current?.offsetHeight!))}}
              clearInput={true}
               ref={password}
               name="password"
@@ -128,6 +142,7 @@ const RegisterContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+             onIonFocus={()=>{registerInputFocus(confirm_password.current?.offsetHeight!,(confirm_password.current?.offsetTop! + confirm_password.current?.offsetHeight!))}}
              clearInput={true}
               ref={confirm_password}
               name="confirm-password"

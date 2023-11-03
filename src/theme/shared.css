@@ -12,7 +12,6 @@ div.spacer_drawer {
 .carousel-status {
   display: none;
 }
-
 div.form-app {
   width: 100%;
   min-height: 100%;
@@ -22,6 +21,7 @@ div.form-app {
   top: 0;
   left: 0;
   bottom: 0;
+  transition: all 299ms ease-in-out;
 }
 div.form-app span.lg {
   display: inline;
