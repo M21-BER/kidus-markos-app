@@ -63,6 +63,7 @@ const UpdateAccountContent: React.FC<Props> = ({
           </h3>
           <form onSubmit={handleSubmit}>
             <IonInput
+              onClick={()=>{registerInputFocus(first_name.current?.offsetHeight!,(first_name.current?.offsetTop! + first_name.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(first_name.current?.offsetHeight!,(first_name.current?.offsetTop! + first_name.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
@@ -78,6 +79,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+              onClick={()=>{registerInputFocus(last_name.current?.offsetHeight!,(last_name.current?.offsetTop! + last_name.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(last_name.current?.offsetHeight!,(last_name.current?.offsetTop! + last_name.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
@@ -93,6 +95,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+              onClick={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
@@ -108,6 +111,7 @@ const UpdateAccountContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+              onClick={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}

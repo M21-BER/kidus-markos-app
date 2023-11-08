@@ -59,6 +59,7 @@ const LoginContent: React.FC<Props> = ({
                   <IonCardContent>
                     <form onSubmit={handleSubmit}>
                       <IonInput
+                        clearInput={true}
                         className="ionInput"
                         ref={clientIdentity}
                         fill="outline"
@@ -68,6 +69,7 @@ const LoginContent: React.FC<Props> = ({
                         type="text"
                       ></IonInput>
                       <IonInput
+                        clearInput={true}
                         ref={password}
                         className="ion-margin-top ionInput"
                         fill="outline"

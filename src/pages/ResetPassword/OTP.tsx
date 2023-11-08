@@ -59,6 +59,7 @@ const OTP: React.FC<Props> = ({userEmail, sendOTP, otp, handleOtpSubmit, handleO
                     </IonText>
                     <form onSubmit={handleOtpSubmit}>
                       <IonInput
+                        clearInput={true}
                         className="ionInput ion-margin-top"
                         onIonInput={handleOTPChange}
                         ref={otp}

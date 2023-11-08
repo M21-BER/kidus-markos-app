@@ -132,6 +132,9 @@ const Account: any = () => {
   const handleModal = () => {
     setOpenModal(true);
   };
+  const handleModal_2 = () => {
+    setOpenModal_2(true);
+  };
   const handleModal_3 = () => {
     setOpenModal_3(true);
   };
@@ -258,7 +261,7 @@ const Account: any = () => {
                 </div>
                 <div
                   className="reset-last-div"
-                  onClick={handleModal_3}
+                  onClick={handleModal_2}
                   id="open-modal_2"
                 >
                   <div>

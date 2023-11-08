@@ -225,6 +225,7 @@ const AddOrder: React.FC = () => {
           </IonText>
       <form onSubmit={handleSubmit}>
         <IonInput
+         onClick={()=>{registerInputFocus(full_name.current?.offsetHeight!,(full_name.current?.offsetTop! + full_name.current?.offsetHeight!))}}
          onIonFocus={()=>{registerInputFocus(full_name.current?.offsetHeight!,(full_name.current?.offsetTop! + full_name.current?.offsetHeight!))}}
          clearInput={true}
           ref={full_name}
@@ -240,6 +241,7 @@ const AddOrder: React.FC = () => {
         <div className="country-phone">
         <img className={flag} src={flagImg}/>
         <IonInput
+          onClick={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
           onIonFocus={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
           clearInput={true}
           onFocus={()=>{
@@ -261,6 +263,7 @@ const AddOrder: React.FC = () => {
         </div>
    
         <IonInput
+         onClick={()=>{registerInputFocus(length.current?.offsetHeight!,(length.current?.offsetTop! + length.current?.offsetHeight!))}}
          onIonFocus={()=>{registerInputFocus(length.current?.offsetHeight!,(length.current?.offsetTop! + length.current?.offsetHeight!))}}
          clearInput={true}
           ref={length}
@@ -274,6 +277,7 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+         onClick={()=>{registerInputFocus(height.current?.offsetHeight!,(height.current?.offsetTop! + height.current?.offsetHeight!))}}
          onIonFocus={()=>{registerInputFocus(height.current?.offsetHeight!,(height.current?.offsetTop! + height.current?.offsetHeight!))}}
          clearInput={true}
           ref={height}
@@ -287,6 +291,7 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+          onClick={()=>{registerInputFocus(width.current?.offsetHeight!,(width.current?.offsetTop! + width.current?.offsetHeight!))}}
           onIonFocus={()=>{registerInputFocus(width.current?.offsetHeight!,(width.current?.offsetTop! + width.current?.offsetHeight!))}}
           clearInput={true}
           ref={width}
@@ -300,6 +305,7 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+          onClick={()=>{registerInputFocus(thickness.current?.offsetHeight!,(thickness.current?.offsetTop! + thickness.current?.offsetHeight!))}}
           onIonFocus={()=>{registerInputFocus(thickness.current?.offsetHeight!,(thickness.current?.offsetTop! + thickness.current?.offsetHeight!))}}
           clearInput={true}
           ref={thickness}
@@ -313,6 +319,7 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <IonInput
+         onClick={()=>{registerInputFocus(quantity.current?.offsetHeight!,(quantity.current?.offsetTop! + quantity.current?.offsetHeight!))}}
          onIonFocus={()=>{registerInputFocus(quantity.current?.offsetHeight!,(quantity.current?.offsetTop! + quantity.current?.offsetHeight!))}}
          clearInput={true}
           ref={quantity}

@@ -51,6 +51,7 @@ const EnterPhoneNumber: React.FC<Props> = ({ phone_number, handlePhoneNumberSubm
                   <IonCardContent>
                     <form onSubmit={handlePhoneNumberSubmit}>
                       <IonInput
+                        clearInput={true}
                         className="ionInput ion-margin-top ion-margin-bottom"
                         ref={phone_number}
                         fill="outline"

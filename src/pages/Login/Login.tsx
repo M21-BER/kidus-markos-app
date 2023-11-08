@@ -69,7 +69,7 @@ const Login: React.FC = () => {
               token: login.data.token,
               logged: true,
             };
-
+           
             await Preferences.set({
               key: login_key,
               value: JSON.stringify(userData),
@@ -79,21 +79,13 @@ const Login: React.FC = () => {
             Toast(presentIonToast, login.data.message, checkmarkCircleOutline);
             navigate!("Home",null,null);
           } else {
-            dismiss();
-            reset(clientIdentity);
-            reset(password);
             throw new Error(failMessage);
           }
         } else {
-          dismiss();
-          reset(clientIdentity);
-          reset(password);
           throw new Error(failMessage);
         }
       } catch (error) {
         dismiss();
-        reset(clientIdentity);
-        reset(password);
         const { message, status } = errorResponse(error);
         if (message && status) {
           if (status === 404) {

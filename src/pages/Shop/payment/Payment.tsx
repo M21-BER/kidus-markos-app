@@ -18,6 +18,7 @@ import { UserContext } from '../../../context/AuthContext';
 import ImageComponent from '../../../components/UI/Image';
 import sample_payment from '../../../assets/sample_payment.jpg'
 import LoaderUI from '../../../components/UI/Loader/LoaderUI';
+import { Keyboard } from "@capacitor/keyboard";
 const Payment: React.FC = () => {
     const {user,shopPayment,shopColor,route,navigate,pushStack} = useContext(UserContext);
     const id: any = {id:route?.id};
@@ -32,6 +33,7 @@ const Payment: React.FC = () => {
     const transaction = useRef<HTMLIonInputElement>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [openModal1, setOpenModal1] = useState<boolean>(false);
+    const [size,setSize] = useState({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
     const [present, dismiss] = useIonLoading();
      if(!isPending){
       bankData = jsonCheck(detail[0].data).bank_option
@@ -92,6 +94,13 @@ const Payment: React.FC = () => {
     useEffect(()=>{
       pushStack!({path:'payment',id:route?.id,info:route?.info});
     },[]);
+    Keyboard.addListener('keyboardDidShow', info => {
+      setSize({initialBreakpoint:0.9,breakpoints:[0, 0.25, 0.9]})
+    });
+    
+    Keyboard.addListener('keyboardDidHide', () => {
+    setSize({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
+    });
     if(!isPending){
      if(error){
       return (
@@ -168,8 +177,8 @@ const Payment: React.FC = () => {
         trigger="open-modal-payment" 
         isOpen={openModal}
         onWillDismiss={(ev) => onWillDismiss(ev)}
-        initialBreakpoint={0.5}
-        breakpoints={[0, 0.25, 0.5]}
+        initialBreakpoint={size.initialBreakpoint}
+        breakpoints={size.breakpoints}
         handleBehavior="cycle"
         >
          <IonContent className='ion-padding ion-text-center'>

@@ -43,6 +43,7 @@ const FeedbackContent: React.FC<Props> = ({
           </h3>
           <form onSubmit={handleSubmit}>
             <IonInput
+             onClick={()=>{registerInputFocus(full_name.current?.offsetHeight!,(full_name.current?.offsetTop! + full_name.current?.offsetHeight!))}}
              onIonFocus={()=>{registerInputFocus(full_name.current?.offsetHeight!,(full_name.current?.offsetTop! + full_name.current?.offsetHeight!))}}
              clearInput={true}
               ref={full_name}
@@ -56,6 +57,7 @@ const FeedbackContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonInput
+              onClick={()=>{registerInputFocus(rating.current?.offsetHeight!,(rating.current?.offsetTop! + rating.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(rating.current?.offsetHeight!,(rating.current?.offsetTop! + rating.current?.offsetHeight!))}}
               clearInput={true}
               ref={rating}
@@ -73,6 +75,7 @@ const FeedbackContent: React.FC<Props> = ({
             ></IonInput>
 
             <IonInput
+              onClick={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
               clearInput={true}
               ref={email}
@@ -86,6 +89,7 @@ const FeedbackContent: React.FC<Props> = ({
               required={false}
             ></IonInput>
             <IonTextarea
+              onClick={()=>{registerInputFocus(feed_back.current?.offsetHeight!,(feed_back.current?.offsetTop! + feed_back.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(feed_back.current?.offsetHeight!,(feed_back.current?.offsetTop! + feed_back.current?.offsetHeight!))}}
               clearOnEdit={true}
               style={{height:"100px"}}

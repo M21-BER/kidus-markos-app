@@ -32,6 +32,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import LoaderUI from "../../../components/UI/Loader/LoaderUI";
 import { watched } from "./ShopDetailView";
+import { Keyboard } from '@capacitor/keyboard';
 const settings = {
   showThumbs: false,
   infiniteLoop: true,
@@ -50,6 +51,9 @@ const ShopDetails: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
   const [presentIonToast] = useIonToast();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [formPosition, setFormPosition] = useState<object>({});
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
   if (!isPending) {
     distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
       addSuffix: true,
@@ -235,7 +239,14 @@ const ShopDetails: React.FC = () => {
   useEffect(()=>{
     pushStack!({path:'shopDetails',id:route?.id,info:route?.info});
   },[]);
+  Keyboard.addListener('keyboardDidShow', info => {
+    setFormPosition({top:`-${info.keyboardHeight + 20}px`})
+  });
 
+  Keyboard.addListener('keyboardDidHide', () => {
+   setFormPosition({top:0})
+  });
+  
 if(!isPending){
   if (error) {
     return (
@@ -251,7 +262,7 @@ if(!isPending){
     
         <IonContent className="ion-no-padding">
           {!isPending && (
-            <div className="shop-details">
+            <div className="shop-details" style={formPosition}>
               <Carousel {...settings} autoPlay>
               {jsonCheck(detail.product.s_product_images).map(
                   (image: any, index: number) => {

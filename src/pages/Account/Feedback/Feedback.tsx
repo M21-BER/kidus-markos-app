@@ -22,7 +22,7 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   const rating = useRef<null | HTMLIonInputElement>(null);
   const email = useRef<null | HTMLIonInputElement>(null);
   const feed_back = useRef<null | HTMLIonTextareaElement>(null);
-  const modal = useRef<HTMLIonModalElement>(null);
+  const modal2 = useRef<HTMLIonModalElement>(null);
   const [presentIonToast] = useIonToast();
   const reset = (field: React.MutableRefObject<HTMLIonInputElement | HTMLIonTextareaElement | null>) => {
     field.current ? (field.current.value = "") : "";
@@ -82,7 +82,7 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   }
   return (
     <IonModal
-      ref={modal}
+      ref={modal2}
       trigger="open-modal_2"
       isOpen={openModal_2}
       onWillDismiss={(ev) => onWillDismiss(ev)}

@@ -42,6 +42,7 @@ const ChangePassword: React.FC<Props> = ({
                   <IonCardContent>
                     <form onSubmit={handleUpdatePasswordSubmit}>
                       <IonInput
+                        clearInput={true}
                         className="ionInput"
                         ref={newPassword}
                         fill="outline"
@@ -51,6 +52,7 @@ const ChangePassword: React.FC<Props> = ({
                         required={false}
                       ></IonInput>
                       <IonInput
+                        clearInput={true}
                         className="ionInput ion-margin-top ion-margin-bottom"
                         ref={repeatPassword}
                         fill="outline"

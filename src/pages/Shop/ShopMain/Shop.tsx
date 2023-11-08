@@ -126,7 +126,7 @@ const Shop: React.FC<Props>= ({spacer,updateEventNow}) => {
         {shopsResBar && (<div onClick={closeSearchBar} className="shopsResBar--backdrop"></div>)}
         <div  className="search-bar">
           <form onSubmit={handleSearch}>
-            <IonSearchbar ref={searchValue} />
+            <IonSearchbar ref={searchValue}  />
             <div className={shopsRes.length > 0?"search-bar-result on":"search-bar-result"}>
               {
                 shopsRes.length > 0 && shopsRes.map((_,i)=>{

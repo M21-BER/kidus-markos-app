@@ -6,7 +6,7 @@ import { Toast } from '../../utils/CustomToast';
 import axios from 'axios';
 import { failMessage, url } from '../../utils/utils';
 import { errorResponse } from '../../utils/errorResponse';
-
+import { Keyboard } from "@capacitor/keyboard";
 interface Props{
 modal:React.RefObject<HTMLIonModalElement>
 onWillDismiss:(ev: CustomEvent<OverlayEventDetail>)=>void
@@ -23,6 +23,7 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
   const hight = useRef<null | HTMLIonInputElement>(null);
   const select = useRef<null | HTMLIonSelectElement>(null);
   const [finalAccessories,setFinalAccessories] = useState<any[]>([]);
+  const [size,setSize] = useState({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
   const [presentIonToast] = useIonToast();
   const handleSubmit = async(e:React.FormEvent)=>{
     e.preventDefault();
@@ -62,10 +63,17 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
    Toast(presentIonToast,"please fill the fields",informationCircleOutline)
    }
   }
+  Keyboard.addListener('keyboardDidShow', info => {
+    setSize({initialBreakpoint:0.9,breakpoints:[0, 0.25, 0.9]})
+  });
+  
+  Keyboard.addListener('keyboardDidHide', () => {
+  setSize({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
+  });
   return (
         <IonModal 
-        initialBreakpoint={0.6}
-        breakpoints={[0, 0.25, 0.6]}
+        initialBreakpoint={size.initialBreakpoint}
+        breakpoints={size.breakpoints}
         handleBehavior="cycle"
         className='modal-task'
         ref={modal}

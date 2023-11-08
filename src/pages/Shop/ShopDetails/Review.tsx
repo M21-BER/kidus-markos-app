@@ -3,6 +3,7 @@ import { informationCircleOutline, paperPlaneSharp, personCircleOutline } from "
 import { jsonCheck } from "../../../utils/utils";
 import { formatDistance } from "date-fns";
 import { Toast } from "../../../utils/CustomToast";
+
 interface Props{
 handleReview:(e:React.FormEvent)=>void;
 review:React.MutableRefObject<HTMLIonInputElement | null>;
@@ -24,14 +25,14 @@ const Review: React.FC<Props> = ({handleReview,review,reviewList}) => {
     }
     return arr1;
   }
-  
+
 return (
     <>
 <IonCard className='km-detail-review' color='warning'>
     <IonCardContent className="ion-padding">
     <div>
     <form onSubmit={handleReview} >
-    <IonInput className="ionInput" onIonInput={handleReviewSub} ref={review} fill='outline'  placeholder='Write your message here' type='text' required={false}></IonInput>
+    <IonInput   clearInput={true} className="ionInput" onIonInput={handleReviewSub} ref={review} fill='outline'  placeholder='Write your message here' type='text' required={false}></IonInput>
     <IonButton className='ion-margin-top' type='submit' expand='block'>Send Review <IonIcon icon={paperPlaneSharp} size="small" slot='start'/> </IonButton>
     </form>
     </div>

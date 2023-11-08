@@ -1,7 +1,8 @@
 import { IonButton, IonContent, IonIcon, IonInput, IonModal, IonTextarea } from '@ionic/react';
-import { sendOutline, trashBinOutline } from 'ionicons/icons';
+import { trashBinOutline } from 'ionicons/icons';
 import { OverlayEventDetail } from "@ionic/core/components";
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { Keyboard } from "@capacitor/keyboard";
 interface Props {
     openModal_3: boolean;
     setOpenModal_3: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,17 +11,25 @@ interface Props {
   }
 const DeleteAccount: React.FC<Props> = ({password,openModal_3,setOpenModal_3,handleDeleteAccount}) => {
     const modal3 = useRef<HTMLIonModalElement>(null);
+    const [size,setSize] = useState({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
     function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
         setOpenModal_3(false)
       }
+      Keyboard.addListener('keyboardDidShow', info => {
+        setSize({initialBreakpoint:0.9,breakpoints:[0, 0.25, 0.9]})
+      });
+      
+      Keyboard.addListener('keyboardDidHide', () => {
+      setSize({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
+      });
     return (
         <IonModal
           ref={modal3}
           trigger="open-modal_3"
           isOpen={openModal_3}
           onWillDismiss={(ev) => onWillDismiss(ev)}
-          initialBreakpoint={0.5}
-          breakpoints={[0, 0.25, 0.5]}
+          initialBreakpoint={size.initialBreakpoint}
+           breakpoints={size.breakpoints}
           handleBehavior="cycle"
           >
              <IonContent className="ion-padding">
