@@ -13,6 +13,8 @@ import { analyticsOutline, checkmarkCircle, checkmarkCircleOutline, checkmarkDon
 import { Toast } from '../../utils/CustomToast';
 import InputModal from './InputModal';
 import { errorResponse } from '../../utils/errorResponse';
+import { Keyboard } from "@capacitor/keyboard";
+
 const ViewTask: React.FC = () => {
   const defaultTaskTitle = "View Task";  
   const defaultDropDown = {
@@ -51,6 +53,7 @@ const ViewTask: React.FC = () => {
   const {id}: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
   const [presentAlert] = useIonAlert();
+  const [formPosition, setFormPosition] = useState<object>({});
   useEffect(()=>{
     (async () => {
       const taskRes = await getTasks();
@@ -586,6 +589,15 @@ const ViewTask: React.FC = () => {
   useEffect(()=>{
     pushStack!({path:'task_view',id:route?.id,info:route?.info});
   },[]);
+
+  Keyboard.addListener('keyboardDidShow', info => {
+    setFormPosition({top:`-${info.keyboardHeight + 20}px`})
+  });
+
+  Keyboard.addListener('keyboardDidHide', () => {
+   setFormPosition({top:0})
+  });
+
   if (error) {
     return (
       <IonPage>
@@ -651,7 +663,8 @@ const ViewTask: React.FC = () => {
               </IonCardContent>
             </IonCard>
         ))}
-        {stepChecker().step17  === 1 ?( <div className="form-app">
+        {stepChecker().step17  === 1 ?( 
+           <div className="form-app" style={formPosition}>
             <div className="form-app-core">
               <h3>
                 <span>How was it?</span>

@@ -76,7 +76,12 @@ section.task_progress > div.task_progress-box > div.task_progress-box--items {
   gap: 8px;
   position: relative;
 }
-
+div.NDAE {
+  height: 85%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 section.task_progress
   > div.task_progress-box
   > div.task_progress-box--items

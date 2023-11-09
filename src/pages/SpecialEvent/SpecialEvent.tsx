@@ -23,9 +23,9 @@ const SpecialEvent: React.FC<Props> = ({spacerFunc,updateEvent}) => {
   const controller = new AbortController();
   const checkEventDate = ()=>{
     var y = new Date().getFullYear();
-    var m = new Date().getMonth();
-    var d = new Date().getDay();  
-    var date = `${m}/${d}/${y}`;
+    var m = new Date().getMonth() + 1;
+    var d = new Date().getDate();  
+    var date = `${y}/${m}/${d}`;
     let Difference_In_Time =   new Date(events[0].event_due_date).getTime() - new Date(date).getTime();
     var Difference_In_Days = Math.round((Difference_In_Time / (1000 * 3600 * 24))); 
     if(Difference_In_Days > 0){

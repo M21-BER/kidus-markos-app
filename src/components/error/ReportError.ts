@@ -7,8 +7,6 @@ export const ReportError:any = async (props:any) => {
       err_message:props.err_message,
       error_occurrence:props.error_occurrence,
     });
-    console.log("error reported");
   } catch (error) {
-    console.log(error);
   }
 };

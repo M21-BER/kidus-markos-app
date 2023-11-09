@@ -1,5 +1,5 @@
-export const url: string = "http://localhost:5000";
-export const url_dev: string = "https://server.kidusmarkos.com";
+export const url_dev: string = "http://localhost:5000";
+export const url: string = "https://server.kidusmarkos.com";
 
 export const failMessage = "Oops, something went wrong. Please try again later";
 

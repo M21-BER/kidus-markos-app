@@ -17,7 +17,7 @@ import {
   const TasksList: React.FC<Props> = ({ tasks,navigate}) => {
     if (tasks.length === 0) {
       return (
-        <div className="ion-text-center NDA">
+        <div className="ion-text-center NDAE">
           <IonText color="medium">No available tasks</IonText>
         </div>
       );
