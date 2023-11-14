@@ -27,7 +27,9 @@ interface Props {
   screenStack: routeType[];
   pushStack: (routeHistory: routeType) => void;
   pullStack: (index: number) => void;
-  setIsAuthed:React.Dispatch<React.SetStateAction<boolean>>
+  setIsAuthed:React.Dispatch<React.SetStateAction<boolean>>;
+  loaded:any;
+  fetchLoaded:(key:string,value:any)=>void
 }
 export const UserContext = createContext<Partial<Props>>({});
 
@@ -43,6 +45,23 @@ export default function UserProvider({ children }: { children: ReactNode }) {
     id: null,
     info: null,
   });
+  const [loaded, setLoaded] = useState<any>({
+    shops:{
+      loaded:false,
+      data:null
+    },orders:{
+      loaded:false,
+      data:null
+    }
+});
+ const fetchLoaded = (key:string,value:any)=>{
+  setLoaded((pre:any)=>{
+    return{
+      ...pre,
+      [key]:value
+    }
+  })
+ }
   const [screenStack, setScreenStack] = useState<routeType[]>([
     {
       path: "Home",
@@ -155,7 +174,9 @@ export default function UserProvider({ children }: { children: ReactNode }) {
         screenStack,
         pushStack,
         pullStack,
-        setIsAuthed
+        setIsAuthed,
+        loaded,
+        fetchLoaded
       }}
     >
       {children}

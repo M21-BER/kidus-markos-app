@@ -9,14 +9,18 @@ const config: CapacitorConfig = {
   },
   plugins: {
     SplashScreen: {
-      launchAutoHide: false,
-      showSpinner: true,
+      launchAutoHide: true,
       backgroundColor: "#ffffffff",
-      spinnerColor: "#361705",
-      splashFullScreen: true,
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
+      showSpinner: true,
       androidSpinnerStyle: "large",
       iosSpinnerStyle: "small",
-      androidScaleType: "CENTER_CROP",
+      spinnerColor: "#999999",
+      splashFullScreen: true,
+      splashImmersive: true,
+      layoutName: "launch_screen",
+      useDialog: false,
     },
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],

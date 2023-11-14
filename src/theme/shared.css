@@ -1,6 +1,12 @@
 ion-content {
   position: relative;
 }
+ion-toolbar {
+  --color: white;
+  --min-height: 80px;
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+}
 div.spacer_drawer {
   height: 50px;
   width: 100%;

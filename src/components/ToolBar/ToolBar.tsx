@@ -134,7 +134,7 @@ export const ToolBarMainAddOn: React.FC<Props> = ({ title,defaultValue }) => {
   };
   return (
     <IonHeader>
-      <IonToolbar color="primary"  style={{height:'80px',padding:"10px 0"}}>
+      <IonToolbar color="primary">
         <IonTitle>{title || "KM"}</IonTitle>
         <IonButtons slot="start" onClick={()=>{
           navigate!(defaultValue.path,defaultValue.id,defaultValue.info)

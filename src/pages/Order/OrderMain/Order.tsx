@@ -19,12 +19,12 @@ interface Props{
   updateEventNow:()=>void 
  }
 const Order: React.FC<Props> = ({spacer,updateEventNow}) => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const controller: AbortController = new AbortController();
   const [present, dismiss] = useIonLoading();
-  const {navigate} = useContext(UserContext)
+  const {navigate,loaded,fetchLoaded} = useContext(UserContext)
+  const [loading, setLoading] = useState<boolean>(loaded.orders.loaded?false:true);
   const getOrders = async () => {
     try {
       const data = await axios(`${url}/api/products`, {
@@ -52,12 +52,18 @@ const Order: React.FC<Props> = ({spacer,updateEventNow}) => {
     }
   };
   useEffect( () => {
-   (async () => {
-    const orders = await getOrders();
-    setOrders(orders);
+   const fetchOrder = async () => {
+    const ordersRes = await getOrders();
+    setOrders(ordersRes);
+    fetchLoaded!('orders',{loaded:true,data:ordersRes});
     setLoading(false);
-  })()
-  });
+  }
+  if(!loaded.orders.loaded){    
+    fetchOrder()
+  }else{
+    setOrders(loaded.orders.data);
+  }
+  },[]);
   const doRefresh = async (event: any) => {
     setLoading(true);
     updateEventNow();

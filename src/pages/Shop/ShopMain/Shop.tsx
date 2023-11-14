@@ -23,14 +23,14 @@ interface Props{
 }
 
 const Shop: React.FC<Props>= ({spacer,updateEventNow}) => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [present, dismiss] = useIonLoading();
   const [shopsRes, setShopsRes] = useState<any[]>([]);
   const [shopsResBar, setShopsResBar] = useState<boolean>(false);
   const [shops, setShops] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
+  const {navigate,loaded,fetchLoaded} = useContext(UserContext)
+  const [loading, setLoading] = useState<boolean>(loaded.shops.loaded?false:true);
   const controller: AbortController = new AbortController();
-  const {navigate} = useContext(UserContext);
   const searchValue = useRef<null | HTMLIonSearchbarElement>(null);
   const getShops = async () => {
     try {
@@ -60,11 +60,17 @@ const Shop: React.FC<Props>= ({spacer,updateEventNow}) => {
   }
   };
   useEffect(() => {
-   (async () => {
-    const shops = await getShops();
-    setShops(shops);
+   const fetchShops = async () => {
+    const shopsRes = await getShops();
+    setShops(shopsRes);
+    fetchLoaded!('shops',{loaded:true,data:shopsRes});
     setLoading(false);
-  })()
+  }
+  if(!loaded.shops.loaded){    
+    fetchShops()
+  }else{
+    setShops(loaded.shops.data);
+  }
   },[]);
 
   const doRefresh = async (event: any) => {
