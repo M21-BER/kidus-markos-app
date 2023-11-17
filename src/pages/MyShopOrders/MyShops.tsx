@@ -118,8 +118,9 @@ import ErrorFallBack from "../../components/error/ErrorFallBack/ErrorFallBack";
        return(
         <IonPage>
            <ToolBarMain title="Ordered Products"/>
-           {loading &&
-            [...Array(10)].map((_, index) => (
+         <IonContent>
+         {loading &&
+            [...Array(20)].map((_, index) => (
               <IonCard key={index}>
                 <IonCardContent className="ion-no-padding">
                   <IonItem lines="none">
@@ -137,6 +138,8 @@ import ErrorFallBack from "../../components/error/ErrorFallBack/ErrorFallBack";
                 </IonCardContent>
               </IonCard>
             ))}
+         </IonContent>
+         <div className="spacer_drawer"></div>
         </IonPage>
        )
     }

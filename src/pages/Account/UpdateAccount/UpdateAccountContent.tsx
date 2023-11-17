@@ -5,7 +5,7 @@ import {
   IonContent,
   useIonToast,
 } from "@ionic/react";
-import {  informationCircleOutline, saveOutline } from "ionicons/icons";
+import {  informationCircleOutline, saveOutline,arrowForward } from "ionicons/icons";
 import Toggle from "../../../components/UI/Toggle/Toggle";
 import { useRef, useState } from "react";
 import { Toast } from "../../../utils/CustomToast";
@@ -47,6 +47,7 @@ const UpdateAccountContent: React.FC<Props> = ({
   return (
     <IonContent className="ion-padding">
         <div ref={form} className="form-app" style={formPosition}>
+        
         <div className="form-app-core">
           <h3 style={{marginBottom:'40px',position:'relative'}}>
             <span>Update Account</span>
@@ -62,66 +63,58 @@ const UpdateAccountContent: React.FC<Props> = ({
             </div>
           </h3>
           <form onSubmit={handleSubmit}>
+            <p className={`${!toggle?"update-account-text update-account-text-on":"update-account-text update-account-text-off"}`}>Current Full Name <IonIcon icon={arrowForward}/> {user.first_name}</p>
             <IonInput
               onClick={()=>{registerInputFocus(first_name.current?.offsetHeight!,(first_name.current?.offsetTop! + first_name.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(first_name.current?.offsetHeight!,(first_name.current?.offsetTop! + first_name.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
-              value={user.first_name ? user.first_name : ""}
               ref={first_name}
               name="first_name"
               fill="outline"
-              labelPlacement="stacked"
-              label="First Name"
-              placeholder="First Name"
+              placeholder="Change First Name Here"
               type="text"
               className="ion-margin-top"
               required={false}
             ></IonInput>
+             <p className={`${!toggle?"update-account-text update-account-text-on":"update-account-text update-account-text-off"}`}>Current Last Name <IonIcon icon={arrowForward}/> {user.last_name}</p>
             <IonInput
               onClick={()=>{registerInputFocus(last_name.current?.offsetHeight!,(last_name.current?.offsetTop! + last_name.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(last_name.current?.offsetHeight!,(last_name.current?.offsetTop! + last_name.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
-              value={user.last_name ? user.last_name : ""}
               ref={last_name}
               name="last_name"
               fill="outline"
-              labelPlacement="stacked"
-              label="Last Name"
-              placeholder="Last Name"
+              placeholder="Change Last Name Here"
               type="text"
               className="ion-margin-top ion-margin-bottom"
               required={false}
             ></IonInput>
+             <p className={`${!toggle?"update-account-text update-account-text-on":"update-account-text update-account-text-off"}`}>Current Email <IonIcon icon={arrowForward}/> {user.email}</p>
             <IonInput
               onClick={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(email.current?.offsetHeight!,(email.current?.offsetTop! + email.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
-              value={user.email ? user.email : ""}
               ref={email}
               name="email"
               fill="outline"
-              labelPlacement="stacked"
-              label="Email"
-              placeholder="user@kidusmarkos.com"
+              placeholder="Change Email Here"
               type="email"
               className="ion-margin-top"
               required={false}
             ></IonInput>
+            <p className={`${!toggle?"update-account-text update-account-text-on":"update-account-text update-account-text-off"}`}>Current Phone Number <IonIcon icon={arrowForward}/> {user.phone_number}</p>
             <IonInput
               onClick={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
               onIonFocus={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
               clearInput={true}
               disabled={toggle}
-              value={user.phone_number ? user.phone_number : ""}
               ref={phone_number}
               name="phone_number"
               fill="outline"
-              labelPlacement="stacked"
-              label="Phone Number"
-              placeholder="Phone Number"
+              placeholder="Change Phone Number Here"
               type="number"
               className="ion-margin-top"
               required={false}

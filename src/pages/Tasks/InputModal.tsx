@@ -6,7 +6,6 @@ import { Toast } from '../../utils/CustomToast';
 import axios from 'axios';
 import { failMessage, url } from '../../utils/utils';
 import { errorResponse } from '../../utils/errorResponse';
-import { Keyboard } from "@capacitor/keyboard";
 interface Props{
 modal:React.RefObject<HTMLIonModalElement>
 onWillDismiss:(ev: CustomEvent<OverlayEventDetail>)=>void
@@ -23,7 +22,6 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
   const hight = useRef<null | HTMLIonInputElement>(null);
   const select = useRef<null | HTMLIonSelectElement>(null);
   const [finalAccessories,setFinalAccessories] = useState<any[]>([]);
-  const [size,setSize] = useState({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
   const [presentIonToast] = useIonToast();
   const handleSubmit = async(e:React.FormEvent)=>{
     e.preventDefault();
@@ -33,10 +31,10 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
     ];
     accessories.push({
       accessoryID:finalAccessories.length,
-      type: select.current?.value,
-      length: length.current?.value,
-      width: width.current?.value,
-      hight: hight.current?.value
+      type: select.current?.value?.toString().trim(),
+      length: parseFloat(length.current?.value?.toString().trim()),
+      width: parseFloat(width.current?.value?.toString().trim()),
+      hight: parseFloat(hight.current?.value?.toString().trim())
     })
     setFinalAccessories(accessories); 
     let stringifiedAccessories = JSON.stringify(accessories);
@@ -63,17 +61,11 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
    Toast(presentIonToast,"please fill the fields",informationCircleOutline)
    }
   }
-  Keyboard.addListener('keyboardDidShow', info => {
-    setSize({initialBreakpoint:0.9,breakpoints:[0, 0.25, 0.9]})
-  });
-  
-  Keyboard.addListener('keyboardDidHide', () => {
-  setSize({initialBreakpoint:0.5,breakpoints:[0, 0.25, 0.5]})
-  });
+
   return (
         <IonModal 
-        initialBreakpoint={size.initialBreakpoint}
-        breakpoints={size.breakpoints}
+        initialBreakpoint={0.9}
+        breakpoints={[0, 0.65, 0.9]}
         handleBehavior="cycle"
         className='modal-task'
         ref={modal}
@@ -120,7 +112,7 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
               fill="outline"
               placeholder="L"
               type="number"
-              step='0.1'
+              step='any'
               min="1"
               className="ion-margin-top ion-text-center"
               required={false}
@@ -131,7 +123,7 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
               fill="outline"
               placeholder="H"
               type="number"
-              step='0.1'
+              step='any'
               min="1"
               className="ion-margin-top ion-text-center"
               required={false}
@@ -142,7 +134,7 @@ const InputModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDismi
               fill="outline"
               placeholder="W"
               type="number"
-              step='0.1'
+              step='any'
               min="1"
               className="ion-margin-top ion-text-center"
               required={false}

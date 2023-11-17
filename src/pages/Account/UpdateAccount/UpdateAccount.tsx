@@ -31,10 +31,10 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
-      first_name: first_name.current?.value,
-      last_name: last_name.current?.value,
-      email: email.current?.value,
-      phone_number: phone_number.current?.value,
+      first_name: first_name.current?.value?.toString().trim(),
+      last_name: last_name.current?.value?.toString().trim(),
+      email: email.current?.value?.toLocaleString.toString().trim(),
+      phone_number: phone_number.current?.value?.toString().trim(),
     };
     async function updateNow() {
       await present("updating...");

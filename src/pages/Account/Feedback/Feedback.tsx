@@ -30,10 +30,10 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
-      full_name: full_name.current?.value,
-      rating: parseInt(`${rating.current?.value}`),
-      email: email.current?.value,
-      feed_back: feed_back.current?.value,
+      full_name: full_name.current?.value?.toString().trim(),
+      rating: parseFloat(`${rating.current?.value}`),
+      email: email.current?.value?.toString().trim(),
+      feed_back: feed_back.current?.value?.toString().trim(),
     };
     async function addFeedback() {
       await present("submitting...");
@@ -64,7 +64,7 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
       }
     }
     if (data.full_name && data.rating && data.email && data.feed_back) {
-      addFeedback();
+      addFeedback(); 
     } else {
       Toast(
         presentIonToast,

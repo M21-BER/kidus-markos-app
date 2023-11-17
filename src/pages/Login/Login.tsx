@@ -55,8 +55,8 @@ const Login: React.FC = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data: any = {
-      clientIdentity: clientIdentity.current?.value,
-      password: password.current?.value,
+      clientIdentity: clientIdentity.current?.value?.toString().trim(),
+      password: password.current?.value?.toString().trim(),
     };
     async function login() {
       try {

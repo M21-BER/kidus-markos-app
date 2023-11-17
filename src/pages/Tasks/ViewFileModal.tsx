@@ -37,25 +37,27 @@ const ViewFileModal: React.FC<Props> = ({setTaskStatus,taskStatus,modal,onWillDi
         isOpen={openModal}
         onWillDismiss={(ev) => onWillDismiss(ev)}>
        <IonHeader>
-         <IonToolbar color="primary">
-           <IonButtons slot="start">
-             <IonButton onClick={() =>{
+         <IonToolbar style={{height:'90px'}} color="primary">
+          <div className='viewFileModalController'>
+          <IonButtons slot="start">
+             <IonButton color='medium' fill='solid' onClick={() =>{
                 setTaskStatus(null);
                 setOpenModal(false);
                 }}>Back</IonButton>
            </IonButtons>
-           <IonButtons slot="end">
-             <IonButton strong={true} onClick={() => confirm()}>
+           <IonButtons  slot="end">
+             <IonButton color='medium' fill='solid' strong={true} onClick={() => confirm()}>
                OK
              </IonButton>
            </IonButtons>
+          </div>
          </IonToolbar>
        </IonHeader>
          <IonContent>
            <div className="pdf-container">
             {
                 defaultPdfFile && <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                    <Viewer  fileUrl={taskStatus?`${url}${taskStatus[taskStatus.type]}`:pdf} plugins={[defaultLayoutPluginInstance]}/>
+                    <Viewer   fileUrl={taskStatus?`${url}${taskStatus[taskStatus.type]}`:pdf} plugins={[defaultLayoutPluginInstance]}/>
                 </Worker>
             }
            </div>

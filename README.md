@@ -1,1 +1,2 @@
-key-store-aab = Kidusmarkos@NO923#336!
+key-store-aab = Km@NO923#336
+key-alias = upload

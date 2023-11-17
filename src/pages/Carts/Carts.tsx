@@ -111,7 +111,7 @@ const Carts: React.FC = () => {
             </IonCard>
       <IonContent>
         {loading &&
-          [...Array(10)].map((_, index) => (
+          [...Array(20)].map((_, index) => (
             <IonCard key={index}>
               <IonCardContent className="ion-no-padding">
                 <IonItem lines="none">
@@ -134,6 +134,7 @@ const Carts: React.FC = () => {
           </IonRefresher> 
         <CartsList shopNow={shopNow} carts={carts} />
       </IonContent>
+      <div className="spacer_drawer"></div>
     </IonPage>
   );
 };

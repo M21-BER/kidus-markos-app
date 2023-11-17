@@ -8,6 +8,7 @@ import axios from 'axios';
 import { UserContext } from '../../context/AuthContext';
 import ErrorFallBack from '../../components/error/ErrorFallBack/ErrorFallBack';
 import Loader from '../../components/UI/Loader/Loader';
+import { errorResponse } from '../../utils/errorResponse';
 const Tasks: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [tasks, setTasks] = useState<any[]>([]);
@@ -41,18 +42,17 @@ const Tasks: React.FC = () => {
       setError(null);
       return data.data.items;
     } catch (error: any) {
+      if(error.code !== "ERR_NETWORK"){
       if (error.name !== "CanceledError") {
         setTasks([]);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message
-        ) {
-          setError(error.response.data.error.message);
+        const {message,status} = errorResponse(error)
+        if (message & status) {
+          setError(message);
         } else {
           setError(failMessage);
         }
+      }}else{
+        setError(error.code);
       }
     }
   };
@@ -95,7 +95,10 @@ const Tasks: React.FC = () => {
     return (
       <IonPage>
         <ToolBarMain defaultValue='/' title='My Tasks'/>
-        <ErrorFallBack error={error} reload={reload} />
+        <IonContent>
+            <ErrorFallBack error={error} reload={reload} />
+        </IonContent>
+        <div className="spacer_drawer"></div>
       </IonPage>
     );
   } else {   
@@ -126,7 +129,7 @@ const Tasks: React.FC = () => {
          <ToolBarMain defaultValue='/' title='My Tasks'/>
          <IonContent>
           {loading &&
-            [...Array(10)].map((_, index) => (
+            [...Array(20)].map((_, index) => (
               <IonCard key={index}>
                 <IonCardContent className="ion-no-padding">
                   <IonItem lines="none">

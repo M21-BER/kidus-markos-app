@@ -14,6 +14,7 @@ import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack
 import OrderList from "./OrderList";
 import OrderSkeleton from "./OrderSkeleton";
 import { UserContext } from "../../../context/AuthContext";
+import { errorResponse } from "../../../utils/errorResponse";
 interface Props{
   spacer:string;
   updateEventNow:()=>void 
@@ -25,6 +26,7 @@ const Order: React.FC<Props> = ({spacer,updateEventNow}) => {
   const [present, dismiss] = useIonLoading();
   const {navigate,loaded,fetchLoaded} = useContext(UserContext)
   const [loading, setLoading] = useState<boolean>(loaded.orders.loaded?false:true);
+  let err = '';
   const getOrders = async () => {
     try {
       const data = await axios(`${url}/api/products`, {
@@ -33,21 +35,20 @@ const Order: React.FC<Props> = ({spacer,updateEventNow}) => {
       setError(null)
       return data.data;
     } catch (error: any) {
+      setOrders([]);
       if(error.code !== "ERR_NETWORK"){
       if (error.name !== "CanceledError") {
-        setOrders([]);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message
-        ) {
-          setError(error.response.data.error.message);
+        const {message,status} = errorResponse(error);
+        if (message && status) {
+          err = message;
+          setError(message);
         } else {
+          err = failMessage;
           setError(failMessage);
         }
       }}else{
         setError(error.code);
+        err = error.code;
       }
     }
   };
@@ -55,13 +56,18 @@ const Order: React.FC<Props> = ({spacer,updateEventNow}) => {
    const fetchOrder = async () => {
     const ordersRes = await getOrders();
     setOrders(ordersRes);
-    fetchLoaded!('orders',{loaded:true,data:ordersRes});
+    if(ordersRes && ordersRes.length !== 0){
+    fetchLoaded!('orders',{loaded:true,data:ordersRes?ordersRes:[],error:err});
+    }
     setLoading(false);
   }
   if(!loaded.orders.loaded){    
     fetchOrder()
   }else{
     setOrders(loaded.orders.data);
+    if(loaded.orders.error){
+      setError(loaded.orders.error);
+      }
   }
   },[]);
   const doRefresh = async (event: any) => {

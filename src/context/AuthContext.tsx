@@ -48,10 +48,12 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState<any>({
     shops:{
       loaded:false,
-      data:null
+      data:null,
+      error:null
     },orders:{
       loaded:false,
-      data:null
+      data:null,
+      error:null
     }
 });
  const fetchLoaded = (key:string,value:any)=>{

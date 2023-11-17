@@ -14,7 +14,17 @@ section.task-status {
 /* ion-modal.modal-task {
   --height: auto;
 } */
+div.viewFileModalController {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
+}
 
+div.pdf-container {
+  height: 100% !important;
+}
 section.task_progress {
   width: 100%;
 }

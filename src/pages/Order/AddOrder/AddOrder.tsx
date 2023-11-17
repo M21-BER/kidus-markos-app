@@ -6,6 +6,7 @@ import {
   IonInput,
   IonPage,
   IonText,
+  useIonLoading,
   useIonToast,
 } from "@ionic/react";
 import { ToolBarDetails } from "../../../components/ToolBar/ToolBar";
@@ -16,7 +17,7 @@ import {
   imagesOutline,
   informationCircleOutline,
 } from "ionicons/icons";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { failMessage, url } from "../../../utils/utils";
 import { useAxios } from "../../../hooks/useAxios";
@@ -25,11 +26,11 @@ import { b64toFile } from "../../../utils/Base64ToBlob";
 import "../Order.css";
 import { errorResponse } from "../../../utils/errorResponse";
 import { Toast } from "../../../utils/CustomToast";
-import flagImg from '../../../assets/Flag_of_Ethiopia.svg.png'
 import ErrorFallBack from "../../../components/error/ErrorFallBack/ErrorFallBack";
 import LoaderUI from "../../../components/UI/Loader/LoaderUI";
 import { UserContext } from "../../../context/AuthContext";
 import { Keyboard } from '@capacitor/keyboard';
+import { ImageOptimizer } from "../../../utils/ImageResize";
 const AddOrder: React.FC = () => {
   const full_name = useRef<null | HTMLIonInputElement>(null);
   const phone_number = useRef<null | HTMLIonInputElement>(null);
@@ -39,7 +40,6 @@ const AddOrder: React.FC = () => {
   const thickness = useRef<null | HTMLIonInputElement>(null);
   const quantity = useRef<null | HTMLIonInputElement>(null);
   const [floorPlan, setFloorPlan] = useState<any[]>([]);
-  const [flag, setFlag] = useState<string>("");
   const {route,pushStack,navigate}= useContext(UserContext);
   const id: any = {id:route?.id};
   const [presentIonToast] = useIonToast();
@@ -47,6 +47,7 @@ const AddOrder: React.FC = () => {
   const form = useRef<HTMLDivElement | null>(null);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
   const formHeight = (form.current?.offsetTop! + form.current?.offsetHeight!);
+  const [present, dismiss] = useIonLoading();
   const registerInputFocus = (elementHeight:any,input:any)=>{
     if(input && formHeight && input >= (formHeight - keyboardHeight !== 0?keyboardHeight:((formHeight*44)/100) +4)){
       setFormPosition({top:`-${input - elementHeight - 100}px`})
@@ -86,23 +87,35 @@ const AddOrder: React.FC = () => {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Base64,
-      });
-  
+      });     
       const img = `data:image/jpeg;base64,${image.base64String}`;
-      let imgSplit = img.split(";")[1].split(",")[1];
-      setFloorPlan((pre) => {
-        return [...pre, b64toFile(imgSplit, "image/png")];
-      });
+       let possibleTypes = ['png','jpg','jpeg','JPG','PNG']
+       let type = image.format;
+       let imgSplit = img.split(";")[1].split(",")[1];
+       let size = b64toFile(imgSplit, "image/png").size;
+      if(possibleTypes.includes(type.toString())){
+        if (size / 1024 / 1024 < 2) {
+          let optimizedImage = await ImageOptimizer(b64toFile(imgSplit, "image/png"))
+          setFloorPlan((pre) => {
+            return [...pre, optimizedImage];
+          });
+        }else{
+          Toast(presentIonToast,"Image file size is limited to 2Mb",informationCircleOutline);
+        }
+      }else{
+      Toast(presentIonToast,"Uploaded file is not a valid image,Only JPG, PNG files are allowed",informationCircleOutline);
+      }
     } catch (error) {
      Toast(presentIonToast,"Asset Cancelled",imagesOutline,1000,'light');
       
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+
+  const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
-    const full_nameInput = full_name.current?.value;
-    const phone_numberInput = phone_number.current?.value;
+    const full_nameInput = full_name.current?.value?.toString().trim();
+    const phone_numberInput = phone_number.current?.value?.toString().trim();
     const lengthInput = length.current?.value || 0;
     const heightInput = height.current?.value || 0;
     const widthInput = width.current?.value || 0;
@@ -124,15 +137,15 @@ const AddOrder: React.FC = () => {
         };
         const formData = new FormData();
         formData.append("product_id", data.product_id);
-        formData.append("order_type", data.product_category);
+        formData.append("order_type", data.order_type);
         formData.append("code", product_code);
         formData.append("full_name", data.full_name);
         formData.append("quantity", data.quantity);
         formData.append("phone_number", data.phone_number);
-        formData.append("length", data.length);
-        formData.append("width", data.width);
-        formData.append("height", data.height);
-        formData.append("thickness", data.thickness);
+        data.length && formData.append("length", data.length);
+        data.width && formData.append("width", data.width);
+        data.height && formData.append("height", data.height);
+        data.thickness && formData.append("thickness", data.thickness);
 
         if (floorPlan.length > 0) {
           let hashedImages = [];
@@ -151,7 +164,8 @@ const AddOrder: React.FC = () => {
             formData.append("floor_plan_hashed", JSON.stringify(hashedImages));
           }
           for (let i = 0; i < floorPlan.length; i++) {
-            formData.append("images", floorPlan[i]);
+            const optimizedImage :any = await ImageOptimizer(floorPlan[i])
+            formData.append("images", optimizedImage);
           }
         }
         const addOrder = await axios.post(`${url}/api/orders`, formData);
@@ -162,7 +176,9 @@ const AddOrder: React.FC = () => {
          throw new Error(failMessage);
         }
         reset();
+        dismiss();
       } catch (error) {
+        dismiss();
         const { message, status } = errorResponse(error);
         if (message && status) {
           Toast(presentIonToast, message, closeCircleOutline);
@@ -175,6 +191,7 @@ const AddOrder: React.FC = () => {
     if (full_nameInput) {
       if (phone_numberInput) {
         if (parseInt(quantityInputInput.toString()) !== 0) {
+          await present("Adding Order...");
           addOrderNow();
         } else {
           Toast(
@@ -201,9 +218,9 @@ const AddOrder: React.FC = () => {
   const reload = ()=>{
     setUpdate(true);
   }
-  // useEffect(()=>{
-  //   pushStack!({path:'addOrder',id:route?.id,info:route?.info});
-  // },[]);
+  useEffect(()=>{
+    pushStack!({path:'addOrder',id:route?.id,info:route?.info});
+  },[]);
   if(!isPending){
   if(error){
    return(
@@ -239,17 +256,10 @@ const AddOrder: React.FC = () => {
           required
         ></IonInput>
         <div className="country-phone">
-        <img className={flag} src={flagImg}/>
         <IonInput
           onClick={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
           onIonFocus={()=>{registerInputFocus(phone_number.current?.offsetHeight!,(phone_number.current?.offsetTop! + phone_number.current?.offsetHeight!))}}
           clearInput={true}
-          onFocus={()=>{
-          setFlag("country-phone_img")
-          }}
-          onBlur={()=>{
-          setFlag("")
-          }}
           ref={phone_number}
           name="phone_number"
           fill="outline"
@@ -269,12 +279,13 @@ const AddOrder: React.FC = () => {
           ref={length}
           name="length"
           fill="outline"
+          step="any"
           labelPlacement="floating"
           label="Length"
           placeholder="Length"
           type="number"
           className="ion-margin-top"
-          required
+          required={false}
         ></IonInput>
         <IonInput
          onClick={()=>{registerInputFocus(height.current?.offsetHeight!,(height.current?.offsetTop! + height.current?.offsetHeight!))}}
@@ -283,18 +294,20 @@ const AddOrder: React.FC = () => {
           ref={height}
           name="height"
           fill="outline"
+          step="any"
           labelPlacement="floating"
           label="Height"
           placeholder="Height"
           type="number"
           className="ion-margin-top"
-          required
+          required={false}
         ></IonInput>
         <IonInput
           onClick={()=>{registerInputFocus(width.current?.offsetHeight!,(width.current?.offsetTop! + width.current?.offsetHeight!))}}
           onIonFocus={()=>{registerInputFocus(width.current?.offsetHeight!,(width.current?.offsetTop! + width.current?.offsetHeight!))}}
           clearInput={true}
           ref={width}
+          step="any"
           name="width"
           fill="outline"
           labelPlacement="floating"
@@ -302,12 +315,13 @@ const AddOrder: React.FC = () => {
           placeholder="Width"
           type="number"
           className="ion-margin-top"
-          required
+          required={false}
         ></IonInput>
         <IonInput
           onClick={()=>{registerInputFocus(thickness.current?.offsetHeight!,(thickness.current?.offsetTop! + thickness.current?.offsetHeight!))}}
           onIonFocus={()=>{registerInputFocus(thickness.current?.offsetHeight!,(thickness.current?.offsetTop! + thickness.current?.offsetHeight!))}}
           clearInput={true}
+          step="any"
           ref={thickness}
           name="thickness"
           fill="outline"
@@ -316,7 +330,7 @@ const AddOrder: React.FC = () => {
           placeholder="Thickness"
           type="number"
           className="ion-margin-top"
-          required
+          required={false}
         ></IonInput>
         <IonInput
          onClick={()=>{registerInputFocus(quantity.current?.offsetHeight!,(quantity.current?.offsetTop! + quantity.current?.offsetHeight!))}}

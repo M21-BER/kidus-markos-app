@@ -98,9 +98,7 @@ const ViewTask: React.FC = () => {
     format: units.filter(i => new Set(nonzero).has(i)).slice(0, 3),
     delimiter: ', '
     })
-  }
-  let datePassed = "2023,12,4:2 Months";
-  
+  }  
   const getTasks = async () => {   
     try {
       const data = await axios(`${url}/api/tasks/client/index/${id}`, {
@@ -131,6 +129,7 @@ const ViewTask: React.FC = () => {
   const doRefresh = async (event: any) => {
     setLoading(true);
     const data = await getTasks();
+    setTaskUpdate(!taskUpdate);
     setTask(data);
     setTaskTitle(data.task_title)
     setLoading(false);
@@ -371,7 +370,10 @@ const ViewTask: React.FC = () => {
                                         if(validator(task,'comment') !== "Empty"){
                                           defaultReturn.step18 = 2;
                                         }
-                                        taskCompleted(); 
+                                        if(!validator(task,'completed','bool')){
+                                          taskCompleted(); 
+                                        }
+                                     
                                       }
                                     }
                                   }
@@ -481,10 +483,10 @@ const ViewTask: React.FC = () => {
   const headerDropDownHandler =  ()=>{
    setDropDownHeader(!dropDownHeader);
   }
-  const handle_customer_satisfaction = (e:React.FormEvent)=>{
+  const handle_customer_satisfaction = async(e:React.FormEvent)=>{
     e.preventDefault();
-  const InputComment = comment.current?.value; 
-  const InputSelect = select.current?.value; 
+  const InputComment = comment.current?.value?.toString().trim(); 
+  const InputSelect = select.current?.value?.toString().trim(); 
   const add_customer_satisfaction = async()=>{
     try {
       await axios.patch(`${url}/api/tasks/client/${id}`,{
@@ -495,9 +497,11 @@ const ViewTask: React.FC = () => {
           Authorization:user.token
         }
       }) 
+      dismiss()
       setTaskUpdate(!taskUpdate);
     Toast(presentIonToast,"task completed",informationCircleOutline);
     } catch (error) {
+      dismiss()
       const {message,status} = errorResponse(error);
          if(message && status){
           Toast(presentIonToast,message,informationCircleOutline);
@@ -507,6 +511,7 @@ const ViewTask: React.FC = () => {
     }
   }
    if(InputSelect){
+    await present("finishing task...");
     add_customer_satisfaction();
    }else{
     Toast(presentIonToast,"select customer satisfaction",informationCircleOutline);
@@ -644,7 +649,7 @@ const ViewTask: React.FC = () => {
        <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
             {!loading && <IonRefresherContent />}
        </IonRefresher>
-        {loading &&
+        {loading && stepChecker().step17  !== 1 &&
           [...Array(10)].map((_, index) => (
             <IonCard key={index}>
               <IonCardContent className="ion-no-padding">
@@ -695,7 +700,8 @@ const ViewTask: React.FC = () => {
                   </IonItem>
                 </IonRadioGroup>
               </IonList>
-              <IonTextarea className="ionInput comment_section" onIonInput={handleCommentSub} ref={comment} fill='outline'  placeholder='Write your comment here'  required={false}></IonTextarea>
+              <IonText style={{paddingLeft:'2%'}} className='ion-margin'>Comment <IonText color="medium">(optional)</IonText></IonText>
+              <IonTextarea className="ionInput ion-margin comment_section" onIonInput={handleCommentSub} ref={comment} fill='outline'  placeholder='Write your comment here'  required={false}></IonTextarea>
               <IonButton className='ion-margin-top' type='submit' expand='block'>Comment <IonIcon icon={paperPlaneSharp} size="small" slot='start'/> </IonButton>
               </form>
             </div>    

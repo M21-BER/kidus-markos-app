@@ -71,13 +71,13 @@ const Register: React.FC  = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data: any = {
-      first_name: first_name.current?.value,
-      last_name: last_name.current?.value,
-      gender: gender.current?.value,
-      email: email.current?.value,
-      phone_number: phone_number.current?.value,
-      password: password.current?.value,
-      confirm_password: confirm_password.current?.value,
+      first_name: first_name.current?.value?.toString().trim(),
+      last_name: last_name.current?.value?.toString().trim(),
+      gender: gender.current?.value?.toString().trim(),
+      email: email.current?.value?.toString().trim(),
+      phone_number: phone_number?.current?.value?.toString().trim(),
+      password: password.current?.value?.toString().trim(),
+      confirm_password: confirm_password.current?.value?.toString().trim(),
     };
     const regex = new RegExp(
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -172,7 +172,7 @@ const Register: React.FC  = () => {
   };
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    const inputVerify: any = verify.current?.value;
+    const inputVerify: any = verify.current?.value?.toString().trim();
     if (inputVerify) {
       if (parseInt(inputVerify) === parseInt(VRes.OTP)) {
         try {

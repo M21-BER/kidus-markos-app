@@ -68,7 +68,7 @@ const ResetPasswordContent: React.FC<Props> = ({
 
   const handlePhoneNumberSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const inputPhoneNumber = phone_number.current?.value;
+    const inputPhoneNumber = phone_number.current?.value?.toString().trim();
     const checkPhoneNumber = async () => {
       try {
         await present("checking...");
@@ -114,9 +114,9 @@ const ResetPasswordContent: React.FC<Props> = ({
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const inputOtp = otp.current?.value;
+    const inputOtp = otp.current?.value?.toString().trim();
     if (inputOtp) {
-      if (generatedOTP == inputOtp) {
+      if (generatedOTP === parseInt(inputOtp)) {
         Toast(
           presentIonToast,
           "code validated successfully",
@@ -139,8 +139,8 @@ const ResetPasswordContent: React.FC<Props> = ({
 
   const handleUpdatePasswordSubmit = async (event: any) => {
     event.preventDefault();
-    const newPass = newPassword.current?.value;
-    const repeatPass = repeatPassword.current?.value;
+    const newPass = newPassword.current?.value?.toString().trim();
+    const repeatPass = repeatPassword.current?.value?.toString().trim();
     let strongPassword = new RegExp(
       "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
     );

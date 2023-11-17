@@ -25,17 +25,26 @@ const OrderDetails: React.FC = () => {
     let relatedItem:any = [];
     if(!isPending1){
      if(detail1.length !== 0){
-      let first = randomInteger(0,detail1.length -1);
-      let second = randomInteger(0,detail1.length -1);
-      relatedItem.push(detail1[first]);   
-      if(second === first){
-         if(second === detail1.length -1){
-          relatedItem.push(detail1[first -1]);   
-         }else{
-          relatedItem.push(detail1[first +1]);
-         } 
-      }else{
-        relatedItem.push(detail1[second]);   
+      if(detail1.length === 1){
+        relatedItem.push(detail1[0]);  
+      }
+      if(detail1.length === 2){
+        relatedItem.push(detail1[0]);  
+        relatedItem.push(detail1[1]);  
+      }    
+      if(detail1.length > 2){
+        const first = randomInteger(0,detail1.length -1);
+        const second = randomInteger(0,detail1.length -1);
+        relatedItem.push(detail1[first]);   
+        if(second === first){
+           if(second === detail1.length -1){
+            relatedItem.push(detail1[first -1]);   
+           }else{
+            relatedItem.push(detail1[first +1]);
+           } 
+        }else{
+          relatedItem.push(detail1[second]);   
+        }
       }
      }
     }
@@ -105,11 +114,11 @@ const OrderDetails: React.FC = () => {
           </IonCard>
           <div className='order-details-others'>
           {
-              !isPending1 && relatedItem.length > 0?
+              !isPending1 && !error1 && relatedItem.length > 0?
               relatedItem.map((item:any,i:number)=>{
                 return(
                  <IonCard onClick={()=>{
-                  navigate!("shopDetails",item.s_product_id,null)
+                  navigate!("shopDetails",item.s_product_id,"orderDetails")
                  }} key={i}>
                  <IonCardContent className='ion-no-padding related-con'>
                    <IonItem lines='none'>

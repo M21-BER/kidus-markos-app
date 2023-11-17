@@ -13,7 +13,6 @@ interface Props {
   navigate:any;
 }
 const ShopList: React.FC<Props> = ({ shops,navigate }) => {
-
   if (shops.length === 0) {
     return (
       <div className="ion-text-center NDA">

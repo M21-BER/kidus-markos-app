@@ -53,12 +53,13 @@ import "./theme/shared.css";
 import { StatusBar } from '@capacitor/status-bar';
 import axios from "axios";
 import { Device } from "@capacitor/device";
-import { SplashScreen } from '@capacitor/splash-screen';
+import { errorResponse } from "./utils/errorResponse";
+import { logout } from "./utils/logout";
 /* Pages, Screens & Components */
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { isAuthed, route, navigate, screenStack, pullStack } =
+  const {user, isAuthed, route, navigate, screenStack, pullStack,updateSavedData,refresh } =
     useContext(UserContext);
   const [introSeen, setIntroSeen] = useState<boolean>(true);
   const [showBackAlert, setShowBackAlert] = useState<boolean>(false);
@@ -126,17 +127,38 @@ const App: React.FC = () => {
   };
   StatusBar.setOverlaysWebView({ overlay: true });
   useEffect(() => {
-  const hideSplash = async()=>{
-  await SplashScreen.hide();
-  }
-  hideSplash();
-}, []); 
-  useEffect(() => {
     const checkStorage = async () => {
       const seen = await Preferences.get({ key: INTRO_KEY });
       setIntroSeen(seen.value === "true");
     };
-    checkStorage();
+    checkStorage();  
+  }, []);
+  useEffect(() => {
+    const updateUserData = async () => {
+     try {
+      const update = await axios.get(`${url}/api/clients/app/${user.client_id}`,{headers:{Authorization:user.token}});
+      const {first_name,last_name,email,phone_number} = update.data.item
+      const passedData = {
+        ...user,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+      };
+      updateSavedData!(passedData);
+     } catch (error) {
+     const {message,status} = errorResponse(error);
+     if(message && status){
+       if(status === 404 && message === "Client not available"){
+        await logout();
+        refresh!();
+       }
+     }
+     }
+    };
+    if(user){
+      updateUserData();
+    }
   }, []);
   useEffect(() => {
     PushNotifications.checkPermissions().then((res) => {

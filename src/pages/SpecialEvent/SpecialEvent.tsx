@@ -5,6 +5,7 @@ import { failMessage, jsonCheck, url } from '../../utils/utils';
 import ImageComponent from '../../components/UI/Image';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { errorResponse } from '../../utils/errorResponse';
 const settings = {
     showThumbs: false,
     infiniteLoop: true,
@@ -45,12 +46,8 @@ const SpecialEvent: React.FC<Props> = ({spacerFunc,updateEvent}) => {
      if(error.code !== "ERR_NETWORK"){
       if (error.name !== "CanceledError") {
         setEvents([]);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.error &&
-          error.response.data.error.message
-        ) {
+        const {message,status}= errorResponse(error);
+        if (message && status) {
           setError(error.response.data.error.message);
         } else {
           setError(failMessage);
