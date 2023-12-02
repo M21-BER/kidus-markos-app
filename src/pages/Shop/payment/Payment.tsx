@@ -134,7 +134,7 @@ const Payment: React.FC = () => {
                       </tr>
                       <tr>
                       <th>Delivery</th>
-                      <td>within 3 to 5 days</td>
+                      <td>Free delivery in Addis Ababa within 15 days</td>
                       </tr>
                       </tbody>
                      </table>
