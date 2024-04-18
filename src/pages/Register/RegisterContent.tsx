@@ -56,7 +56,7 @@ const RegisterContent: React.FC<Props> = ({
         <div className="form-app-core form-app-core-register">
           <h3>Create Account</h3>
           <IonText color="medium">
-            Register with us to get access to exclusive content and feature
+            Register with us to get access to exclusive content and feature!
           </IonText>
           <form onSubmit={handleSubmit}>
             <IonInput
@@ -94,11 +94,11 @@ const RegisterContent: React.FC<Props> = ({
               className="ion-margin-top custom-radio-km"
             >
               <IonLabel>Sex: </IonLabel>
-              <IonRadio value="Male">
+              <IonRadio value="Male" mode="md">
                 <span className="sm">M</span>
                 <span className="lg">Male</span>
               </IonRadio>
-              <IonRadio value="Female">
+              <IonRadio value="Female" mode="md">
                 <span className="sm">F</span>
                 <span className="lg">Female</span>
               </IonRadio>
