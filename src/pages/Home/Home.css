@@ -66,9 +66,10 @@ div.ion-image-item .blurhash-img {
 }
 .search-bar .search-bar-result li {
   margin: 5px;
-  padding: 5px;
+  padding: 10px;
   background: #f3f3f3;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 .searchbar-input-container {
   border: 1px solid rgba(0, 0, 0, 0.1);
