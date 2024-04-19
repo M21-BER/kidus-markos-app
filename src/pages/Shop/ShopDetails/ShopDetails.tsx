@@ -32,6 +32,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import LoaderUI from "../../../components/UI/Loader/LoaderUI";
 import { watched } from "./ShopDetailView";
+import { Keyboard } from '@capacitor/keyboard';
 const settings = {
   showThumbs: false,
   infiniteLoop: true,
@@ -49,7 +50,24 @@ const ShopDetails: React.FC = () => {
   const [cartExist, setCartExist] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<number>(0);
   const review = useRef<null | HTMLIonInputElement>(null);
+  const ShopDetailsPage = useRef<HTMLDivElement | null>(null);
   const [presentIonToast] = useIonToast();
+  const [formPosition, setFormPosition] = useState<object>({});
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+  
+  const registerInputFocus = (elementHeight:any,input:any)=>{
+    var ShopDetailsPageHeight = (ShopDetailsPage.current?.offsetTop! + ShopDetailsPage.current?.offsetHeight!);
+    if(input && ShopDetailsPageHeight && input){
+      setFormPosition({top:`-${input - elementHeight - 100}px`});
+     }
+  }
+  Keyboard.addListener('keyboardDidShow', info => {
+    keyboardHeight === 0 && setKeyboardHeight(info.keyboardHeight);
+  });
+
+  Keyboard.addListener('keyboardDidHide', () => {
+   setFormPosition({top:0})
+  });
   if (!isPending) {
     distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
       addSuffix: true,
@@ -174,7 +192,7 @@ const ShopDetails: React.FC = () => {
         Preferences.set({ key: CART_KEY, value: JSON.stringify(new_ids) });
       }
       setCartExist(true);
-      Toast(presentIonToast,"Item have been added to cart 🗸 ",cartSharp);
+      Toast(presentIonToast,`Item have been added to cart`,cartSharp);
     } catch (error) {
       Toast(presentIonToast,"Item not added to cart, please try again later",informationCircleOutline);
     }
@@ -224,7 +242,7 @@ const ShopDetails: React.FC = () => {
         const ids: any[] = jsonCheck(cartIDS.value).filter((i:any)=>(i.id !==id.id));
         Preferences.set({ key: CART_KEY, value: JSON.stringify(ids) });
         setCartExist(false);
-        Toast(presentIonToast,"Item have been removed from Cart 🗸 ",cartSharp);
+        Toast(presentIonToast,"Item have been removed from Cart",cartSharp);
       }else{
         throw new Error("cart filter failed")
       }
@@ -251,7 +269,7 @@ if(!isPending){
     
         <IonContent className="ion-no-padding">
           {!isPending && (
-            <div className="shop-details">
+            <div ref={ShopDetailsPage} className="shop-details" style={formPosition}>
               <Carousel {...settings} autoPlay>
               {jsonCheck(detail.product.s_product_images).map(
                   (image: any, index: number) => {
@@ -300,6 +318,7 @@ if(!isPending){
                       ? detail.product.s_product_reviews
                       : []
                   }
+                  registerInputFocus={registerInputFocus}
                 />
               </div>
             </div>
