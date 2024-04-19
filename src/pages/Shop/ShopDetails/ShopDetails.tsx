@@ -152,19 +152,19 @@ const ShopDetails: React.FC = () => {
     if (checkReview.toString().length <= 200) {
       if (isAuthed) {
         if (!review.current?.value) {
-          Toast(presentIonToast,"Please write your message first",informationCircleOutline)
+          Toast(presentIonToast,"please write something",informationCircleOutline)
         } else {
           addReview();
         }
       }else{
-        Toast(presentIonToast,"Please login first",informationCircleOutline);
+        Toast(presentIonToast,"make sure to log in first!",informationCircleOutline);
         navigate!("Login",null,null);
       }
     }else{
       Toast(presentIonToast,"review must be below 80 character",informationCircleOutline);
     }
    }else{
-    Toast(presentIonToast,"please write review first",informationCircleOutline);
+    Toast(presentIonToast,"please write something",informationCircleOutline);
    }
     reset(review);
   };
