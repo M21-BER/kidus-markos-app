@@ -69,7 +69,7 @@ const ShopDetails: React.FC = () => {
    setFormPosition({top:0})
   });
   if (!isPending) {
-    distance = formatDistance(new Date(detail.product.updatedAt), new Date(), {
+    distance = formatDistance(new Date(detail.product.createdAt), new Date(), {
       addSuffix: true,
     });
     colors = jsonCheck(detail.product.s_product_colors)
