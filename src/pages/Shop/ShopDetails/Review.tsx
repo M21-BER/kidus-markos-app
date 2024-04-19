@@ -3,19 +3,22 @@ import { informationCircleOutline, paperPlaneSharp, personCircleOutline } from "
 import { jsonCheck } from "../../../utils/utils";
 import { formatDistance } from "date-fns";
 import { Toast } from "../../../utils/CustomToast";
+import { useRef } from "react";
 
 interface Props{
 handleReview:(e:React.FormEvent)=>void;
 review:React.MutableRefObject<HTMLIonInputElement | null>;
 reviewList:any[];
+registerInputFocus:any
 }
-const Review: React.FC<Props> = ({handleReview,review,reviewList}) => {
+const Review: React.FC<Props> = ({handleReview,review,reviewList,registerInputFocus}) => {
   const [presentIonToast] = useIonToast();
+  const cardRef = useRef<null | HTMLIonCardElement>(null);
   const handleReviewSub = (e: any) => {
     if (e.detail.value.length >= 200) {
       // @ts-ignore
       review.current.value = e.detail.value.toString().slice(0, 200);
-      Toast(presentIonToast,"review must be below 200 character",informationCircleOutline);
+      Toast(presentIonToast,"Review must be below 200 character",informationCircleOutline);
     }
   };
   const rev  = (arr:[])=>{
@@ -28,11 +31,21 @@ const Review: React.FC<Props> = ({handleReview,review,reviewList}) => {
 
 return (
     <>
-<IonCard className='km-detail-review' color='warning'>
+<IonCard ref={cardRef} className='km-detail-review' color='warning'>
     <IonCardContent className="ion-padding">
     <div>
     <form onSubmit={handleReview} >
-    <IonInput   clearInput={true} className="ionInput" onIonInput={handleReviewSub} ref={review} fill='outline'  placeholder='Write your message here' type='text' required={false}></IonInput>
+    <IonInput   
+    onClick={()=>{registerInputFocus(review.current?.offsetHeight!,(cardRef.current?.offsetTop! + review.current?.offsetHeight!))}}
+    onIonFocus={()=>{registerInputFocus(review.current?.offsetHeight!,(cardRef.current?.offsetTop! + review.current?.offsetHeight!))}}
+    clearInput={true} 
+    className="ionInput" 
+    onIonInput={handleReviewSub} 
+    ref={review} 
+    fill='outline'  
+    placeholder='Write your message here' 
+    type='text' 
+    required={false}></IonInput>
     <IonButton className='ion-margin-top' type='submit' expand='block'>Send Review <IonIcon icon={paperPlaneSharp} size="small" slot='start'/> </IonButton>
     </form>
     </div>
