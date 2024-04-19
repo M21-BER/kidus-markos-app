@@ -6,6 +6,7 @@ import {
   useIonLoading,
   IonSearchbar,
   IonSkeletonText,
+  IonText,
 } from "@ionic/react";
 import React, {useEffect, useContext, useRef, useState } from "react";
 import axios from "axios";
@@ -140,15 +141,18 @@ const Shop: React.FC<Props>= ({spacer,updateEventNow}) => {
         <div  className="search-bar">
           <form onSubmit={handleSearch}>
             <IonSearchbar ref={searchValue}  />
-            <div className={shopsRes.length > 0?"search-bar-result on":"search-bar-result"}>
+            {
+              shopsResBar &&  <div className={shopsRes.length > 0?"search-bar-result on":"search-bar-result on"}>
               {
-                shopsRes.length > 0 && shopsRes.map((_,i)=>{
+                shopsRes.length > 0 ?shopsRes.map((_,i)=>{
                   return(
                     <li onClick={()=>{gotoDetailsFromSearchList(_.s_product_id)}} key={i}>{_.s_product_name}</li>
                   ) 
-                })
+                }):<li style={{textAlign:'center'}}><IonText color='medium'>No product found</IonText></li>
               } 
             </div>
+            }
+           
           </form>
         </div>
         <IonContent className="_under_drawer">
