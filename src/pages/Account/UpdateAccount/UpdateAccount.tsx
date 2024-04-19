@@ -30,12 +30,12 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const data: any = {
-      first_name: first_name.current?.value?.toString().trim(),
-      last_name: last_name.current?.value?.toString().trim(),
-      email: email.current?.value?.toLocaleString.toString().trim(),
-      phone_number: phone_number.current?.value?.toString().trim(),
+    var data: any = {
     };
+    first_name.current?.value?.toString().trim() != ""  &&  (data.first_name = first_name.current?.value?.toString().trim());
+    last_name.current?.value?.toString().trim() != ""  &&  (data.last_name = last_name.current?.value?.toString().trim());
+    email.current?.value?.toString().trim() != ""  &&  (data.email = email.current?.value?.toString().trim());
+    phone_number.current?.value?.toString().trim() != ""  &&  (data.phone_number = phone_number.current?.value?.toString().trim());
     async function updateNow() {
       await present("updating...");
       try {
@@ -68,7 +68,7 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
       } catch (error) {
         dismiss();
         const { message, status } = errorResponse(error);
-        if (message && status) {
+        if (message && status) {    
           Toast(presentIonToast, message, closeCircleOutline);
         } else {
           Toast(presentIonToast, failMessage, closeCircleOutline);
@@ -76,12 +76,12 @@ const UpdateAccount: React.FC<Props> = ({ openModal, setOpenModal, user }) => {
       }
     }
     if (
-      data.first_name &&
-      data.last_name &&
-      data.email &&
+      data.first_name ||
+      data.last_name ||
+      data.email ||
       data.phone_number
     ) {
-      updateNow();
+     updateNow();
     } else {
       Toast(
         presentIonToast,
