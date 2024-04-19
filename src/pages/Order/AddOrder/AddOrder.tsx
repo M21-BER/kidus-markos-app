@@ -47,7 +47,6 @@ const AddOrder: React.FC = () => {
   const form = useRef<HTMLDivElement | null>(null);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
   const [present, dismiss] = useIonLoading();
-  
   const registerInputFocus = (elementHeight:any,input:any)=>{
     var formHeight = (form.current?.offsetTop! + form.current?.offsetHeight!);
     if(input && formHeight && input >= (formHeight - keyboardHeight !== 0?keyboardHeight:((formHeight*44)/100) +4)){
@@ -172,7 +171,7 @@ const AddOrder: React.FC = () => {
         const addOrder = await axios.post(`${url}/api/orders`, formData);
         if(addOrder.status === 201 && addOrder.data.status){
           navigate!("Home",id.id,null)
-          Toast(presentIonToast, "Product Ordered Successfully", checkmarkCircleOutline);
+          Toast(presentIonToast, "Product ordered successfully, we will contact you soon!", checkmarkCircleOutline);
         }else{
          throw new Error(failMessage);
         }
