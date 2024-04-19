@@ -128,6 +128,14 @@ const Tasks: React.FC = () => {
       <IonPage>
          <ToolBarMain defaultValue='/' title='My Tasks'/>
          <IonContent>
+         <IonCard className="ion-no-margin">
+              <IonCardContent >
+              <section className='task-status'>
+               <div><IonText style={{display:'flex',alignItems:'center'}}> <IonSkeletonText animated style={{ width: '70px',height:'10px' }} />  <IonChip> <IonSkeletonText animated /></IonChip></IonText></div>              
+               <div><IonText style={{display:'flex',alignItems:'center'}}> <IonSkeletonText animated style={{ width: '70px',height:'10px' }} /><IonChip> <IonSkeletonText animated /></IonChip></IonText></div>              
+              </section> 
+              </IonCardContent>
+            </IonCard>
           {loading &&
             [...Array(20)].map((_, index) => (
               <IonCard key={index}>
