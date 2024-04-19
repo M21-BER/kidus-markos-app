@@ -240,6 +240,9 @@ const Register: React.FC  = () => {
         Toast(presentIonToast, failMessage, closeCircleOutline);
       }
   };
+  const resetState = ()=>{
+  setVerifyStatus(false); 
+  }
   useEffect(()=>{
     pushStack!({path:'Register',id:route?.id,info:route?.info});
   },[]);
@@ -254,6 +257,7 @@ const Register: React.FC  = () => {
             verify={verify}
             sendOTPAgain={sendOTPAgain}
             handleVerify={handleVerify}
+            resetState={resetState}
           />
         ) : (
           <RegisterContent
