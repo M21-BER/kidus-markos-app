@@ -12,16 +12,17 @@ import {
   IonText,
   IonTitle,
 } from "@ionic/react";
-import { checkmarkCircleOutline } from "ionicons/icons";
+import { checkmarkCircleOutline, refreshCircle, refreshCircleOutline } from "ionicons/icons";
 import "../ResetPassword/Reset.css";
 import CountdownTimer from "../../components/UI/CountdownTimer";
 interface Props {
   handleVerify: (e: React.FormEvent) => void;
+  resetState: () => void;
   sendOTPAgain: (userEmail:any) => void;
   verify: React.MutableRefObject<HTMLIonInputElement | null>;
   userEmail:string;
 }
-const Verify: React.FC<Props> = ({userEmail, handleVerify, verify, sendOTPAgain }) => {
+const Verify: React.FC<Props> = ({userEmail, handleVerify, verify, sendOTPAgain,resetState }) => {
   const handleOTPChange = (e: any) => {
     if (e.detail.value.length >= 4) {
       // @ts-ignore
@@ -82,6 +83,17 @@ const Verify: React.FC<Props> = ({userEmail, handleVerify, verify, sendOTPAgain 
                       >
                         Verify
                         <IonIcon icon={checkmarkCircleOutline} slot="end" />
+                      </IonButton>
+                      <IonButton
+                        onClick={resetState}
+                        className="ion-margin-top"
+                        type="button"
+                        expand="block"
+                        fill="clear"
+                        style={{textTransform:'lowercase'}}
+                      >
+                        <span  style={{textTransform:'uppercase'}}>S</span>ign up Again
+                        <IonIcon icon={refreshCircle} slot="start" />
                       </IonButton>
                       <IonText className="ion-margin-top" color="medium">
                       <CountdownTimer
