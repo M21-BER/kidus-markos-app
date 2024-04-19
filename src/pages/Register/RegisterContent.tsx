@@ -37,8 +37,9 @@ const RegisterContent: React.FC<Props> = ({
   const [formPosition, setFormPosition] = useState<object>({});
   const form = useRef<HTMLDivElement | null>(null);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
-  const formHeight = (form.current?.offsetTop! + form.current?.offsetHeight!);
+
   const registerInputFocus = (elementHeight:any,input:any)=>{
+  var formHeight = (form.current?.offsetTop! + form.current?.offsetHeight!);
     if(input && formHeight && input >= (formHeight - keyboardHeight !== 0?keyboardHeight:((formHeight*44)/100) +4)){
       setFormPosition({top:`-${input - elementHeight - 100}px`})
      }
