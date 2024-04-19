@@ -1,5 +1,6 @@
 import { IonIcon, IonText } from "@ionic/react";
 import { checkmarkCircleSharp } from "ionicons/icons";
+import { GetColorName } from 'hex-color-to-color-name';
 
 interface Props {
 colors:[]
@@ -17,7 +18,7 @@ const ColorList: React.FC<Props> = ({colors,updateColor,selectedColor}) => {
                  return (<div key={index} className='pickColorParent' style={{background:color}}>  
                    <div onClick={()=>{updateColor(index,color)}}>
                     {(selectedColor == index) && <IonIcon icon={checkmarkCircleSharp} /> }
-                    <p>{color}</p>
+                    <p>{GetColorName(color)}</p>
                     </div>
                     </div>  
                  )})
