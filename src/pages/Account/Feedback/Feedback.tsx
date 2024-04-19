@@ -49,7 +49,7 @@ const Feedback: React.FC<Props> = ({ openModal_2, setOpenModal_2 }) => {
         ) {
           Toast(
             presentIonToast,
-            submit_feedback.data.message,
+            'Thank you for your feedback!',
             checkmarkCircleOutline
           );
         }
